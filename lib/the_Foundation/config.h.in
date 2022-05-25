@@ -1,0 +1,86 @@
+#pragma once
+
+/** @file the_Foundation/config.h  Library build configuration.
+
+@authors Copyright (c) 2017 Jaakko Keränen <jaakko.keranen@iki.fi>
+
+@par License
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+<small>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
+*/
+
+#define iFoundationLibraryVersion { ${the_Foundation_VERSION_MAJOR}, ${the_Foundation_VERSION_MINOR}, ${the_Foundation_VERSION_PATCH} }
+#define iFoundationLibraryGitTag "${iFoundationLibraryGitTag}"
+
+#cmakedefine iPlatformAndroid
+#cmakedefine iPlatformApple
+#cmakedefine iPlatformCygwin
+#cmakedefine iPlatformHaiku
+#cmakedefine iPlatformLinux
+#cmakedefine iPlatformMsys
+#cmakedefine iPlatformOther
+#cmakedefine iPlatformWindows
+
+#cmakedefine iHaveDebugOutput
+#cmakedefine iHaveBigEndian
+#cmakedefine iHaveSSE4_1
+
+#cmakedefine iHaveC11Threads
+#cmakedefine iHaveCurl
+#cmakedefine iHaveSysDirent
+#cmakedefine iHaveOpenSSL
+#cmakedefine iHavePcre
+#cmakedefine iHavePThread
+#cmakedefine iHavePThreadCancel
+#cmakedefine iHavePThreadTimedMutex
+#cmakedefine iHaveRegExp
+#cmakedefine iHaveStrnstr
+#cmakedefine iHaveTlsRequest
+#cmakedefine iHaveWebRequest
+#cmakedefine iHaveWin32FileAPI
+#cmakedefine iHaveZlib
+
+#if !defined (iHavePThreadTimedMutex) && !defined (C11THREADS_NO_TIMED_MUTEX)
+#   define C11THREADS_NO_TIMED_MUTEX
+#endif
+
+/*
+ * The iFoundationAPI macro is used for declaring exported symbols. It must be
+ * applied in all exported classes and functions.
+ */
+#if defined (_MSC_VER)
+#   if defined (iIsLibraryBuild)
+#       define iFoundationAPI       __declspec(dllexport)
+#       define iFoundationAPIData
+#   else
+#       define iFoundationAPI       __declspec(dllimport)
+#       define iFoundationAPIData   __declspec(dllimport)
+#   endif
+#   define iNoReturn            __declspec(noreturn)
+#elif defined (iPlatformMsys)
+#   define iFoundationAPI    
+#   define iFoundationAPIData   extern
+#   define iNoReturn            __attribute__((__noreturn__))
+#else
+#   define iFoundationAPI
+#   define iFoundationAPIData   extern
+#   define iNoReturn            __attribute__((__noreturn__))
+#endif

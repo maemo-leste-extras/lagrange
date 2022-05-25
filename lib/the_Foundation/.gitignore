@@ -1,0 +1,10 @@
+.vscode
+.vsbuild
+*.user
+*.user.*
+doc
+build
+build-*
+.DS_Store
+*~
+

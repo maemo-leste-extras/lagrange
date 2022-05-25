@@ -1,0 +1,1025 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
+"PO-Revision-Date: 2022-05-05 03:36+0000\n"
+"Last-Translator: Nikolay Korotkiy <sikmir@gmail.com>\n"
+"Language-Team: Esperanto <http://weblate.skyjake.fi/projects/lagrange/ui/eo/>"
+"\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.1\n"
+
+msgid "toggle.yes"
+msgstr "Jes"
+
+msgid "toggle.no"
+msgstr "Ne"
+
+msgid "menu.title.file"
+msgstr "Dosiero"
+
+msgid "menu.title.edit"
+msgstr "Redakti"
+
+msgid "menu.title.view"
+msgstr "Vido"
+
+msgid "menu.title.bookmarks"
+msgstr "Legosignoj"
+
+msgid "menu.title.help"
+msgstr "Helpo"
+
+msgid "menu.closetab"
+msgstr "Fermi langeton"
+
+msgid "menu.closetab.other"
+msgstr "Fermi aliajn langetojn"
+
+msgid "menu.duptab"
+msgstr "Duobligi langeton"
+
+msgid "about.tagline"
+msgstr "Bela Gemini-retumilo"
+
+msgid "cancel"
+msgstr "Rezigni"
+
+msgid "dismiss"
+msgstr "Fermi"
+
+msgid "dlg.message.ok"
+msgstr "Daŭrigi"
+
+msgid "menu.title.identity"
+msgstr "Identeco"
+
+msgid "menu.closetab.right"
+msgstr "Fermi langetojn dekstren"
+
+msgid "dlg.default"
+msgstr " OK "
+
+msgid "macos.menu.find"
+msgstr "Serĉi"
+
+msgid "menu.openlocation"
+msgstr "Malfermi lokon…"
+
+msgid "menu.find"
+msgstr "Trovi sur la paĝo"
+
+msgid "menu.help"
+msgstr "Helpo"
+
+msgid "menu.releasenotes"
+msgstr "Eldonaj notoj"
+
+msgid "menu.copy"
+msgstr "Kopii"
+
+msgid "menu.paste"
+msgstr "Alglui"
+
+msgid "menu.show.bookmarks"
+msgstr "Montri legosignojn"
+
+msgid "menu.zoom.in"
+msgstr "Grandigi"
+
+msgid "menu.zoom.out"
+msgstr "Etigi"
+
+msgid "menu.cut"
+msgstr "Eltondi"
+
+msgid "menu.show.history"
+msgstr "Montri historion"
+
+msgid "menu.show.identities"
+msgstr "Montri Identecojn"
+
+msgid "menu.preferences"
+msgstr "Agordoj…"
+
+msgid "menu.sidebar"
+msgstr "Baskuligi flankpanelon"
+
+msgid "menu.sidebar.left"
+msgstr "Baskuligi maldekstran flankpanelon"
+
+msgid "menu.sidebar.right"
+msgstr "Baskuligi dekstran flankpanelon"
+
+msgid "menu.show.feeds"
+msgstr "Montri abonfluojn"
+
+msgid "macos.menu.bookmarks.list"
+msgstr "Listigi ĉiujn"
+
+msgid "menu.bookmarks.list"
+msgstr "Listigi ĉiujn legosignojn"
+
+msgid "menu.back"
+msgstr "Malantaŭen"
+
+msgid "menu.copy.source"
+msgstr "Kopii fontotekston"
+
+msgid "menu.quit"
+msgstr "Forlasi"
+
+msgid "menu.forward"
+msgstr "Antaŭen"
+
+msgid "menu.page.translate"
+msgstr "Traduki…"
+
+msgid "sidebar.bookmarks"
+msgstr "Legosignoj"
+
+msgid "sidebar.history"
+msgstr "Historio"
+
+msgid "menu.identity.new"
+msgstr "Nova identeco…"
+
+msgid "menu.identity.import"
+msgstr "Importi…"
+
+msgid "sidebar.feeds"
+msgstr "Abonfluoj"
+
+msgid "sidebar.identities"
+msgstr "Identecoj"
+
+msgid "menu.feeds.refresh"
+msgstr "Reŝargi abonfluojn"
+
+msgid "sidebar.outline"
+msgstr "Skemo"
+
+msgid "status.query"
+msgstr "Serĉpeto"
+
+msgid "panel.back"
+msgstr "Malantaŭen"
+
+msgid "hint.findtext"
+msgstr "serĉi tekston sur la paĝo"
+
+msgid "sidebar.entry.bookmark"
+msgstr "Aldoni legosignon…"
+
+msgid "feeds.entry.bookmark"
+msgstr "Aldoni legosignon…"
+
+msgid "menu.opentab"
+msgstr "Malfermi en nova langeto"
+
+msgid "menu.edit"
+msgstr "Redakti…"
+
+msgid "feeds.edit"
+msgstr "Redakti abonfluon…"
+
+msgid "feeds.unsubscribe"
+msgstr "Malaboni…"
+
+msgid "ident.temporary"
+msgstr "Provizora"
+
+# megabytes, used as the unit after a number
+msgid "mb"
+msgstr "MB"
+
+# kilobytes, used as the unit after a number
+msgid "kb"
+msgstr "KB"
+
+msgid "history.clear"
+msgstr "Malplenigi historion…"
+
+msgid "dlg.history.clear"
+msgstr "Malplenigi historion"
+
+msgid "num.bytes"
+msgid_plural "num.bytes.n"
+msgstr[0] "%u bajto"
+msgstr[1] "%u bajtoj"
+
+msgid "feeds.refresh"
+msgstr "Reŝargi abonfluojn"
+
+msgid "bookmark.tag.home"
+msgstr "Uzi kiel hejmpaĝo"
+
+msgid "ident.showuse"
+msgstr "Montri uzadon"
+
+msgid "feeds.entry.markread"
+msgstr "Marki legita"
+
+msgid "feeds.entry.markunread"
+msgstr "Marki nelegita"
+
+msgid "heading.history.clear"
+msgstr "Malplenigi historion"
+
+msgid "ident.delete"
+msgstr "Forigi identecon…"
+
+msgid "ident.fingerprint"
+msgstr "Kopii fingropremaĵon"
+
+msgid "heading.ident.use"
+msgstr "Identeca uzado"
+
+msgid "menu.edit.notes"
+msgstr "Redakti notojn…"
+
+# %s refers to name of an identity.
+#, c-format
+msgid "dlg.ident.notes"
+msgstr "Notoj pri %s:"
+
+msgid "dlg.ident.delete"
+msgstr "Forigi identecon kaj dosierojn"
+
+msgid "dlg.save.size"
+msgstr "Grando:"
+
+msgid "dlg.unsub"
+msgstr "Malaboni"
+
+msgid "dlg.input.send"
+msgstr "Sendi"
+
+msgid "heading.unsub"
+msgstr "Malabono"
+
+msgid "heading.pageinfo"
+msgstr "Paĝinformoj"
+
+msgid "dlg.cert.fingerprint"
+msgstr "Kopii fingropremaĵon"
+
+msgid "pageinfo.header.cached"
+msgstr "(kaŝmemorigita enhavo)"
+
+msgid "dlg.cert.trust"
+msgstr "Fidi"
+
+#, c-format
+msgid "dlg.import.add"
+msgid_plural "dlg.import.add.n"
+msgstr[0] "%Aldoni legosignon"
+msgstr[1] "%Aldoni %d legosignojn"
+
+msgid "pageinfo.cert.status"
+msgstr "Stato de atestilo:"
+
+msgid "link.newtab"
+msgstr "Malfermi ligilon en nova langeto"
+
+msgid "link.copy"
+msgstr "Kopii adreson de ligilo"
+
+msgid "dlg.openlink"
+msgstr "Malfermi ligilon"
+
+msgid "dlg.certimport.import"
+msgstr "Importi"
+
+#, c-format
+msgid "num.hours"
+msgid_plural "num.hours.n"
+msgstr[0] "%d horo"
+msgstr[1] "%d horoj"
+
+msgid "heading.openlink"
+msgstr "Malfermi ligilon"
+
+msgid "heading.certimport"
+msgstr "Importi identecon"
+
+msgid "hint.certimport.description"
+msgstr "priskribo"
+
+# Interpret as "Results from history..."
+msgid "heading.lookup.history"
+msgstr "HISTORIO"
+
+# Interpret as "Other results..."
+msgid "heading.lookup.other"
+msgstr "ALIAJ"
+
+msgid "bookmark.title.blank"
+msgstr "Malplena paĝo"
+
+# Interpret as "Results from feeds..."
+msgid "heading.lookup.feeds"
+msgstr "ABONFLUOJ"
+
+# Interpret as "Results from identitites..."
+msgid "heading.lookup.identities"
+msgstr "IDENTECOJ"
+
+msgid "link.hint.audio"
+msgstr "Sonaĵo"
+
+msgid "link.hint.image"
+msgstr "Bildo"
+
+msgid "lang.ar"
+msgstr "Araba"
+
+msgid "lang.zh"
+msgstr "Ĉina"
+
+msgid "lang.zh.hans"
+msgstr "Ĉina (simpligita)"
+
+msgid "lang.zh.hant"
+msgstr "Ĉina (tradicia)"
+
+msgid "lang.en"
+msgstr "Angla"
+
+msgid "lang.fi"
+msgstr "Finna"
+
+msgid "lang.fr"
+msgstr "Franca"
+
+msgid "lang.de"
+msgstr "Germana"
+
+msgid "lang.it"
+msgstr "Itala"
+
+msgid "lang.ja"
+msgstr "Japana"
+
+msgid "lang.hi"
+msgstr "Hinda"
+
+msgid "lang.ru"
+msgstr "Rusa"
+
+msgid "lang.es"
+msgstr "Hispana"
+
+msgid "dlg.newident.email"
+msgstr "Retpoŝto:"
+
+msgid "dlg.newident.country"
+msgstr "Lando:"
+
+msgid "heading.newident"
+msgstr "Nova identeco"
+
+msgid "dlg.newident.domain"
+msgstr "Domajno:"
+
+msgid "dlg.newident.create"
+msgstr "Krei identecon"
+
+msgid "dlg.feed.title"
+msgstr "Titolo:"
+
+msgid "dlg.feed.sub"
+msgstr "Aboni"
+
+msgid "dlg.bookmark.url"
+msgstr "URL:"
+
+# tab button
+msgid "heading.prefs.colors"
+msgstr "Koloroj"
+
+msgid "dlg.bookmark.title"
+msgstr "Titolo:"
+
+msgid "dlg.bookmark.tags"
+msgstr "Etikedoj:"
+
+msgid "dlg.bookmark.icon"
+msgstr "Bildsimbolo:"
+
+msgid "heading.prefs"
+msgstr "Agordoj"
+
+msgid "heading.prefs.fonts"
+msgstr "Tiparoj"
+
+# tab button
+msgid "heading.prefs.network"
+msgstr "Reto"
+
+msgid "heading.prefs.paragraph"
+msgstr "Alineo"
+
+msgid "heading.prefs.scrolling"
+msgstr "Rulumado"
+
+msgid "prefs.theme"
+msgstr "Temo:"
+
+msgid "prefs.theme.black"
+msgstr "Nigra"
+
+msgid "prefs.theme.white"
+msgstr "Blanka"
+
+msgid "prefs.uilang"
+msgstr "Lingvo:"
+
+msgid "prefs.doctheme.name.black"
+msgstr "Nigra"
+
+msgid "prefs.doctheme.name.gray"
+msgstr "Griza"
+
+msgid "prefs.doctheme.name.white"
+msgstr "Blanka"
+
+# tab button
+msgid "heading.prefs.userinterface"
+msgstr "Fasado"
+
+msgid "prefs.mono.gopher"
+msgstr "Gopher"
+
+msgid "menu.binding.clear"
+msgstr "Forigi"
+
+msgid "prefs.proxy.gemini"
+msgstr "Gemini-prokurilo:"
+
+msgid "prefs.proxy.gopher"
+msgstr "Gopher-prokurilo:"
+
+msgid "prefs.proxy.http"
+msgstr "HTTP-prokurilo:"
+
+msgid "keys.reload"
+msgstr "Reŝargi paĝon"
+
+msgid "keys.forward"
+msgstr "Antaŭen"
+
+msgid "keys.back"
+msgstr "Malantaŭen"
+
+msgid "prefs.saturation"
+msgstr "Satureco:"
+
+msgid "keys.tab.close"
+msgstr "Fermi langeton"
+
+msgid "keys.zoom.in"
+msgstr "Grandigi"
+
+msgid "keys.zoom.out"
+msgstr "Etigi"
+
+msgid "keys.tab.prev"
+msgstr "Antaŭa langeto"
+
+msgid "keys.tab.next"
+msgstr "Sekva langeto"
+
+msgid "error.notfound"
+msgstr "Ne trovita"
+
+msgid "error.badrequest"
+msgstr "Malbona peto"
+
+msgid "error.cert.invalid"
+msgstr "Nevalida atestilo"
+
+msgid "about.version"
+msgstr "Versio"
+
+msgid "menu.newtab"
+msgstr "Nova langeto"
+
+msgid "menu.about"
+msgstr "Pri Lagrange"
+
+msgid "feeds.today"
+msgstr "Hodiaŭ"
+
+msgid "bookmark.delete"
+msgstr "Forigi legosignon"
+
+msgid "reload.never"
+msgstr "Neniam"
+
+msgid "dlg.certimport.notes"
+msgstr "Notoj:"
+
+# Interpret as "Results from bookmarks..."
+msgid "heading.lookup.bookmarks"
+msgstr "LEGOSIGNOJ"
+
+msgid "dlg.translate"
+msgstr "Traduki"
+
+msgid "lang.pt"
+msgstr "Portugala"
+
+msgid "dlg.bookmark.save"
+msgstr "Konservi legosignon"
+
+# tab button
+msgid "heading.prefs.style"
+msgstr "Stilo"
+
+msgid "prefs.mono.gemini"
+msgstr "Gemini"
+
+msgid "keys.bookmark.add"
+msgstr "Aldoni legosignon"
+
+msgid "keys.tab.new"
+msgstr "Nova langeto"
+
+msgid "menu.closetab.left"
+msgstr "Fermi langetojn maldekstren"
+
+msgid "menu.reload"
+msgstr "Reŝargi paĝon"
+
+msgid "dlg.newident.temp"
+msgstr "Provizora:"
+
+msgid "heading.prefs.certs"
+msgstr "Atestiloj"
+
+#, c-format
+msgid "num.minutes"
+msgid_plural "num.minutes.n"
+msgstr[0] "%d minuto"
+msgstr[1] "%d minutoj"
+
+# Usage: "(count) Unread" in the sidebar tab title, referring to feed entries.
+msgid "sidebar.unread"
+msgid_plural "sidebar.unread.n"
+msgstr[0] "Nelegita"
+msgstr[1] "Nelegitaj"
+
+msgid "menu.dup"
+msgstr "Duobligi…"
+
+msgid "keys.fullscreen"
+msgstr "Baskuligi plenekranan reĝimon"
+
+msgid "heading.import.bookmarks"
+msgstr "Importi legosignojn"
+
+msgid "lang.sr"
+msgstr "Serba"
+
+msgid "lang.ie"
+msgstr "Okcidentalo"
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.title"
+msgstr "Titolo"
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.artist"
+msgstr "Artisto"
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.genre"
+msgstr "Ĝenro"
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.date"
+msgstr "Dato"
+
+msgid "numbertype.integer"
+msgstr "entjero"
+
+# used as adjective, n is 8, 16, 24, 32, or 64
+#, c-format
+msgid "n.bit"
+msgstr "%d-bita"
+
+# Hertz, unit for frequency values
+msgid "hz"
+msgstr "Hz"
+
+msgid "mb.per.sec"
+msgstr "MB/s"
+
+msgid "dlg.newident.org"
+msgstr "Organizaĵo:"
+
+msgid "prefs.theme.dark"
+msgstr "Malhela"
+
+msgid "prefs.theme.light"
+msgstr "Hela"
+
+msgid "menu.split.merge"
+msgstr "Kunfandi la langetojn"
+
+msgid "menu.split.horizontal"
+msgstr "Horizontala"
+
+msgid "menu.split.vertical"
+msgstr "Vertikala"
+
+msgid "dlg.translate.to"
+msgstr "Al:"
+
+msgid "prefs.accent.teal"
+msgstr "Turkisa"
+
+msgid "dlg.translate.from"
+msgstr "De:"
+
+msgid "lang.ia"
+msgstr "Interlingvao"
+
+msgid "hint.newident.optional"
+msgstr "nedeviga"
+
+msgid "prefs.accent.orange"
+msgstr "Oranĝa"
+
+msgid "prefs.linewidth.normal"
+msgstr "Normala"
+
+msgid "prefs.quoteicon.line"
+msgstr "Linio"
+
+msgid "sidebar.action.feeds.showall"
+msgstr "Ĉiuj"
+
+msgid "sidebar.action.feeds.showunread"
+msgstr "Nelegitaj"
+
+msgid "sidebar.action.ident.new"
+msgstr "Nova…"
+
+# tab button
+msgid "heading.prefs.general"
+msgstr "Ĝenerala"
+
+# tab button
+msgid "heading.prefs.interface"
+msgstr "Fasado"
+
+msgid "heading.prefs.proxies"
+msgstr "Prokuriloj"
+
+msgid "gempub.meta.lang"
+msgstr "Lingvo"
+
+msgid "gempub.meta.license"
+msgstr "Permesilo"
+
+msgid "gempub.meta.author"
+msgstr "Aŭtoro"
+
+msgid "gempub.meta.pub"
+msgstr "Eldonita"
+
+msgid "gempub.meta.version"
+msgstr "Versio"
+
+msgid "lang.pl"
+msgstr "Pola"
+
+msgid "close"
+msgstr "Fermi"
+
+msgid "menu.openfile"
+msgstr "Malfermi dosieron…"
+
+# Inline download status message.
+msgid "media.download.warnclose"
+msgstr "La ŝarĝado estos nuliga se la enmetaĵo estas fermata."
+
+msgid "media.untitled.image"
+msgstr "Bildo"
+
+msgid "media.untitled.audio"
+msgstr "Sonaĵo"
+
+msgid "numbertype.float"
+msgstr "flosanto"
+
+# Used in about:feeds.
+msgid "feeds.list.title"
+msgstr "Donalista eniro"
+
+# Inline download status message.
+msgid "media.download.complete"
+msgstr "La ŝarĝado finita."
+
+msgid "menu.update"
+msgstr "Kontroli ĝisdatigojn…"
+
+#, c-format
+msgid "fontpack.meta.version"
+msgstr "Versio %d"
+
+#, c-format
+msgid "fontpack.disable"
+msgstr "Malebligi \"%s\":n"
+
+#, c-format
+msgid "fontpack.enable"
+msgstr "Ebligi \"%s\":n"
+
+msgid "heading.fontpack.meta"
+msgstr "Tiparoj"
+
+msgid "dlg.dismiss.warning"
+msgstr "Ignori averton"
+
+msgid "menu.newfolder"
+msgstr "Nova dosierujo…"
+
+# keep this short (3x1 horiz layout)
+msgid "menu.selectall"
+msgstr "Elekti ĉiujn"
+
+msgid "menu.copyurl"
+msgstr "Kopii URL"
+
+#, c-format
+msgid "minutes.ago"
+msgid_plural "minutes.ago.n"
+msgstr[0] "antaŭ %d minuto"
+msgstr[1] "antaŭ %d minutoj"
+
+#, c-format
+msgid "hours.ago"
+msgid_plural "hours.ago.n"
+msgstr[0] "antaŭ %d horo"
+msgstr[1] "antaŭ %d horoj"
+
+# used for Preferences on mobile
+msgid "menu.settings"
+msgstr "Agordoj"
+
+# keep this short (3x1 horiz layout)
+msgid "menu.delete"
+msgstr "Forigi"
+
+msgid "sidebar.action.bookmarks.newfolder"
+msgstr "Nova dosierujo"
+
+msgid "sidebar.action.bookmarks.edit"
+msgstr "Redakti"
+
+msgid "num.files"
+msgid_plural "num.files.n"
+msgstr[0] "%u dosiero"
+msgstr[1] "%u dosieroj"
+
+msgid "ident.export"
+msgstr "Eksporti"
+
+#, c-format
+msgid "days.ago"
+msgid_plural "days.ago.n"
+msgstr[0] "antaŭ %d tago"
+msgstr[1] "antaŭ %d tagoj"
+
+# keep this short (3x1 horiz layout)
+msgid "menu.undo"
+msgstr "Malfari"
+
+msgid "sidebar.action.show"
+msgstr "Montri:"
+
+msgid "fontpack.meta.installed"
+msgstr "Instalita"
+
+msgid "gempub.cover.aboutbook"
+msgstr "Pri ĉi tiu libro"
+
+msgid "gempub.cover.untitled"
+msgstr "Sentitola libro"
+
+#, c-format
+msgid "fontpack.install"
+msgstr "Instali \"%s\""
+
+#, c-format
+msgid "fontpack.upgrade"
+msgstr "Ĝisdatigi \"%s\" al versio %d"
+
+msgid "error.cgi"
+msgstr "CGI-eraro"
+
+msgid "error.gone"
+msgstr "Forigita"
+
+msgid "dlg.fontpack.delete"
+msgstr "Forigi tiparpakaĵon"
+
+msgid "heading.fontpack.delete"
+msgstr "Forigi tiparpakaĵon"
+
+msgid "fontpack.meta.notinstalled"
+msgstr "Ne instalita"
+
+# Used in the desktop Help menu.
+msgid "menu.aboutapp"
+msgstr "Pri Lagrange"
+
+msgid "dlg.addfolder.defaulttitle"
+msgstr "Nova dosierujo"
+
+# used on mobile
+msgid "heading.settings"
+msgstr "Agordoj"
+
+msgid "prefs.linewidth"
+msgstr "Linia larĝo:"
+
+msgid "heading.bookmark.edit"
+msgstr "Redakti legosignon"
+
+msgid "heading.file.delete"
+msgstr "Forigi dosieron"
+
+msgid "dlg.file.delete"
+msgstr "Forigi"
+
+msgid "heading.bookmark.add"
+msgstr "Aldoni legosignon"
+
+msgid "bookmark.untag.home"
+msgstr "Forigi hejmpaĝon"
+
+msgid "reload.onceperday"
+msgstr "Unufoje tage"
+
+msgid "heading.upload.file"
+msgstr "Dosiero"
+
+msgid "heading.upload.id"
+msgstr "Rajtigo"
+
+msgid "dlg.upload.id.default"
+msgstr "Defaŭlto"
+
+# used on mobile
+msgid "dlg.upload.file"
+msgstr "Alŝuti dosieron"
+
+msgid "upload.file.name"
+msgstr "Dosiernomo:"
+
+msgid "dlg.bookmark.folder"
+msgstr "Dosierujo:"
+
+msgid "prefs.toolbaraction1"
+msgstr "Butono 1"
+
+msgid "prefs.toolbaraction2"
+msgstr "Butono 2"
+
+msgid "prefs.doctheme.dark"
+msgstr "Malhela temo:"
+
+msgid "prefs.doctheme.name.sepia"
+msgstr "Sepio"
+
+msgid "heading.addfolder"
+msgstr "Aldoni dosierujon"
+
+msgid "prefs.imagestyle.text"
+msgstr "Teksta koloro"
+
+msgid "bookmark.export.title.folder"
+msgstr "Legosignoj"
+
+# used on mobile
+msgid "dlg.upload.pickfile"
+msgstr "Elekti dosieron"
+
+msgid "dlg.newident.more"
+msgstr "Pli…"
+
+msgid "dlg.feed.save"
+msgstr "Konservi agordojn"
+
+msgid "menu.newwindow"
+msgstr "Nova fenestro"
+
+msgid "status.query.tight"
+msgstr "Serĉi"
+
+msgid "heading.confirm.bookmarks.delete"
+msgstr "Forigi legosignojn"
+
+msgid "pageinfo.settings"
+msgstr "Agordoj"
+
+msgid "sitespec.accept"
+msgstr "Konservi agordojn"
+
+msgid "link.file.delete"
+msgstr "Forigi dosieron"
+
+msgid "import.userdata.bookmarks"
+msgstr "Legosignoj:"
+
+msgid "import.userdata.history"
+msgstr "Historio:"
+
+msgid "heading.upload.text"
+msgstr "Teksto"
+
+msgid "upload.mime"
+msgstr "MIME-tipo:"
+
+# Mobile subheading in the Upload dialog.
+msgid "upload.url"
+msgstr "URL"
+
+# Mobile subheading: buttons for entering uploaded data.
+msgid "upload.content"
+msgstr "Enhavo"
+
+msgid "dlg.upload.send"
+msgstr "Alŝuti"
+
+msgid "heading.translate"
+msgstr "Traduki paĝon"
+
+msgid "dlg.addfolder"
+msgstr "Aldoni dosierujon"
+
+msgid "prefs.uilayout"
+msgstr "Aranĝo:"
+
+msgid "prefs.accent.red"
+msgstr "Ruĝa"
+
+msgid "prefs.accent.green"
+msgstr "Verda"
+
+msgid "prefs.accent.blue"
+msgstr "Blua"
+
+msgid "prefs.accent.gray"
+msgstr "Griza"
+
+msgid "prefs.returnkey.linebreak"
+msgstr "Linisalto"
+
+msgid "prefs.animate"
+msgstr "Movbildoj:"
+
+msgid "prefs.doctheme.light"
+msgstr "Hela temo:"
+
+msgid "prefs.imagestyle.grayscale"
+msgstr "Grizoskalo"
+
+msgid "prefs.font.heading"
+msgstr "Titoloj:"
+
+msgid "prefs.font.mono"
+msgstr "Antaŭformatita:"
+
+# Color of the text foreground, i.e., the characters.
+msgid "prefs.gemtext.ansi.fg"
+msgstr "Teksta koloro"
+
+# Color of text background.
+msgid "prefs.gemtext.ansi.bg"
+msgstr "Fona koloro"
+
+msgid "prefs.gemtext.ansi.fontstyle"
+msgstr "Tipara fasono"
+
+msgid "prefs.font.smooth"
+msgstr "Glatigo:"
+
+msgid "prefs.ca.file"
+msgstr "CA-dosiero:"
+
+msgid "heading.ident.delete"
+msgstr "Forigi identecon"
+
+msgid "upload.id"
+msgstr "Identeco:"
+
+msgid "dlg.spartan.upload"
+msgstr "Malfermi redaktilon…"

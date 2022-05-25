@@ -1,0 +1,135 @@
+```LAGRANGE
+           __   __             __   ___
+|     /\  / _` |__)  /\  |\ | / _` |__
+|___ /~~\ \__> |  \ /~~\ | \| \__> |___
+
+```
+# Release notes
+
+## 1.13 (Beta 6)
+* Enabled audio output. WAV and Ogg Vorbis decoding is supported in this build. NOTE: At the moment, playback is not supported when app is in the background, or when the screen is locked. Also, playback may not start if there is already an active player on the page.
+* Fixed showing error page for an empty server response.
+* Fixes for Spartan: query strings, input prompt default content, empty paths.
+* Added Spartan URL handler.
+
+## 1.13 (Beta 5)
+New features:
+* URL field indicator 🔖 that shows if there's a bookmark for the current page. Clicking on the indicator opens the Add/Edit Bookmark dialog. The indicator is shown in landscape mode.
+* Support for the Spartan protocol. Prompt lines will open an input dialog for submitting text. This can be expanded to the full upload dialog using which a file can be uploaded, too.
+* Reopening the last closed tab.
+* Page context menu item "View as Plain Text".
+* Option to view Markdown as source or as a Gemtext conversion (default: as source).
+* Checking server certificates using a bundled root CA file, for instance when the server is using a Let's Encrypt certificate.
+* WebP image decoding.
+
+Changes and enhancements:
+* Updated Noto Emoji font with support for Unicode 14. There should be no more missing Emoji glyphs.
+* When bookmarking a page, show the Edit Bookmark dialog if there's already a bookmark for the URL. The Edit Bookmark dialog has a new Duplicate button for actually making a duplicate bookmark.
+* Markdown documents support horizontal rules.
+
+Fixes:
+* Show a proper error page if server closes the connection before a header is fully received.
+* Sidebar page outline not updated when the current tab changes.
+
+## 1.12 (Beta 4)
+* Use system-provided file pickers for opening/saving files.
+* Selecting a file for importing a client certificate.
+* Selecting a file for uploading.
+* Importing exported user data archives.
+* Settings: Added "Export User Data".
+* Feeds: Added "Mark Below as Read".
+* No more extra fields in bookmark dialog when editing a folder.
+* Fixed invalid contents appearing in the overscroll areas of lists.
+
+## 1.12 (Beta 3)
+* Fixed possible crash when opening Settings or focusing the URL field.
+* Fixed incorrect tab bar position after dismissing the onscreen keyboard.
+* Fixed pasting URLs: percent-encoded reserved characters should not be decoded.
+* Fixed saving of the "Hide toolbar on scroll" setting.
+
+## 1.12 (Beta 2)
+* Fixed entered text being ignored on some devices/Android releases.
+* Fixed an issue with input prompts. If the prompt was reopened quickly, the entered text would be ignored.
+
+## 1.12 (Beta 1)
+* Input fields use the operating system's native text editors.
+* Colors of the status bar and the device navigation bar change depending on UI/theme colors.
+* Adjusted scrolling behavior to be more like regular Android scrolling.
+* Changed appearance of many dialogs to use a card layout instead of fullscreen.
+* Input prompts appear next to the keyboard, putting action buttons more within reach.
+* Added Import and Create actions on the Identities page in Settings.
+* Adjusted UI layout of Settings. The title of the current page appears in the top bar, together with any relevant actions.
+* Changed appearance of the pull down indicator.
+* Fixed glitches with showing and hiding lookup results.
+* Fixed incorrect document width after changing orientation from landscape to portrait.
+
+## 1.12 (Alpha 7)
+* Roboto is the new default content/UI font.
+* Added option to move the URL field and/or the tab bar at the bottom.
+* Toggles use symbols instead of YES/NO.
+* UI uses only one accent color at a time.
+* Added new UI accent colors: Red, Green, Blue, Gray.
+* Added new content theme "Oceanic" with support for both dark and light modes.
+* Adjusted generated palettes of Colorful Dark/Light.
+* Improved the Sepia theme, and added a dark mode variant.
+* Added style option to justify long paragraphs.
+* Text renderer uses additional subpixel offsets with lower-density displays.
+* Text rendering optimizations: avoid repeated shaping of the same text.
+* Fixed occasional small gaps between glyph backgrounds.
+* Fixed problems with marking feed entries as read/unread.
+* Fixed issues with focused input fields.
+
+## 1.11 (Alpha 6)
+⚠️ Downgrading back to v1.10 causes all site-specific themes to be forgotten.
+
+New features:
+* Site-specific settings dialog: theme customization and showing ANSI escape warnings. The custom theme is based on a "seed string" chosen by the user.
+* Fontpack search. Fonts in the skyjake.fi font library have been indexed based on all the glyphs they provide, so one can look up which fontpacks provide any missing glyphs.
+* "Tab width" setting (default: 8). This controls how TAB characters are displayed on pages.
+* Setting for maximum valid URI length on 'text/gemini' link lines.
+* Option to show images decoded from data URLs immediately after loading a page. This is limited to JPEG, PNG, WebP, and GIF (no animations).
+* TLS session caching: reduces the need for redundant handshaking by keeping old TLS sessions cached for 10 minutes.
+* UI language for Italian.
+
+Changes and enhancements:
+* The input prompt dialog saves entered text persistently, just like the Upload dialog. This prevents losing text if the dialog is closed accidentally.
+* The missing glyphs warning dialog now shows a list of the missing code points.
+* Abbreviate font pack descriptions on "about:fonts". The full description is shown when viewing a single fontpack.
+* The active tab button uses the theme background color if the page color theme has a bright colorful background to avoid clashing with the UI accent color.
+* Adjusted colors of the Gray and Black page themes.
+* Added additional (small) variations to theme hues.
+* Data URLs have their own link icon.
+
+Fixes:
+* Incorrect behavior and UI glitches related to data URLs. The UI will now omit the encoded part of data URLs.
+* Occasional mismatch between page and banner backgrounds. It was due to loss of precision when converting colors to 8-bit RGB.
+* TAB characters are no longer forcibly normalized to spaces.
+* Pasting LF characters in the URL field should not be possible.
+
+## 1.10 (Alpha 5)
+* Fixed cancelling an input query. Now pressing Cancel will navigate back to the previous page as intended.
+* Gopher: Fixed navigating to parent. Set item type to 1 to show a gophermap and not the plain source.
+* Updated Smol Emoji: added the rest of Unicode 8 Emoji glyphs.
+
+## 1.10 (Alpha 4)
+* Save downloads to the external storage so they're accessible from a file manager.
+* Handle Gemini, Gopher and Finger URIs opened from other apps.
+* Back button dismisses UI panels/dialogs when appropriate instead of navigating back.
+
+## 1.10 (Alpha 3)
+* Added Android-specific release notes.
+* Added Settings > UI > Toolbar Actions: customize the two leftmost phone toolbar buttons.
+* Show build version in Settings > About.
+* Changed return key behavior to insert newlines where possible.
+* Fixed sizing of the UI when the device has on-screen system keys.
+* Fixed the copy/paste menu staying hidden behind the keyboard.
+* Fixed system Auto-Rotate setting not locking the screen orientation.
+
+## 1.10 (Alpha 2)
+* Upgraded SDL to 2.0.18, which fixed a lot of stability issues.
+* Added native binaries for arm64, x86, and x86_64.
+* Enabled bidirectional text and complex scripts (with HarfBuzz and FriBidi).
+* Enabled switching to landscape orientation.
+
+## 1.10 (Alpha 1)
+Initial test build with SDL 2.0.5 and 32-bit ARM binaries. It works, but barely.

@@ -1,0 +1,2478 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
+"POT-Creation-Date: 2021-03-23 09:09+0000\n"
+"PO-Revision-Date: 2022-05-24 11:55+0000\n"
+"Last-Translator: Weblate Admin <jaakko.keranen@iki.fi>\n"
+"Language-Team: Finnish <http://weblate.skyjake.fi/projects/lagrange/ui/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.1\n"
+
+msgid "about.logo"
+msgstr "ASCII-kuva: sana \"Lagrange\" kirjoitettuna isolla fontilla"
+
+msgid "about.tagline"
+msgstr "Kaunis Gemini-selain"
+
+msgid "about.version"
+msgstr "Versio"
+
+msgid "about.powered"
+msgstr "SDL 2:n, OpenSSL:n ja ☕️:n voimalla"
+
+msgid "cancel"
+msgstr "Peruuta"
+
+msgid "dismiss"
+msgstr "Takaisin"
+
+msgid "dlg.message.ok"
+msgstr "Jatketaan"
+
+msgid "dlg.default"
+msgstr " OK "
+
+msgid "toggle.yes"
+msgstr "Kyllä"
+
+msgid "toggle.no"
+msgstr "Ei"
+
+msgid "menu.title.file"
+msgstr "Tiedosto"
+
+msgid "menu.title.edit"
+msgstr "Muokkaa"
+
+msgid "menu.title.view"
+msgstr "Näkymä"
+
+msgid "menu.title.bookmarks"
+msgstr "Kirjanmerkit"
+
+msgid "menu.title.identity"
+msgstr "Identiteetti"
+
+msgid "menu.title.help"
+msgstr "Ohje"
+
+msgid "menu.newtab"
+msgstr "Uusi välilehti"
+
+msgid "menu.closetab"
+msgstr "Sulje välilehti"
+
+msgid "menu.closetab.other"
+msgstr "Sulje toiset välilehdet"
+
+msgid "menu.closetab.left"
+msgstr "Sulje välilehdet vasemmalla"
+
+msgid "menu.closetab.right"
+msgstr "Sulje välilehdet oikealla"
+
+msgid "menu.duptab"
+msgstr "Monista välilehti"
+
+msgid "menu.openlocation"
+msgstr "Avaa sijainti…"
+
+msgid "menu.find"
+msgstr "Etsi sivulta"
+
+msgid "macos.menu.find"
+msgstr "Etsi"
+
+msgid "menu.save.files"
+msgstr "Tallenna tiedostoon"
+
+msgid "menu.save.downloads"
+msgstr "Tallenna latauskansioon"
+
+msgid "menu.copy.source"
+msgstr "Kopioi lähdeteksti"
+
+msgid "menu.sidebar"
+msgstr "Näytä/piilota sivupaneeli"
+
+msgid "menu.sidebar.left"
+msgstr "Näytä/piilota vasen sivupaneeli"
+
+msgid "menu.sidebar.right"
+msgstr "Näytä/piilota oikea sivupaneeli"
+
+msgid "menu.zoom.in"
+msgstr "Suurenna"
+
+msgid "menu.zoom.out"
+msgstr "Pienennä"
+
+msgid "menu.zoom.reset"
+msgstr "Oletuskoko"
+
+msgid "menu.bookmarks.list"
+msgstr "Luettele kaikki kirjanmerkit"
+
+msgid "macos.menu.bookmarks.list"
+msgstr "Luettele kaikki"
+
+msgid "menu.bookmarks.bytag"
+msgstr "Luettele kirjanmerkit avainsanoilla"
+
+msgid "macos.menu.bookmarks.bytag"
+msgstr "Luettele avainsanoilla"
+
+msgid "menu.bookmarks.bytime"
+msgstr "Luettele kirjanmerkit luontijärjestyksessä"
+
+msgid "macos.menu.bookmarks.bytime"
+msgstr "Luettele luontijärjestyksessä"
+
+msgid "menu.feeds.entrylist"
+msgstr "Näytä syötteiden artikkelit"
+
+msgid "menu.preferences"
+msgstr "Asetukset…"
+
+msgid "menu.help"
+msgstr "Ohje"
+
+msgid "menu.releasenotes"
+msgstr "Versiohistoria"
+
+msgid "menu.quit"
+msgstr "Sulje Lagrange"
+
+msgid "menu.cut"
+msgstr "Leikkaa"
+
+msgid "menu.copy"
+msgstr "Kopioi"
+
+msgid "menu.paste"
+msgstr "Liimaa"
+
+msgid "menu.copy.pagelink"
+msgstr "Kopioi sivun linkki"
+
+msgid "menu.show.bookmarks"
+msgstr "Näytä kirjanmerkit"
+
+msgid "menu.show.feeds"
+msgstr "Näytä syötteet"
+
+msgid "menu.show.history"
+msgstr "Näytä historia"
+
+msgid "menu.show.identities"
+msgstr "Näytä identiteetit"
+
+msgid "menu.show.outline"
+msgstr "Näytä sivun rakenne"
+
+msgid "menu.back"
+msgstr "Mene takaisin"
+
+msgid "menu.forward"
+msgstr "Mene eteenpäin"
+
+msgid "menu.parent"
+msgstr "Mene ylähakemistoon"
+
+msgid "menu.root"
+msgstr "Mene juureen"
+
+msgid "menu.reload"
+msgstr "Lataa sivu uudestaan"
+
+msgid "menu.autoreload"
+msgstr "Aseta automaattinen lataus…"
+
+msgid "menu.page.bookmark"
+msgstr "Lisää kirjanmerkki…"
+
+msgid "menu.page.subscribe"
+msgstr "Tilaa sivu syötteenä…"
+
+msgid "menu.aboutpages"
+msgstr "About-sivut"
+
+msgid "menu.about"
+msgstr "Tietoja: Lagrange"
+
+msgid "menu.aboutapp"
+msgstr "Tietoja: Lagrange"
+
+msgid "panel.back"
+msgstr "Takaisin"
+
+msgid "menu.debug"
+msgstr "Virheenetsintätietoja"
+
+msgid "menu.import.links"
+msgstr "Tuo kaikki linkit sivulla…"
+
+msgid "menu.page.import"
+msgstr "Tuo linkit kirjanmerkkeinä…"
+
+msgid "menu.page.translate"
+msgstr "Käännä…"
+
+msgid "menu.page.copyurl"
+msgstr "Kopioi sivun URL"
+
+msgid "menu.page.copysource"
+msgstr "Kopioi sivun lähde"
+
+msgid "menu.bookmarks.refresh"
+msgstr "Päivitä etäkirjanmerkit"
+
+msgid "menu.feeds.refresh"
+msgstr "Päivitä syötteet"
+
+msgid "menu.identity.new"
+msgstr "Uusi identiteetti…"
+
+msgid "menu.identity.import"
+msgstr "Tuo…"
+
+msgid "menu.identity.notactive"
+msgstr "Ei aktiivista identiteettiä"
+
+msgid "sidebar.bookmarks"
+msgstr "Kirjanmerkit"
+
+msgid "sidebar.feeds"
+msgstr "Syötteet"
+
+msgid "sidebar.history"
+msgstr "Historia"
+
+msgid "sidebar.identities"
+msgstr "Identiteetit"
+
+msgid "sidebar.outline"
+msgstr "Rakenne"
+
+msgid "sidebar.unread"
+msgid_plural "sidebar.unread.n"
+msgstr[0] "lukematon"
+msgstr[1] "lukematonta"
+
+msgid "toolbar.outline"
+msgstr "Sivun rakenne"
+
+msgid "hint.findtext"
+msgstr "etsi teksti sivulta"
+
+msgid "status.query"
+msgstr "Kysely"
+
+msgid "status.feeds"
+msgstr "Syötteiden päivitys"
+
+msgid "mb"
+msgstr "Mt"
+
+msgid "kb"
+msgstr "kt"
+
+msgid "bytes"
+msgstr "tavua"
+
+msgid "page.timestamp"
+msgstr ""
+"Vastaanotettu %H:%M\n"
+"%b %d, %Y"
+
+msgid "sidebar.date.thisyear"
+msgstr "%b %d"
+
+msgid "sidebar.date.otheryear"
+msgstr "%b %d, %Y"
+
+msgid "feeds.today"
+msgstr "Tänään"
+
+msgid "feeds.entry.newtab"
+msgstr "Avaa artikkeli uuteen välilehteen"
+
+msgid "feeds.entry.markread"
+msgstr "Merkitse luetuksi"
+
+msgid "feeds.entry.markunread"
+msgstr "Merkitse lukemattomaksi"
+
+msgid "sidebar.entry.bookmark"
+msgstr "Lisää kirjanmerkki…"
+
+msgid "feeds.entry.bookmark"
+msgstr "Lisää kirjanmerkki…"
+
+msgid "feeds.entry.openfeed"
+msgstr "Avaa syötesivu"
+
+msgid "feeds.edit"
+msgstr "Muokkaa syötettä…"
+
+msgid "feeds.unsubscribe"
+msgstr "Lopeta tilaus…"
+
+msgid "feeds.markallread"
+msgstr "Merkitse kaikki luetuksi"
+
+msgid "feeds.refresh"
+msgstr "Päivitä syötteet"
+
+msgid "menu.opentab"
+msgstr "Avaa uuteen välilehteen"
+
+msgid "menu.opentab.background"
+msgstr "Avaa taustalle välilehteen"
+
+msgid "menu.edit"
+msgstr "Muokkaa…"
+
+msgid "menu.dup"
+msgstr "Monista…"
+
+msgid "menu.copyurl"
+msgstr "Kopioi URL"
+
+msgid "menu.forgeturl"
+msgstr "Unohda URL"
+
+msgid "history.clear"
+msgstr "Tyhjennä historia…"
+
+msgid "heading.history.clear"
+msgstr "Tyhjennä historia"
+
+msgid "dlg.confirm.history.clear"
+msgstr "Haluatko varmasti tyhjentää selaushistorian?"
+
+msgid "dlg.history.clear"
+msgstr "Tyhjennä historia"
+
+msgid "bookmark.tag.home"
+msgstr "Käytä kotisivuna"
+
+msgid "bookmark.tag.sub"
+msgstr "Tilaa syötteenä"
+
+msgid "bookmark.tag.remote"
+msgstr "Käytä etäkirjanmerkkien lähteenä"
+
+msgid "bookmark.untag.home"
+msgstr "Älä käytä kotisivuna"
+
+msgid "bookmark.untag.sub"
+msgstr "Lopeta tilaus"
+
+msgid "bookmark.untag.remote"
+msgstr "Älä käytä etäkirjanmerkkien lähteenä"
+
+msgid "bookmark.delete"
+msgstr "Poista kirjanmerkki"
+
+msgid "bookmarks.reload"
+msgstr "Päivitä etäkirjanmerkit"
+
+msgid "ident.using"
+msgstr "Käytössä tällä sivulla"
+
+msgid "ident.notused"
+msgstr "Ei käytössä"
+
+msgid "ident.usedonurls"
+msgid_plural "ident.usedonurls.n"
+msgstr[0] "Käytössä %u URL:ssa"
+msgstr[1] "Käytössä %u URL:ssa"
+
+msgid "ident.temporary"
+msgstr "Tilapäinen"
+
+msgid "ident.expiry"
+msgstr "Päättyy %b %d, %Y"
+
+msgid "ident.use"
+msgstr "Käytä tällä sivulla"
+
+msgid "ident.stopuse"
+msgstr "Lopeta käyttö tällä sivulla"
+
+msgid "ident.stopuse.all"
+msgstr "Lopeta käyttö kaikkialla"
+
+msgid "ident.showuse"
+msgstr "Näytä käyttö"
+
+msgid "heading.ident.use"
+msgstr "Identiteetin käyttö"
+
+msgid "menu.edit.notes"
+msgstr "Muokkaa muistiinpanoja…"
+
+msgid "heading.ident.notes"
+msgstr "Identiteetin muistiinpanot"
+
+msgid "dlg.ident.notes"
+msgstr "Muistiinpanot liittyen identiteettiin %s:"
+
+msgid "ident.fingerprint"
+msgstr "Kopioi sormenjälki"
+
+msgid "ident.delete"
+msgstr "Poista identiteetti…"
+
+msgid "heading.ident.delete"
+msgstr "Poista identiteetti"
+
+msgid "dlg.confirm.ident.delete"
+msgstr ""
+"Oletko varma, että haluat poistaa identiteetin %s%s%s mukaanlukien sen "
+"sertifikaatin ja salaisen avaimen?"
+
+msgid "dlg.ident.delete"
+msgstr "Poista identiteetti ja tiedostot"
+
+msgid "sidebar.empty.idents"
+msgstr "Ei identiteettejä"
+
+msgid "ident.gotohelp"
+msgstr "Katso %sOhjeesta%s lisätietoja TLS-asiakassertifikaateista."
+
+msgid "heading.unsub"
+msgstr "Poista tilaus"
+
+msgid "dlg.confirm.unsub"
+msgstr "Haluatko varmasti poistaa syötteen \"%s\" tilauksen?"
+
+msgid "dlg.unsub"
+msgstr "Poista tilaus"
+
+msgid "error.unsupported.suggestsave"
+msgstr ""
+"Voit tallentaa sen latauskansioon: paina %s tai valitse \"%s\" valikosta."
+
+msgid "heading.pageinfo"
+msgstr "Sivun tiedot"
+
+msgid "pageinfo.header.cached"
+msgstr "(sisältö välimuistista)"
+
+msgid "pageinfo.cert.status"
+msgstr "Sertifikaatin tila:"
+
+msgid "pageinfo.cert.ca.verified"
+msgstr "CA:n varmentama"
+
+msgid "pageinfo.cert.ca.unverified"
+msgstr "Ei CA:n varmentama"
+
+msgid "pageinfo.cert.notexpired"
+msgstr "Voimassa"
+
+msgid "pageinfo.cert.expired"
+msgstr "Vanhentunut"
+
+msgid "pageinfo.cert.trusted"
+msgstr "Luotettu"
+
+msgid "pageinfo.cert.untrusted"
+msgstr "Ei luotettu"
+
+msgid "pageinfo.domain.match"
+msgstr "Verkkotunnus täsmää"
+
+msgid "pageinfo.domain.mismatch"
+msgstr "Verkkotunnus ei täsmää"
+
+msgid "dlg.cert.trust"
+msgstr "Luota"
+
+msgid "dlg.cert.fingerprint"
+msgstr "Kopioi sormenjälki"
+
+msgid "dlg.input.prompt"
+msgstr "Anna syöte sivulle \"%s\":"
+
+msgid "dlg.input.send"
+msgstr "Lähetä"
+
+msgid "heading.save"
+msgstr "Tiedosto tallennettu"
+
+msgid "heading.save.incomplete"
+msgstr "Sivun lataus kesken"
+
+msgid "dlg.save.incomplete"
+msgstr "Sivun sisällön lataus ei ole vielä päättynyt."
+
+msgid "dlg.save.size"
+msgstr "Koko:"
+
+msgid "heading.save.error"
+msgstr "Virhe tallentaessa"
+
+msgid "heading.import.bookmarks"
+msgstr "Tuo kirjanmerkkejä"
+
+msgid "dlg.import.found"
+msgid_plural "dlg.import.found.n"
+msgstr[0] "Sivulta löytyy yksi uusi linkki."
+msgstr[1] "Sivulta löydettiin %d uutta linkkiä."
+
+msgid "dlg.import.add"
+msgid_plural "dlg.import.add.n"
+msgstr[0] "%sLisää kirjanmerkki"
+msgstr[1] "%sLisää %d kirjanmerkkiä"
+
+msgid "dlg.import.notnew"
+msgstr "Kaikki sivun linkit on jo kirjanmerkkeinä."
+
+msgid "heading.autoreload"
+msgstr "Automaattinen lataus"
+
+msgid "dlg.autoreload"
+msgstr "Valitse välilehden uudelleenlataustiheys."
+
+msgid "link.newtab"
+msgstr "Avaa linkki uuteen välilehteen"
+
+msgid "link.newtab.background"
+msgstr "Avaa linkki taustalle välilehteen"
+
+msgid "link.browser"
+msgstr "Avaa linkki oletusselaimessa"
+
+msgid "link.noproxy"
+msgstr "Avaa ilman välipalvelinta"
+
+msgid "link.copy"
+msgstr "Kopioi linkki"
+
+msgid "link.bookmark"
+msgstr "Tee kohteesta kirjanmerkki…"
+
+msgid "link.download"
+msgstr "Lataa kohde tiedostoon"
+
+msgid "heading.openlink"
+msgstr "Avaa linkki"
+
+msgid "dlg.openlink.confirm"
+msgstr ""
+"Avaa tämä linkki oletusselaimessa?\n"
+"%s%s"
+
+msgid "dlg.openlink"
+msgstr "Avaa linkki"
+
+msgid "heading.certwarn"
+msgstr "SERTIFIKAATTIVAROITUS"
+
+msgid "dlg.certwarn.mayberenewed"
+msgid_plural "dlg.certwarn.mayberenewed.n"
+msgstr[0] ""
+"Vastaanotettu sertifikaatti voi olla hiljattain uusittu — se on merkitty "
+"oikealle verkkotunnukselle ja on voimassa. Tällä hetkellä luottamamme "
+"sertifikaatin voimassaolo päätty %s, yhden päivän kuluttua."
+msgstr[1] ""
+"Vastaanotettu sertifikaatti voi olla hiljattain uusittu — se on merkitty "
+"oikealle verkkotunnukselle ja on voimassa. Tällä hetkellä luottamamme "
+"sertifikaatin voimassaolo päätty %s, %d päivän kuluttua."
+
+msgid "dlg.certwarn.different"
+msgstr ""
+"Vastaanotettu sertifikaatti on voimassa, mutta eri kuin luottamamme "
+"sertifikaatti."
+
+msgid "dlg.certwarn.expired"
+msgstr "Vastaanotettu sertifikaatti on vanhentunut %s."
+
+msgid "dlg.certwarn.domain"
+msgstr ""
+"Vastaanotettu sertifikaatti on väärälle verkkotunnukselle (%s). Tämä voi "
+"johtua virheestä palvelimen asetuksissa."
+
+msgid "dlg.certwarn.domain.expired"
+msgstr ""
+"Vastaanotettu sertifikaatti on vanhentunut JA merkitty väärälle "
+"verkkotunnukselle."
+
+msgid "link.hint.audio"
+msgstr "Ääni"
+
+msgid "link.hint.image"
+msgstr "Kuva"
+
+msgid "bookmark.title.blank"
+msgstr "Tyhjä sivu"
+
+msgid "heading.translate"
+msgstr "Käännä sivu"
+
+msgid "dlg.translate.unavail"
+msgstr "Palvelu ei ole toiminnassa"
+
+msgid "dlg.translate.fail"
+msgstr "Pyyntö epäonnistui"
+
+msgid "dlg.translate"
+msgstr "Käännä"
+
+msgid "dlg.translate.from"
+msgstr "Kielestä:"
+
+msgid "dlg.translate.to"
+msgstr "Kielelle:"
+
+msgid "lang.ar"
+msgstr "Arabia"
+
+msgid "lang.zh"
+msgstr "Kiina"
+
+msgid "lang.en"
+msgstr "Englanti"
+
+msgid "lang.fr"
+msgstr "Ranska"
+
+msgid "lang.de"
+msgstr "Saksa"
+
+msgid "lang.hi"
+msgstr "Hindi"
+
+msgid "lang.it"
+msgstr "Italia"
+
+msgid "lang.ja"
+msgstr "Japani"
+
+msgid "lang.pt"
+msgstr "Portugali"
+
+msgid "lang.ru"
+msgstr "Venäjä"
+
+msgid "lang.es"
+msgstr "Espanja"
+
+msgid "heading.newident"
+msgstr "Uusi identiteetti"
+
+msgid "dlg.newident.rsa.selfsign"
+msgstr "Luodaan itse allekirjoitettu 2048-bittinen RSA-sertifikaatti."
+
+msgid "dlg.newident.until"
+msgstr "Voimassa:"
+
+msgid "hint.newident.date"
+msgstr "VVVV tai VVVV-KK-PP"
+
+msgid "hint.newident.optional"
+msgstr "vapaaehtoinen"
+
+msgid "dlg.newident.commonname"
+msgstr "Yleisnimi:"
+
+msgid "dlg.newident.temp"
+msgstr "Väliaikainen:"
+
+msgid "dlg.newident.notsaved"
+msgstr "ei talletata tiedostoon"
+
+msgid "dlg.newident.email"
+msgstr "Sähköposti:"
+
+msgid "dlg.newident.userid"
+msgstr "Käyttäjätunnus:"
+
+msgid "dlg.newident.domain"
+msgstr "Verkkotunnus:"
+
+msgid "dlg.newident.org"
+msgstr "Järjestö:"
+
+msgid "dlg.newident.country"
+msgstr "Maa:"
+
+msgid "dlg.newident.create"
+msgstr "Luo identiteetti"
+
+msgid "heading.feedcfg"
+msgstr "Syötteen asetukset"
+
+msgid "heading.subscribe"
+msgstr "Tilaa sivu syötteenä"
+
+msgid "dlg.feed.title"
+msgstr "Otsikko:"
+
+msgid "dlg.feed.entrytype"
+msgstr "Artikkelin tyyppi:"
+
+msgid "dlg.feed.type.gemini"
+msgstr "VVVV-KK-PP linkit"
+
+msgid "dlg.feed.type.headings"
+msgstr "Uudet otsakkeet"
+
+msgid "dlg.feed.save"
+msgstr "Talleta asetukset"
+
+msgid "dlg.feed.sub"
+msgstr "Tilaa"
+
+msgid "heading.bookmark.add"
+msgstr "Lisää kirjanmerkki"
+
+msgid "heading.bookmark.edit"
+msgstr "Muokkaa kirjanmerkkiä"
+
+msgid "dlg.bookmark.save"
+msgstr "Talleta kirjanmerkki"
+
+msgid "dlg.bookmark.title"
+msgstr "Otsikko:"
+
+msgid "dlg.bookmark.url"
+msgstr "URL:"
+
+msgid "dlg.bookmark.tags"
+msgstr "Avainsanat:"
+
+msgid "dlg.bookmark.icon"
+msgstr "Kuvake:"
+
+msgid "heading.prefs"
+msgstr "Asetukset"
+
+msgid "heading.prefs.certs"
+msgstr "Sertifikaatit"
+
+msgid "heading.prefs.colors"
+msgstr "Värit"
+
+msgid "heading.prefs.fonts"
+msgstr "Kirjasinlajit"
+
+msgid "heading.prefs.general"
+msgstr "Yleiset"
+
+msgid "heading.prefs.interface"
+msgstr "UI"
+
+msgid "heading.prefs.keys"
+msgstr "Näppäimet"
+
+msgid "heading.prefs.network"
+msgstr "Verkko"
+
+msgid "heading.prefs.paragraph"
+msgstr "Kappale"
+
+msgid "heading.prefs.pagecontent"
+msgstr "Sivun värit"
+
+msgid "heading.prefs.proxies"
+msgstr "Välipalvelimet"
+
+msgid "heading.prefs.scrolling"
+msgstr "Vieritys"
+
+msgid "heading.prefs.sizing"
+msgstr "Koko"
+
+msgid "heading.prefs.widelayout"
+msgstr "Leveä ulkoasu"
+
+msgid "heading.prefs.style"
+msgstr "Tyyli"
+
+msgid "heading.prefs.userinterface"
+msgstr "Käyttöliittymä"
+
+msgid "prefs.downloads"
+msgstr "Latauskansio:"
+
+msgid "prefs.searchurl"
+msgstr "Kysely-URL:"
+
+msgid "prefs.hoverlink"
+msgstr "Käytä URL kursorin alla:"
+
+msgid "prefs.centershort"
+msgstr "Pystykeskitys:"
+
+msgid "prefs.smoothscroll"
+msgstr "Pehmeä vieritys:"
+
+msgid "prefs.imageloadscroll"
+msgstr "Lataa kuva vieritettäessä:"
+
+msgid "prefs.hidetoolbarscroll"
+msgstr "Piilota alapalkki vieritettäessä:"
+
+msgid "prefs.ostheme"
+msgstr "Käytä järjestelmän teemaa:"
+
+msgid "prefs.theme"
+msgstr "Teema:"
+
+msgid "prefs.theme.black"
+msgstr "Musta"
+
+msgid "prefs.theme.dark"
+msgstr "Tumma"
+
+msgid "prefs.theme.light"
+msgstr "Vaalea"
+
+msgid "prefs.theme.white"
+msgstr "Valkoinen"
+
+msgid "prefs.accent"
+msgstr "Aksenttiväri:"
+
+msgid "prefs.accent.teal"
+msgstr "Sinivihreä"
+
+msgid "prefs.accent.orange"
+msgstr "Oranssi"
+
+msgid "prefs.uiscale"
+msgstr "Skaalauskerroin:"
+
+msgid "prefs.customframe"
+msgstr "Mukautetut reunukset:"
+
+msgid "prefs.retainwindow"
+msgstr "Säilytä sijainti:"
+
+msgid "prefs.sideicon"
+msgstr "Kapselin ikoni:"
+
+msgid "prefs.doctheme.dark"
+msgstr "Tumma teema:"
+
+msgid "prefs.doctheme.light"
+msgstr "Vaalea teema:"
+
+msgid "prefs.doctheme.name.colorfuldark"
+msgstr "Värikäs tumma"
+
+msgid "prefs.doctheme.name.colorfullight"
+msgstr "Värikäs vaalea"
+
+msgid "prefs.doctheme.name.black"
+msgstr "Musta"
+
+msgid "prefs.doctheme.name.gray"
+msgstr "Harmaa"
+
+msgid "prefs.doctheme.name.white"
+msgstr "Valkoinen"
+
+msgid "prefs.doctheme.name.sepia"
+msgstr "Seepia"
+
+msgid "prefs.doctheme.name.highcontrast"
+msgstr "Korkea kontrasti"
+
+msgid "prefs.saturation"
+msgstr "Saturaatio:"
+
+msgid "prefs.headingfont"
+msgstr "Otsakkeet:"
+
+msgid "prefs.font"
+msgstr "Leipäteksti:"
+
+msgid "prefs.mono"
+msgstr "Tasalevyinen leipäteksti:"
+
+msgid "prefs.mono.gemini"
+msgstr "Gemini"
+
+msgid "prefs.mono.gopher"
+msgstr "Gopher"
+
+msgid "prefs.linewidth"
+msgstr "Rivin leveys:"
+
+msgid "prefs.linewidth.normal"
+msgstr "Normaali"
+
+msgid "prefs.linewidth.fill"
+msgstr "Täytä"
+
+msgid "prefs.quoteicon"
+msgstr "Lainaustyyli:"
+
+msgid "prefs.quoteicon.icon"
+msgstr "\" ikoni"
+
+msgid "prefs.quoteicon.line"
+msgstr "Viiva"
+
+msgid "prefs.biglede"
+msgstr "Suuri 1. kappale:"
+
+msgid "prefs.plaintext.wrap"
+msgstr "Rivitä selväteksti:"
+
+msgid "prefs.decodeurls"
+msgstr "Pura URL-koodaus:"
+
+msgid "prefs.cachesize"
+msgstr "Välimuistin koko:"
+
+msgid "prefs.ca.file"
+msgstr "CA-tiedosto:"
+
+msgid "prefs.ca.path"
+msgstr "CA-polku:"
+
+msgid "prefs.proxy.gemini"
+msgstr "Gemini-välipalvelin:"
+
+msgid "prefs.proxy.gopher"
+msgstr "Gopher-välipalvelin:"
+
+msgid "prefs.proxy.http"
+msgstr "HTTP-välipalvelin:"
+
+msgid "menu.binding.reset"
+msgstr "Palauta oletus"
+
+msgid "menu.binding.clear"
+msgstr "Poista"
+
+msgid "keys.top"
+msgstr "Siirry alkuun"
+
+msgid "keys.bottom"
+msgstr "Siirry loppuun"
+
+msgid "keys.scroll.up"
+msgstr "Vieritä ylöspäin"
+
+msgid "keys.scroll.down"
+msgstr "Vieritä alaspäin"
+
+msgid "keys.scroll.halfpage.up"
+msgstr "Vieritä ylöspäin puoli sivua"
+
+msgid "keys.scroll.halfpage.down"
+msgstr "Vieritä alaspäin puoli sivua"
+
+msgid "keys.scroll.page.up"
+msgstr "Vieritä sivu ylöspäin"
+
+msgid "keys.scroll.page.down"
+msgstr "Vieritä sivu alaspäin"
+
+msgid "keys.back"
+msgstr "Mene takaisin"
+
+msgid "keys.forward"
+msgstr "Mene eteenpäin"
+
+msgid "keys.parent"
+msgstr "Mene yläkansioon"
+
+msgid "keys.root"
+msgstr "Mene kapselin juureen"
+
+msgid "keys.reload"
+msgstr "Lataa sivu uudelleen"
+
+msgid "keys.link.modkey"
+msgstr "Avaa linkki muokkausnäppäimen avulla"
+
+msgid "keys.link.homerow"
+msgstr "Avaa linkki kotirivinäppäimillä"
+
+msgid "keys.link.homerow.newtab"
+msgstr "Avaa linkki uuteen välilehteen kotirivinäppäimillä"
+
+msgid "keys.link.homerow.hover"
+msgstr "Aktivoi linkki kotirivinäppäimillä"
+
+msgid "keys.link.homerow.next"
+msgstr "Seuraava joukko kotirivilinkkejä"
+
+msgid "keys.bookmark.add"
+msgstr "Lisää kirjanmerkki"
+
+msgid "keys.findtext"
+msgstr "Etsi teksti sivulta"
+
+msgid "keys.zoom.in"
+msgstr "Suurenna"
+
+msgid "keys.zoom.out"
+msgstr "Pienennä"
+
+msgid "keys.zoom.reset"
+msgstr "Oletuskoko"
+
+msgid "keys.fullscreen"
+msgstr "Koko ruudun tila"
+
+msgid "keys.tab.new"
+msgstr "Uusi välilehti"
+
+msgid "keys.tab.close"
+msgstr "Sulje välilehti"
+
+msgid "keys.tab.prev"
+msgstr "Edellinen välilehti"
+
+msgid "keys.tab.next"
+msgstr "Seuraava välilehti"
+
+msgid "keys.hoverurl"
+msgstr "Näytä URL kursorin alla"
+
+msgid "heading.certimport"
+msgstr "Tuo identiteetti"
+
+msgid "dlg.certimport.help"
+msgstr ""
+"Liimaa PEM-koodattu sertifikaatti ja/tai salainen avain,\n"
+"tai pudota .crt/.key-tiedosto ikkunaan."
+
+msgid "prefs.uilang"
+msgstr "Kieli:"
+
+msgid "dlg.certimport.notfound"
+msgstr "Sertifikaattia tai salaista avainta ei löytynyt."
+
+msgid "dlg.certimport.notfound.page"
+msgstr "Sivulta ei löytynyt sertifikaattia tai avainta."
+
+msgid "heading.certimport.pasted"
+msgstr "Liimattu leikepöydältä"
+
+msgid "heading.certimport.dropped"
+msgstr "Pudotettu tiedosto"
+
+msgid "dlg.certimport.import"
+msgstr "Tuo"
+
+msgid "dlg.certimport.notes"
+msgstr "Muistiinpanot:"
+
+msgid "hint.certimport.description"
+msgstr "kuvaus"
+
+msgid "dlg.certimport.nocert"
+msgstr "Ei sertifikaattia"
+
+msgid "dlg.certimport.nokey"
+msgstr "Ei salaista avainta"
+
+msgid "lang.fi"
+msgstr "Suomi"
+
+msgid "error.openfile"
+msgstr "Tiedoston avaus epäonnistui"
+
+msgid "error.openfile.msg"
+msgstr ""
+"Pyydettyä tiedostoa ei ole olemassa tai sen avaamiseksi ei ole riittäviä "
+"oikeuksia. Tarkista tiedoston polku."
+
+msgid "error.badresource"
+msgstr "Virheellinen resurssi"
+
+msgid "error.badresource.msg"
+msgstr "Pyydettyä resurssia ei ole olemassa."
+
+msgid "error.unsupported.media"
+msgstr "Sisältötyyppi ei tuettu"
+
+msgid "error.unsupported.protocol"
+msgstr "Protokolla ei tuettu"
+
+msgid "error.unsupported.protocol.msg"
+msgstr "Pyydetty protokolla ei ole tuettu tässä sovelluksessa."
+
+msgid "error.badheader"
+msgstr "Virheellinen otsaketieto"
+
+msgid "error.badredirect"
+msgstr "Virheellinen uudelleenohjaus"
+
+msgid "error.schemeredirect"
+msgstr "Skeeman vaihtava uudelleenohjaus"
+
+msgid "error.schemeredirect.msg"
+msgstr ""
+"Palvelin yritti uudelleenohjata meidät kohteeseen, jonka skeema on eri kuin "
+"lähdeosoitteen skeema. Tässä on kohdelinkki, jotta voit avata sen "
+"manuaalisesti."
+
+msgid "error.manyredirects"
+msgstr "Liian monta uudelleenohjausta"
+
+msgid "error.tls"
+msgstr "Verkko/TLS-virhe"
+
+msgid "error.tls.msg"
+msgstr "Viestintä palvelimen kanssa epäonnistui."
+
+msgid "error.temporary.msg"
+msgstr "Pyyntö epäonnistui, mutta voi onnistua myöhemmin, jos yrität uudelleen."
+
+msgid "error.unavail"
+msgstr "Palvelin ei käytettävissä"
+
+msgid "error.cgi"
+msgstr "CGI-virhe"
+
+msgid "error.cgi.msg"
+msgstr ""
+"Palvelimella tapahtui virhe dynaamisen sisällöntuotannon aikana. Palvelimen "
+"ohjelmisto voi tarvita korjausta."
+
+msgid "error.proxy"
+msgstr "Välipalvelinvirhe"
+
+msgid "error.slowdown"
+msgstr "Hitaammin"
+
+msgid "error.slowdown.msg"
+msgstr "Palvelin on rajoittanut pyyntötiheyttä. Ole hyvä ja odota…"
+
+msgid "error.temporary"
+msgstr "Väliaikainen virhe"
+
+msgid "error.permanent"
+msgstr "Pysyvä virhe"
+
+msgid "error.permanent.msg"
+msgstr ""
+"Pyyntösi epäonnistui ja tulee epäonnistumaan myös jatkossa, jos yrität "
+"uudelleen."
+
+msgid "error.notfound"
+msgstr "Ei löydy"
+
+msgid "error.notfound.msg"
+msgstr "Pyydettyä resurssia ei löydy tällä hetkellä."
+
+msgid "error.gone"
+msgstr "Poistettu"
+
+msgid "error.gone.msg"
+msgstr "Pyydetty resurssi ei ole enää tarjolla."
+
+msgid "error.proxyrefusal"
+msgstr "Välityspyyntö evätty"
+
+msgid "error.badrequest"
+msgstr "Virheellinen pyyntö"
+
+msgid "error.badrequest.msg"
+msgstr "Palvelin ei ymmärtänyt pyyntöäsi."
+
+msgid "error.cert.needed"
+msgstr "Sertifikaatti puuttuu"
+
+msgid "error.cert.needed.msg"
+msgstr "Pyydetty resurssi vaatii tunnistautumisen TLS-asiakassertifikaatilla."
+
+msgid "error.cert.auth"
+msgstr "Sertifikaattia ei sallittu"
+
+msgid "error.cert.invalid"
+msgstr "Virheellinen sertifikaatti"
+
+msgid "error.cert.invalid.msg"
+msgstr "Käytössä oleva asiakassertifikaatti on vanhentunut tai virheellinen."
+
+msgid "error.badstatus"
+msgstr "Tuntematon tilakoodi"
+
+msgid "error.badstatus.msg"
+msgstr ""
+"Palvelin vastasi tilakoodilla, jota ei ole määritelty Gemini-protokollan "
+"spesifikaatiossa. Ehkä palvelin on tulevaisuudesta? Tai vain epäkunnossa."
+
+msgid "error.unsupported.media.msg"
+msgstr "Vastaanotettua sisältöä ei voi toistaa tällä sovelluksella."
+
+msgid "error.badheader.msg"
+msgstr ""
+"Vastaanotettu otsaketieto ei ole Gemini-protokollan spesifikaation mukainen. "
+"Ehkä palvelin on epäkunnossa, tai yritit ottaa yhteyttä palvelimeen, joka ei "
+"tue Gemini-protokollaa."
+
+msgid "error.badredirect.msg"
+msgstr ""
+"Palvelin vastasi uudelleenohjauksella, jossa ei ole kelvollista kohdetta. "
+"Palvelin voi olla epäkunnossa."
+
+msgid "error.manyredirects.msg"
+msgstr ""
+"Olet mahdollisesti juuttunut uudelleenohjaussilmukkaan. Seuraava "
+"uudelleenohjattu kohde on alla, niin voit jatkaa manuaalisesti."
+
+msgid "error.unavail.msg"
+msgstr ""
+"Palvelin ei ole juuri nyt käytettävissä, koska siihen kohdistuu liikaa "
+"liikennettä tai sitä huolletaan. Yritä myöhemmin uudestaan."
+
+msgid "error.proxy.msg"
+msgstr ""
+"Välityspyyntö epäonnistui, koska välipalvelin ei pystynyt suorittamaan "
+"loppuun tapahtumaa kohdepalvelimen kanssa. Ongelma voi liittyä "
+"verkkoyhteyksiin."
+
+msgid "error.proxyrefusal.msg"
+msgstr ""
+"Pyydetty resurssi ei ole palvelimen tarjoamalla verkkotunnuksella eikä "
+"palvelin ota vastaan välityspyyntöjä."
+
+msgid "error.cert.auth.msg"
+msgstr ""
+"Käytössä oleva asiakassertifikaatti on kelvollinen, mutta sille ei ole "
+"myönnetty lupaa pyydettyyn resurssiin."
+
+msgid "lang.zh.hans"
+msgstr "Kiina"
+
+msgid "keys.subscribe"
+msgstr "Tilaa sivu syötteenä"
+
+# Interpret as "Results from bookmarks..."
+msgid "heading.lookup.bookmarks"
+msgstr "KIRJANMERKIT"
+
+# Interpret as "Results from feeds..."
+msgid "heading.lookup.feeds"
+msgstr "SYÖTTEET"
+
+# Interpret as "Results from history..."
+msgid "heading.lookup.history"
+msgstr "HISTORIA"
+
+# Interpret as "Results from page content..."
+msgid "heading.lookup.pagecontent"
+msgstr "SIVUJEN SISÄLTÖ"
+
+# Interpret as "Results from identitites..."
+msgid "heading.lookup.identities"
+msgstr "IDENTITEETIT"
+
+# Interpret as "Other results..."
+msgid "heading.lookup.other"
+msgstr "MUUT"
+
+msgid "num.bytes"
+msgid_plural "num.bytes.n"
+msgstr[0] "%u tavu"
+msgstr[1] "%u tavua"
+
+msgid "reload.never"
+msgstr "Ei koskaan"
+
+msgid "reload.onceperday"
+msgstr "Kerran päivässä"
+
+#, c-format
+msgid "num.minutes"
+msgid_plural "num.minutes.n"
+msgstr[0] "%d minuutti"
+msgstr[1] "%d minuuttia"
+
+#, c-format
+msgid "num.hours"
+msgid_plural "num.hours.n"
+msgstr[0] "%d tunti"
+msgstr[1] "%d tuntia"
+
+msgid "doc.pre.nocaption"
+msgstr "Esimuotoiltua tekstiä ilman kuvausta"
+
+msgid "prefs.collapsepreonload"
+msgstr "Piilota esimuotoillut:"
+
+msgid "lang.zh.hant"
+msgstr "Kiina (perinteisin merkein)"
+
+msgid "lang.ie"
+msgstr "Interlingue"
+
+msgid "lang.sr"
+msgstr "Serbia"
+
+# Used in about:feeds.
+msgid "feeds.list.title"
+msgstr "Syötteiden artikkelit"
+
+#, c-format
+msgid "feeds.list.counts"
+msgid_plural "feeds.list.counts.n"
+msgstr[0] "Olet tilannut %u syötteen, joka sisältää %%s.\n"
+msgstr[1] "Olet tilannut %u syötettä, jotka sisältävät %%s.\n"
+
+# Link download progress message.
+msgid "doc.fetching"
+msgstr "Ladataan"
+
+# Inline download status message.
+msgid "media.download.warnclose"
+msgstr "Lataus keskeytyy, jos tämä välilehti suljetaan."
+
+# Inline download status message.
+msgid "media.download.complete"
+msgstr "Lataus on päättynyt."
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.title"
+msgstr "Nimi"
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.artist"
+msgstr "Artisti"
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.genre"
+msgstr "Genre"
+
+# Used in inline audio player metadata popup.
+msgid "audio.meta.date"
+msgstr "Päiväys"
+
+# used as adjective, n is 8, 16, 24, 32, or 64
+#, c-format
+msgid "n.bit"
+msgstr "%d-bittinen"
+
+msgid "numbertype.integer"
+msgstr "kokonaisluku"
+
+msgid "numbertype.float"
+msgstr "liukuluku"
+
+# Hertz, unit for frequency values
+msgid "hz"
+msgstr "Hz"
+
+#, c-format
+msgid "feeds.list.entrycount"
+msgid_plural "feeds.list.entrycount.n"
+msgstr[0] "yhteensä %u artikkelin"
+msgstr[1] "yhteensä %u artikkelia"
+
+msgid "feeds.list.refreshtime.now"
+msgstr "Viimeinen päivitys tehtiin hetki sitten."
+
+#, c-format
+msgid "feeds.list.refreshtime"
+msgstr "Viimeinen päivitys tehtiin %s."
+
+#, c-format
+msgid "minutes.ago"
+msgid_plural "minutes.ago.n"
+msgstr[0] "%d minuutti sitten"
+msgstr[1] "%d minuuttia sitten"
+
+#, c-format
+msgid "hours.ago"
+msgid_plural "hours.ago.n"
+msgstr[0] "%d tunti sitten"
+msgstr[1] "%d tuntia sitten"
+
+#, c-format
+msgid "days.ago"
+msgid_plural "days.ago.n"
+msgstr[0] "%d päivä sitten"
+msgstr[1] "%d päivää sitten"
+
+msgid "mb.per.sec"
+msgstr "Mt/s"
+
+msgid "prefs.boldlink"
+msgstr "Lihavoidut linkit:"
+
+# Interpretation: (Bold links) on light (background).
+msgid "prefs.boldlink.light"
+msgstr "Vaalea tausta"
+
+# Interpretation: (Bold links) on dark (background).
+msgid "prefs.boldlink.dark"
+msgstr "Tumma tausta"
+
+msgid "menu.select.clear"
+msgstr "Poista valinta"
+
+msgid "sidebar.action.feeds.showall"
+msgstr "Kaikki"
+
+msgid "sidebar.action.feeds.showunread"
+msgstr "Lukemattomat"
+
+msgid "sidebar.action.ident.new"
+msgstr "Uusi…"
+
+msgid "sidebar.action.ident.import"
+msgstr "Tuo…"
+
+msgid "menu.downloads"
+msgstr "Näytä latauskansio"
+
+msgid "menu.split.merge"
+msgstr "Poista jakaus"
+
+msgid "menu.split.horizontal"
+msgstr "Vaaka"
+
+msgid "menu.split.vertical"
+msgstr "Pysty"
+
+msgid "lang.ia"
+msgstr "Interlingua"
+
+msgid "gempub.cover.untitled"
+msgstr "Nimetön kirja"
+
+msgid "gempub.cover.aboutbook"
+msgstr "Tietoja tästä kirjasta"
+
+msgid "gempub.meta.author"
+msgstr "Kirjailija"
+
+msgid "gempub.meta.version"
+msgstr "Versio"
+
+msgid "gempub.meta.pub"
+msgstr "Julkaistu"
+
+msgid "gempub.meta.lang"
+msgstr "Kieli"
+
+msgid "gempub.meta.license"
+msgstr "Lisenssi"
+
+msgid "gempub.cover.image"
+msgstr "Kansikuva"
+
+msgid "gempub.meta.pubdate"
+msgstr "Julkaisupäivä"
+
+msgid "gempub.cover.view"
+msgstr "Näytä Gempub-sisältö"
+
+msgid "dlg.save.opendownload"
+msgstr "Avaa ladattu tiedosto"
+
+msgid "menu.split.swap"
+msgstr "Vaihda keskenään"
+
+msgid "menu.view.split"
+msgstr "Jaa kahtia…"
+
+msgid "link.side"
+msgstr "Avaa linkki viereen"
+
+msgid "link.side.newtab"
+msgstr "Avaa linkki viereen uuteen välilehteen"
+
+msgid "dlg.newident.date.example"
+msgstr ""
+"Tarkista voimassaolopäivämäärä. Esimerkkejä:\n"
+"• 2030\n"
+"• 2025-06-30\n"
+"• 2021-12-31 23:59:59"
+
+msgid "doc.archive"
+msgstr "%s on pakattu arkisto."
+
+msgid "doc.archive.view"
+msgstr "Näytä arkiston sisältö"
+
+msgid "bookmark.tag.linksplit"
+msgstr "Linkit aukeavat viereen"
+
+msgid "lang.tok"
+msgstr "Toki Pona"
+
+msgid "heading.newident.missing"
+msgstr "Puuttuva tieto"
+
+msgid "dlg.newindent.missing.commonname"
+msgstr "\"Yleisnimi\" on pakollinen tieto."
+
+msgid "heading.newident.date.bad"
+msgstr "Virheellinen päivämäärä"
+
+msgid "dlg.newident.date.past"
+msgstr "Voimassaolon täytyy päättyä tulevaisuudessa."
+
+msgid "prefs.pinsplit"
+msgstr "Jaetun näkymän kiinnitys:"
+
+msgid "prefs.pinsplit.none"
+msgstr "Ei"
+
+msgid "prefs.pinsplit.left"
+msgstr "Vasen välilehti"
+
+msgid "prefs.pinsplit.right"
+msgstr "Oikea välilehti"
+
+msgid "archive.exit"
+msgstr "Poistu arkistosta"
+
+msgid "archive.summary"
+msgid_plural "archive.summary.n"
+msgstr[0] "Tämä arkisto sisältää %u tiedoston ja sen pakattu koko on %.1f Mt."
+msgstr[1] "Tämä arkisto sisältää %u tiedostoa ja sen pakattu koko on %.1f Mt."
+
+msgid "dir.empty"
+msgstr "Tämä hakemisto on tyhjä."
+
+# User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
+msgid "prefs.archive.openindex"
+msgstr "Avaa arkistojen index-sivut:"
+
+#, c-format
+msgid "dir.summary"
+msgid_plural "dir.summary.n"
+msgstr[0] "Tämä hakemisto sisältää %u nimikkeen."
+msgstr[1] "Tämä hakemisto sisältää %u nimikettä."
+
+msgid "keys.tab.close.other"
+msgstr "Sulje muut välilehdet"
+
+msgid "gempub.cover.viewlocal"
+msgstr ""
+"Tämän Gempub-kirjan voi avata sen jälkeen, kun se on talletettu "
+"paikallisesti."
+
+msgid "gempub.meta.revdate"
+msgstr "Päivitetty"
+
+msgid "keys.split.menu"
+msgstr "Aseta näkymän jakaus"
+
+msgid "keys.split.next"
+msgstr "Aktivoi seuraava jakaus"
+
+msgid "lang.pl"
+msgstr "Puola"
+
+msgid "close"
+msgstr "Sulje"
+
+msgid "ident.export"
+msgstr "Vie"
+
+msgid "error.server.msg"
+msgstr "Palvelin vastasi seuraavalla viestillä:"
+
+msgid "dlg.input.linebreak"
+msgstr "Rivinvaihto"
+
+msgid "dlg.newident.scope"
+msgstr "Käytössä:"
+
+msgid "dlg.newident.more"
+msgstr "Lisää…"
+
+msgid "prefs.userfont"
+msgstr "Kuvakefontti:"
+
+msgid "keys.split.menu.vert21"
+msgstr "Jaetun näkymän valikko: pysty 2:1"
+
+msgid "dlg.newident.scope.domain"
+msgstr "Tämä verkkotunnus"
+
+msgid "dlg.newident.scope.page"
+msgstr "Tämä sivu"
+
+msgid "dlg.newident.scope.none"
+msgstr "Ei käytetä"
+
+msgid "keys.split.menu.merge"
+msgstr "Jaetun näkymän valikko: yhdistä välilehdet"
+
+msgid "keys.split.menu.swap"
+msgstr "Jaetun näkymän valikko: vaihda puolia"
+
+msgid "keys.split.menu.horiz"
+msgstr "Jaetun näkymän valikko: vaaka"
+
+msgid "keys.split.menu.horiz12"
+msgstr "Jaetun näkymän valikko: vaaka 1:2"
+
+msgid "keys.split.menu.horiz21"
+msgstr "Jaetun näkymän valikko: vaaka 2:1"
+
+msgid "keys.split.menu.vert"
+msgstr "Jaetun näkymän valikko: pysty"
+
+msgid "keys.split.menu.vert12"
+msgstr "Jaetun näkymän valikko: pysty 1:2"
+
+msgid "prefs.animate"
+msgstr "Animaatiot:"
+
+msgid "menu.save.downloads.open"
+msgstr "Tallenna latauskansioon ja avaa tiedosto"
+
+msgid "keys.split.item"
+msgstr "Jaetun näkymän valikko:"
+
+msgid "error.certverify.msg"
+msgstr ""
+"Yhteyden avaaminen palvelimeen keskeytettiin, koska emme luota sen "
+"lähettämään TLS-sertifikaattiin. Tarkista, onko palvelin ilmoittanut "
+"vaihdosta uuteen sertifikaattiin. Jos ei, on mahdollista, että jokin muu "
+"taho yrittää esiintyä vilpillisesti tänä palvelimena.\n"
+"\n"
+"Sertifikaatti voidaan merkitä luotetuksi Sivun tiedon -paneelissa."
+
+msgid "menu.pageinfo"
+msgstr "Näytä sivun tiedot"
+
+msgid "status.query.tight"
+msgstr "Etsi"
+
+msgid "menu.openfile"
+msgstr "Avaa tiedosto…"
+
+msgid "link.file.delete"
+msgstr "Poista tiedosto"
+
+msgid "heading.file.delete"
+msgstr "Poista tiedosto"
+
+msgid "dlg.file.delete.confirm"
+msgstr "Oletko varma, että haluat poistaa tämän tiedoston?"
+
+msgid "dlg.file.delete"
+msgstr "Poista"
+
+msgid "heading.prefs.uitheme"
+msgstr "Käyttöliittymän värit"
+
+msgid "prefs.scrollspeed.keyboard"
+msgstr "Näppäimistön nopeus:"
+
+msgid "prefs.scrollspeed.mouse"
+msgstr "Hiiren nopeus:"
+
+msgid "hint.prefs.userfont"
+msgstr "TrueType-fontin polku"
+
+msgid "prefs.linespacing"
+msgstr "Riviväli:"
+
+msgid "prefs.memorysize"
+msgstr "Muistin koko:"
+
+msgid "error.certverify"
+msgstr "Palvelin ei luotettu"
+
+msgid "menu.unexpire"
+msgstr "Jatka lataamista vanhentumisesta huolimatta"
+
+msgid "menu.page.upload"
+msgstr "Lähetä Titanilla…"
+
+msgid "heading.upload"
+msgstr "Titan-lähetys"
+
+msgid "heading.upload.text"
+msgstr "Teksti"
+
+msgid "hint.upload.text"
+msgstr "syötä lähetettävä teksti"
+
+msgid "heading.upload.file"
+msgstr "Tiedosto"
+
+msgid "upload.file.name"
+msgstr "Nimi:"
+
+msgid "upload.file.drophere"
+msgstr "(pudota tiedosto ikkunaan)"
+
+msgid "upload.file.size"
+msgstr "Koko:"
+
+msgid "upload.mime"
+msgstr "MIME-tyyppi:"
+
+msgid "upload.token"
+msgstr "Avainsana:"
+
+msgid "hint.upload.token"
+msgstr "katso palvelimen ohjeet"
+
+msgid "dlg.upload.send"
+msgstr "Lähetä"
+
+msgid "prefs.returnkey.linebreak"
+msgstr "Rivinvaihto"
+
+msgid "prefs.returnkey.accept"
+msgstr "Hyväksy"
+
+msgid "prefs.returnkey"
+msgstr "Palautusnäppäin:"
+
+msgid "keys.upload"
+msgstr "Lähetä Titanilla"
+
+msgid "error.certexpired"
+msgstr "Vanhentunut sertifikaatti"
+
+msgid "error.certexpired.msg"
+msgstr ""
+"Yhteyden avaaminen palvelimeen keskeytettiin, koska sen TLS-sertifikaatti on "
+"vanhentunut."
+
+msgid "upload.port"
+msgstr "Portti…"
+
+msgid "heading.uploadport"
+msgstr "Titan-lähetysportti"
+
+msgid "dlg.uploadport.msg"
+msgstr ""
+"Aseta Titan-palvelimen portti, jota käytetään tämän URL:n kanssa. Portti "
+"talletetaan palvelinkohtaisiin asetuksiin."
+
+msgid "dlg.uploadport.set"
+msgstr "Aseta portti"
+
+msgid "media.untitled.image"
+msgstr "Kuva"
+
+msgid "media.untitled.audio"
+msgstr "Ääni"
+
+msgid "feeds.atom.translated"
+msgstr ""
+"Tämä Atom-XML-dokumentti on automaattisesti käännetty Gemini-syötteeksi, "
+"jotta siihen voi tehdä tilauksen."
+
+msgid "bookmark.export.title.folder"
+msgstr "Kirjanmerkit"
+
+msgid "menu.newfolder"
+msgstr "Uusi kansio…"
+
+msgid "menu.sort.alpha"
+msgstr "Järjestä aakkosjärjestykseen"
+
+msgid "heading.confirm.bookmarks.delete"
+msgstr "Tuhoa kirjanmerkit"
+
+#, c-format
+msgid "dlg.confirm.bookmarks.delete"
+msgid_plural "dlg.confirm.bookmarks.delete.n"
+msgstr[0] "Haluatko varmasti tuhota kirjanmerkin tämän kansion sisältä?"
+msgstr[1] "Haluatko varmasti tuhota %u kirjanmerkkiä tämän kansion sisältä?"
+
+# button in the mobile New Identity dialog
+msgid "dlg.certimport.pickfile"
+msgstr "Tuo sertifikaatti/avain"
+
+msgid "bookmark.export.count"
+msgid_plural "bookmark.export.count.n"
+msgstr[0] "Sinulla on %d kirjanmerkki."
+msgstr[1] "Sinulla on %d kirjanmerkkiä."
+
+# used on mobile
+msgid "dlg.upload.text"
+msgstr "Lähetä tekstiä"
+
+# used on mobile
+msgid "heading.settings"
+msgstr "Asetukset"
+
+msgid "prefs.imagestyle"
+msgstr "Kuvien väritys:"
+
+# Abbrevation: background-to-foreground
+msgid "prefs.imagestyle.bgfg"
+msgstr "Tausta-edusta"
+
+# used for Preferences on mobile
+msgid "menu.settings"
+msgstr "Asetukset"
+
+# keep this short (3x1 horiz layout)
+msgid "menu.selectall"
+msgstr "Valitse kaikki"
+
+# keep this short (3x1 horiz layout)
+msgid "menu.delete"
+msgstr "Poista"
+
+# keep this short (3x1 horiz layout)
+msgid "menu.undo"
+msgstr "Kumoa"
+
+#, c-format
+msgid "dlg.bookmarks.delete"
+msgid_plural "dlg.bookmarks.delete.n"
+msgstr[0] "Tuhoa kirjanmerkki"
+msgstr[1] "Tuhoa %u kirjanmerkkiä"
+
+msgid "bookmark.export.title.tag"
+msgstr "Kirjanmerkkien avainsanat"
+
+msgid "bookmark.export.title.time"
+msgstr "Luodut kirjanmerkit"
+
+msgid "bookmark.export.saving"
+msgstr ""
+"Talleta tämä sivu viedäksesi ne, tai voit myös kopioida ne leikepöydälle."
+
+msgid "upload.id"
+msgstr "Identiteetti:"
+
+msgid "dlg.upload.id.none"
+msgstr "Ei identiteettiä"
+
+msgid "dlg.upload.id.default"
+msgstr "Oletus"
+
+# used on mobile
+msgid "dlg.upload.file"
+msgstr "Lähetä tiedosto"
+
+# used on mobile
+msgid "dlg.upload.pickfile"
+msgstr "Valitse tiedosto"
+
+msgid "heading.bookmark.tags"
+msgstr "Erikoisavainsanat"
+
+msgid "heading.addfolder"
+msgstr "Lisää kansio"
+
+msgid "dlg.addfolder.defaulttitle"
+msgstr "Uusi kansio"
+
+msgid "dlg.addfolder.prompt"
+msgstr "Kirjoita uuden kansion nimi:"
+
+msgid "dlg.addfolder"
+msgstr "Lisää kansio"
+
+msgid "prefs.imagestyle.original"
+msgstr "Ei"
+
+msgid "prefs.imagestyle.grayscale"
+msgstr "Harmaasävy"
+
+msgid "prefs.imagestyle.text"
+msgstr "Tekstin väri"
+
+msgid "prefs.imagestyle.preformat"
+msgstr "Esimuotoillun tekstin väri"
+
+msgid "keys.bookmark.addfolder"
+msgstr "Lisää kirjanmerkkikansio"
+
+msgid "lang.sk"
+msgstr "Slovakki"
+
+msgid "lang.es.mx"
+msgstr "Espanja (Meksiko)"
+
+msgid "lang.eo"
+msgstr "Esperanto"
+
+msgid "lang.gl"
+msgstr "Galicia"
+
+msgid "lang.isv"
+msgstr "Interslaavi"
+
+msgid "menu.website"
+msgstr "Projektin verkkosivut…"
+
+msgid "dlg.certwarn.title"
+msgstr "Tietoturvavaroitus"
+
+msgid "dlg.feed.ignoreweb"
+msgstr "Sivuuta HTTP(S)-linkit:"
+
+msgid "prefs.gemtext.ansi"
+msgstr "ANSI-koodit:"
+
+msgid "prefs.font.smooth"
+msgstr "Pehmennys:"
+
+msgid "error.ansi.msg"
+msgstr ""
+"Tämän sivun ulkonäkö voi olla virheellinen. Se käyttää ANSI-koodeja tekstin "
+"ulkoasun muokkaamiseen, mutta tätä tuetaan vain osittain. Voisit yrittää "
+"katsoa sivua pääte-emulaattorissa."
+
+msgid "fontpack.export"
+msgstr "Näytä fontpack.ini-malli"
+
+#, c-format
+msgid "dlg.fontpack.delete.confirm"
+msgstr "Haluatko varmasti poistaa ja tuhota fonttipaketin \"%s\"?"
+
+msgid "fontpack.help"
+msgstr ""
+"Lagrange-fonttipaketit ovat ZIP-kansioita, jotka sisältävät joukon "
+"fonttitiedostoja ja niihin liittyviä kokoonpanotietoja. Asennuksen jälkeen "
+"kirjasinlajeja voi käyttää sivujen sisällön ja käyttöliittymän teksteissä. "
+"Aktiiviset kirjasinlajt valitaan Asetukset-dialogin kautta."
+
+msgid "truetype.help"
+msgstr ""
+"Lagrange yrittää ladata kaikki yksittäiset TrueType-tiedostot, jotka on "
+"kopioitu käyttäjän fonttihakemistoon."
+
+msgid "bookmark.export.format.otherlines"
+msgstr ""
+"Luettelo- ja lainausrivit ovat varattu edeltävään kirjanmerkkiin liittyville "
+"lisätiedoille. Tekstirivit ja esimuotoiltu teksti ovat kommentteja ja ne "
+"tulee sivuuttaa."
+
+msgid "prefs.font.ui"
+msgstr "Käyttöliittymä:"
+
+msgid "prefs.font.heading"
+msgstr "Otsikot:"
+
+msgid "prefs.font.body"
+msgstr "Leipäteksti:"
+
+msgid "prefs.font.mono"
+msgstr "Esimuotoiltu:"
+
+# Font to use for headings and body when Monospace body is enabled.
+msgid "prefs.font.monodoc"
+msgstr "Tasalevyinen kirjasinlaji:"
+
+msgid "prefs.boldlink.visited"
+msgstr "Vierailtu"
+
+msgid "menu.fonts"
+msgstr "Hallinnoi fontteja…"
+
+msgid "num.files"
+msgid_plural "num.files.n"
+msgstr[0] "%u tiedosto"
+msgstr[1] "%u tiedostoa"
+
+msgid "num.fonts"
+msgid_plural "num.fonts.n"
+msgstr[0] "%u fontti"
+msgstr[1] "%u fonttia"
+
+msgid "bookmark.export.taginfo"
+msgstr ""
+"Tässä luettelossa jokainen otsikko edustaa kirjanmerkin avainsanaa. Vain "
+"avainsanoilla varustetut kirjanmerkit ovat mukana luettelossa. Kirjanmerkit "
+"joilla on monta avainsanaa on toistettu jokaisen avainsanaotsikon alla."
+
+msgid "bookmark.export.format.sub"
+msgstr ""
+"Tämä sivu on muotoiltu \"Subscribing to Gemini pages\" -spesifikaation "
+"mukaisesti."
+
+msgid "bookmark.export.format.linklines"
+msgstr "Jokainen linkki edustaa kirjanmerkkiä."
+
+msgid "bookmark.export.format.folders"
+msgstr "Kansiorakenteen määrittävät 2. ja 3. tason otsikot."
+
+msgid "bookmark.export.format.tags"
+msgstr "Avainsanoja edustavat 2. tason otsikot."
+
+msgid "prefs.bookmarks.addbottom"
+msgstr "Lisää kirjanmerkit loppuun:"
+
+msgid "prefs.gemtext.ansi.fg"
+msgstr "Tekstin väri"
+
+msgid "prefs.gemtext.ansi.fontstyle"
+msgstr "Kirjasinlaji"
+
+msgid "prefs.font.warnmissing"
+msgstr "Varoita puuttuvista:"
+
+msgid "error.ansi"
+msgstr "Pääte-emulointi"
+
+msgid "error.glyphs"
+msgstr "Kirjaimia puuttuu"
+
+msgid "error.glyphs.msg"
+msgstr ""
+"Tätä sivua ei voitu näyttää kokonaisuudessaan, koska yksi tai useampi "
+"kirjainmerkki puuttuu. Voit asentaa lisää fontteja korjataksesi ongelman."
+
+msgid "heading.fontpack.meta"
+msgstr "Kirjasinlajit"
+
+msgid "heading.fontpack.meta.enabled"
+msgstr "Käytössä olevat fonttipaketit"
+
+msgid "heading.fontpack.meta.disabled"
+msgstr "Estetyt fonttipaketit"
+
+# Action label
+msgid "fontpack.meta.viewfile"
+msgstr "Näytä tiedosto"
+
+#, c-format
+msgid "fontpack.meta.version"
+msgstr "Versio %d"
+
+msgid "fontpack.meta.installed"
+msgstr "Asennettu"
+
+msgid "fontpack.meta.notinstalled"
+msgstr "Ei asennettu"
+
+msgid "fontpack.meta.disabled"
+msgstr ", käyttö estetty"
+
+#, c-format
+msgid "fontpack.enable"
+msgstr "Ota \"%s\" käyttöön"
+
+#, c-format
+msgid "fontpack.disable"
+msgstr "Estä \"%s\":n käyttö"
+
+#, c-format
+msgid "fontpack.install"
+msgstr "Asenna \"%s\""
+
+#, c-format
+msgid "fontpack.upgrade"
+msgstr "Päivitä \"%s\" versioon %d"
+
+#, c-format
+msgid "fontpack.delete"
+msgstr "Poista ja tuhoa \"%s\""
+
+msgid "heading.fontpack.delete"
+msgstr "Poista fonttipaketti"
+
+msgid "dlg.fontpack.delete"
+msgstr "Tuhoa fonttipaketti"
+
+msgid "fontpack.install.ttf"
+msgstr "Asenna TrueType-fontti"
+
+msgid "fontpack.open.fontsdir"
+msgstr "Avaa käyttäjän fonttihakemisto"
+
+msgid "fontpack.open.aboutfonts"
+msgstr "Näytä asennetut kirjasinlajit"
+
+msgid "truetype.help.installed"
+msgstr "Tämä fontti on asennettu käyttäjän fonttihakemistoon."
+
+msgid "heading.dismiss.warning"
+msgstr "Poista varoitus?"
+
+#, c-format
+msgid "dlg.dismiss.ansi"
+msgstr "Poista pääte-emulaatiovaroitus sivustolla %s?"
+
+msgid "dlg.dismiss.warning"
+msgstr "Poista varoitus"
+
+msgid "dlg.fontpack.classic"
+msgstr "Lataa fonttipaketti (25 Mt)"
+
+msgid "heading.fontpack.classic"
+msgstr "Lataa fonttipaketti"
+
+msgid "dlg.fontpack.classic.msg"
+msgstr ""
+"Aiemmin sovelluksen kanssa tulleet fontit ovat nyt saatavilla erillisenä "
+"latauksena. Haluaisitko ladata Classic set -fonttipaketin nyt?"
+
+msgid "lang.uk"
+msgstr "Ukraina"
+
+msgid "lang.hu"
+msgstr "Unkari"
+
+msgid "lang.cs"
+msgstr "Tšekki"
+
+msgid "sidebar.action.show"
+msgstr "Näytä:"
+
+msgid "dlg.bookmark.folder"
+msgstr "Kansio:"
+
+# Color of text background.
+msgid "prefs.gemtext.ansi.bg"
+msgstr "Taustan väri"
+
+msgid "menu.update"
+msgstr "Tarkista päivitykset…"
+
+msgid "prefs.time.24h"
+msgstr "24 tunnin kellonajat"
+
+# This label should be fairly short so it fits in a button in the sidebar.
+msgid "sidebar.action.feeds.markallread"
+msgstr "Lue kaikki"
+
+msgid "menu.page.upload.edit"
+msgstr "Muokkaa sivua Titanilla…"
+
+msgid "heading.upload.id"
+msgstr "Valtuudet"
+
+msgid "menu.upload.export"
+msgstr "Vie teksti"
+
+msgid "menu.upload.delete"
+msgstr "Poista kaikki"
+
+# Mobile subheading in the Upload dialog.
+msgid "upload.url"
+msgstr "URL"
+
+# Mobile subheading: buttons for entering uploaded data.
+msgid "upload.content"
+msgstr "Sisältö"
+
+msgid "hint.upload.path"
+msgstr "Polku"
+
+msgid "hint.upload.token.long"
+msgstr "avainsana — katso palvelimen ohjeet"
+
+msgid "prefs.toolbaraction1"
+msgstr "Painike 1"
+
+msgid "prefs.toolbaraction2"
+msgstr "Painike 2"
+
+msgid "keys.upload.edit"
+msgstr "Muokkaa sivua Titanilla"
+
+# The %s represents the name of an identity.
+#, c-format
+msgid "ident.switch"
+msgstr "Ota käyttöön %s"
+
+msgid "menu.upload.delete.confirm"
+msgstr "Poista kaikki (ei voi peruuttaa)"
+
+msgid "heading.prefs.toolbaractions"
+msgstr "Työkalupalkin toiminnot"
+
+msgid "prefs.blink"
+msgstr "Vilkkuva kursori:"
+
+msgid "menu.open.external"
+msgstr "Avaa toisessa sovelluksessa"
+
+# Active identity toolbar menu.
+msgid "menu.hide.identities"
+msgstr "Piilota identiteetit"
+
+msgid "menu.home"
+msgstr "Mene kotiin"
+
+msgid "menu.identities"
+msgstr "Hallinnoi identiteettejä"
+
+msgid "sidebar.close"
+msgstr "Valmis"
+
+msgid "sidebar.action.bookmarks.newfolder"
+msgstr "Uusi kansio"
+
+msgid "sidebar.action.bookmarks.edit"
+msgstr "Muokkaa"
+
+msgid "sidebar.action.history.clear"
+msgstr "Tyhjennä"
+
+msgid "sidebar.empty.unread"
+msgstr "Kaikki luettu"
+
+# Paste the line preceding the clicked link into the input prompt.
+msgid "menu.input.precedingline"
+msgstr "Liimaa edeltävä rivi"
+
+# Shows where a local file is using the Finder.
+msgid "menu.reveal.macos"
+msgstr "Näytä Finderissa"
+
+msgid "menu.share"
+msgstr "Jaa"
+
+# Shows where a local file is using the File Manager.
+msgid "menu.reveal.filemgr"
+msgstr "Näytä tiedostonhallinnassa"
+
+# Menu heading shown when customizing navbar button actions.
+msgid "menu.toolbar.setaction"
+msgstr "Aseta toiminto:"
+
+msgid "menu.newwindow"
+msgstr "Uusi ikkuna"
+
+msgid "keys.feeds.showall"
+msgstr "Sivupaneeli: Näytä kaikki syötteiden artikkelit"
+
+msgid "keys.feeds.showunread"
+msgstr "Sivupaneeli: Näytä lukemattomat artikkelit"
+
+msgid "menu.openwindow"
+msgstr "Avaa uuteen ikkunaan"
+
+msgid "pageinfo.settings"
+msgstr "Asetukset"
+
+msgid "heading.sitespec"
+msgstr "Palvelinkohtaiset asetukset"
+
+msgid "sitespec.ansi"
+msgstr "ANSI-varoitukset:"
+
+msgid "sitespec.palette"
+msgstr "Teemapaletin siemen:"
+
+msgid "sitespec.accept"
+msgstr "Talleta asetukset"
+
+msgid "keys.pageinfo"
+msgstr "Näytä sivun tiedot"
+
+msgid "keys.sitespec"
+msgstr "Näytä palvelinkohtaiset asetukset"
+
+msgid "link.newwindow"
+msgstr "Avaa linkki uuteen ikkunaan"
+
+msgid "heading.glyphfinder"
+msgstr "Puuttuvia merkkejä"
+
+msgid "dlg.glyphfinder.missing"
+msgstr "Seuraavia merkkejä ei voitu näyttää:"
+
+msgid "dlg.glyphfinder.help"
+msgstr ""
+"Voit etsiä skyjake.fi-fonttikirjastosta fontteja, jotka tarjoavat nämä "
+"merkit, tai asentaa käsin lisää TrueType-fontteja."
+
+msgid "dlg.glyphfinder.help.empty"
+msgstr ""
+"Ole hyvä ja lataa sivu uudestaan tarkistaaksesi puuttuuko siitä merkkejä."
+
+msgid "dlg.glyphfinder.disable"
+msgstr "Älä varoita enää"
+
+msgid "dlg.glyphfinder.search"
+msgstr "Etsi fonttikirjastosta"
+
+msgid "heading.glyphfinder.results"
+msgstr "Hakutulokset"
+
+msgid "glyphfinder.results"
+msgstr ""
+"Seuraavat fonttipaketit sisältävät yhden tai useamman puuttuvista merkeistä:"
+
+msgid "glyphfinder.results.empty"
+msgstr "Sopivia fonttipaketteja ei löytynyt."
+
+# User preference that controls whether image data embedded in Data URLs gets automatically displayed when a page is loaded.
+msgid "prefs.dataurl.openimages"
+msgstr "Avaa Data URL -kuvat:"
+
+msgid "prefs.urlsize"
+msgstr "URL-pituusraja:"
+
+msgid "keys.input.precedingline"
+msgstr "Syötekysely: Liimaa edeltävä rivi"
+
+msgid "prefs.tabwidth"
+msgstr "Sarkaimen leveys:"
+
+msgid "menu.paste.go"
+msgstr "Liimaa ja mene"
+
+msgid "prefs.retaintabs"
+msgstr "Palauta välilehdet:"
+
+msgid "heading.archive.userdata"
+msgstr "Arkistoidut käyttäjän tiedot"
+
+msgid "userdata.help"
+msgstr ""
+"Arkistoidut käyttäjät tiedot sisältävät käyttäjän selaushistorian, "
+"identiteetit, kirjanmerkit, palvelinkohtaiset asetukset, ja luotettujen "
+"sertifikaattien sormenjäljet. Tämän avulla voit varmuuskopioida nämä tiedot "
+"tai siirtää ne laitteesta toiseen."
+
+msgid "sitespec.tlscache"
+msgstr "Tallenna ja jatka TLS-istuntoja:"
+
+msgid "dlg.certimport.paste"
+msgstr "Liimaa leikkauspöydältä"
+
+msgid "import.userdata.sitespec"
+msgstr "Palvelinkohtaiset asetukset:"
+
+msgid "import.userdata.error"
+msgstr "%s on virheellinen Lagrange-vientiarkisto."
+
+msgid "heading.bookmark.editfolder"
+msgstr "Muokkaa kansiota"
+
+msgid "prefs.doctheme.name.oceanic"
+msgstr "Merellinen"
+
+msgid "feeds.entry.markbelowread"
+msgstr "Merkitse alla olevat luetuksi"
+
+msgid "menu.export"
+msgstr "Vie käyttäjän tiedot"
+
+msgid "menu.import"
+msgstr "Tuo käyttäjän tiedot…"
+
+msgid "heading.import.userdata"
+msgstr "Tuo käyttäjän tiedot"
+
+msgid "heading.import.userdata.error"
+msgstr "Tuonti epäonnistui"
+
+msgid "import.userdata.bookmarks"
+msgstr "Kirjanmerkit:"
+
+msgid "import.userdata.idents"
+msgstr "Identiteetit:"
+
+msgid "import.userdata.history"
+msgstr "Historia:"
+
+msgid "import.userdata.trusted"
+msgstr "Luotetut sertifikaatit:"
+
+msgid "dlg.userdata.no"
+msgstr "Ei"
+
+msgid "dlg.userdata.missing"
+msgstr "Jos puuttuu"
+
+msgid "dlg.userdata.all"
+msgstr "Kaikki (ylikirjoita)"
+
+msgid "dlg.userdata.alldup"
+msgstr "Kaikki (pidä kaksoiskappaleet)"
+
+msgid "import.userdata"
+msgstr "Tuo valitut tiedot"
+
+msgid "import.userdata.dupfolder"
+msgstr "Tuodut kaksoiskappaleet"
+
+msgid "dlg.bookmark.parentfolder"
+msgstr "Yläkansio:"
+
+msgid "heading.prefs.support"
+msgstr "Tuki"
+
+msgid "prefs.uilayout"
+msgstr "Asettelu:"
+
+msgid "prefs.bottomnavbar"
+msgstr "Nav.palkki alhaalla"
+
+msgid "prefs.bottomtabbar"
+msgstr "Välisivut alhaalla"
+
+msgid "prefs.menubar"
+msgstr "Valikkorivi"
+
+msgid "prefs.accent.red"
+msgstr "Punainen"
+
+msgid "prefs.accent.green"
+msgstr "Vihreä"
+
+msgid "prefs.accent.blue"
+msgstr "Sininen"
+
+msgid "prefs.accent.gray"
+msgstr "Harmaa"
+
+msgid "prefs.justify"
+msgstr "Tasoita:"
+
+msgid "menu.reopentab"
+msgstr "Avaa viimeiseksi suljettu välisivu"
+
+msgid "menu.viewformat.plain"
+msgstr "Näytä lähdeteksti"
+
+msgid "menu.viewformat.gemini"
+msgstr "Näytä Gemtext"
+
+msgid "keys.menubar.focus"
+msgstr "Kohdista valikkorivi"
+
+msgid "keys.identmenu"
+msgstr "Avaa identiteettivalikko"
+
+msgid "keys.contextmenu"
+msgstr "Avaa kontekstivalikko"
+
+msgid "spartan.input"
+msgstr "Syötä lähetettävä teksti:"
+
+msgid "dlg.spartan.upload"
+msgstr "Avaa editori…"
+
+msgid "heading.upload.spartan"
+msgstr "Spartan-lähetys"
+
+msgid "prefs.markdown.viewsource"
+msgstr "Näytä Markdown lähdetekstinä:"
+
+msgid "error.incompleteheader.msg"
+msgstr ""
+"Palvelimen vastauksesta ei löytynyt kokonaista otsaketietoa. Ehkä palvelin "
+"on epäkunnossa, tai yritit ottaa yhteyttä palvelimeen, joka ei tue Gemini-"
+"protokollaa."
+
+msgid "error.incompleteheader"
+msgstr "Keskeneräinen otsaketieto"
+
+msgid "prefs.tui.simple"
+msgstr "Yksinkertainen merkistö:"
+
+msgid "prefs.evensplit"
+msgstr "Tasaleveä jaettu näkymä:"

@@ -1,0 +1,181 @@
+```LAGRANGE
+           __   __             __   ___
+|     /\  / _` |__)  /\  |\ | / _` |__
+|___ /~~\ \__> |  \ /~~\ | \| \__> |___
+
+```
+# Release notes
+
+## 1.13 (2)
+* Fixed showing error page for an empty server response.
+* Fixes for Spartan: query strings, input prompt default content, empty paths.
+* Added Spartan URL handler.
+
+## 1.13 (1)
+New features:
+* URL field indicator 🔖 that shows if there's a bookmark for the current page. Clicking on the indicator opens the Add/Edit Bookmark dialog. It is always shown on iPads and on landscape mode on smaller devices.
+* Support for the Spartan protocol. Prompt lines will open an input dialog for submitting text. This can be expanded to the full upload dialog using which a file can be uploaded, too.
+* Reopening the last closed tab.
+* Page context menu item "View as Plain Text".
+* Option to view Markdown as source or as a Gemtext conversion (default: as source).
+* Checking server certificates using a bundled root CA file, for instance when the server is using a Let's Encrypt certificate.
+
+Changes and enhancements:
+* Updated Noto Emoji font with support for Unicode 14. There should be no more missing Emoji glyphs.
+* When bookmarking a page, show the Edit Bookmark dialog if there's already a bookmark for the URL. The Edit Bookmark dialog has a new Duplicate button for actually making a duplicate bookmark.
+* Markdown documents support horizontal rules.
+
+Fixes:
+* Show a proper error page if server closes the connection before a header is fully received.
+* Sidebar page outline not updated when the current tab changes.
+
+## 1.12 (3)
+* Importing exported user data archives.
+* Settings: Added "Export User Data".
+* Feeds: Added "Mark Below as Read".
+* No more extra fields in bookmark dialog when editing a folder.
+* Fixed invalid contents appearing in the overscroll areas of lists.
+
+## 1.12 (2)
+* Changed appearance of many dialogs to use a card layout instead of fullscreen.
+* Input prompts appear next to the keyboard, putting action buttons more within reach.
+* Added Import and Create actions on the Identities page in Settings.
+* Adjusted UI layout of Settings. The title of the current page appears in the top bar, together with any relevant actions.
+* Changed appearance of the pull down indicator.
+* Fixed glitches with showing and hiding lookup results.
+* Fixed incorrect document width after changing orientation from landscape to portrait.
+* iPad: Fixed positioning of input prompts when the sidebar is visible.
+
+## 1.12 (1)
+* Roboto is the new default content/UI font.
+* Added option to move the URL field and/or the tab bar at the bottom.
+* Toggles use symbols instead of YES/NO.
+* UI uses only one accent color at a time.
+* Added new UI accent colors: Red, Green, Blue, Gray.
+* Added new content theme "Oceanic" with support for both dark and light modes.
+* Adjusted generated palettes of Colorful Dark/Light.
+* Improved the Sepia theme, and added a dark mode variant.
+* Added style option to justify long paragraphs.
+* Text renderer uses additional subpixel offsets with lower-density displays.
+* Text rendering optimizations: avoid repeated shaping of the same text.
+* Fixed occasional small gaps between glyph backgrounds.
+* Fixed problems with marking feed entries as read/unread.
+
+## 1.11 (1)
+⚠️ Downgrading back to v1.10 causes all site-specific themes to be forgotten.
+
+New features:
+* Site-specific settings dialog: theme customization and showing ANSI escape warnings. The custom theme is based on a "seed string" chosen by the user.
+* Fontpack search. Fonts in the skyjake.fi font library have been indexed based on all the glyphs they provide, so one can look up which fontpacks provide any missing glyphs.
+* "Tab width" setting (default: 8). This controls how TAB characters are displayed on pages.
+* Setting for maximum valid URI length on 'text/gemini' link lines.
+* Option to show images decoded from data URLs immediately after loading a page. This is limited to JPEG, PNG, WebP, and GIF (no animations).
+* TLS session caching: reduces the need for redundant handshaking by keeping old TLS sessions cached for 10 minutes.
+* UI language for Italian.
+
+Changes and enhancements:
+* The input prompt dialog saves entered text persistently, just like the Upload dialog. This prevents losing text if the dialog is closed accidentally.
+* The missing glyphs warning dialog now shows a list of the missing code points.
+* Abbreviate font pack descriptions on "about:fonts". The full description is shown when viewing a single fontpack.
+* The active tab button uses the theme background color if the page color theme has a bright colorful background to avoid clashing with the UI accent color.
+* Adjusted colors of the Gray and Black page themes.
+* Added additional (small) variations to theme hues.
+* Data URLs have their own link icon.
+
+Fixes:
+* Incorrect behavior and UI glitches related to data URLs. The UI will now omit the encoded part of data URLs.
+* Occasional mismatch between page and banner backgrounds. It was due to loss of precision when converting colors to 8-bit RGB.
+* TAB characters are no longer forcibly normalized to spaces.
+* Pasting LF characters in the URL field should not be possible.
+
+## 1.10 (12)
+* Tapping the status bar area scrolls the page to the top.
+* "/index.gmi" is considered equal to "/" when navigating to parent directory.
+* Fixed crash when a media player is active and a new download is started.
+* Fixed crash when a line contains nothing but an ANSI escape sequence.
+* Fixed height of navbar buttons on iPad.
+
+## 1.10 (11)
+* Fixed cancelling an input query. Now pressing Cancel will navigate back to the previous page as intended.
+* Gopher: Fixed navigating to parent. Set item type to 1 to show a gophermap and not the plain source.
+* Updated Smol Emoji: added the rest of Unicode 8 Emoji glyphs.
+
+## 1.10 (10)
+* Fixed a hang when tapping "New Folder" while editing bookmarks.
+* Bug fixes, improvements, and updated UI translations from the desktop version (v1.10.1).
+
+## 1.10 (9)
+* Added "Share" actions for downloaded files (via "Download Linked File") and selected text on page.
+* Added "Edit Page with Titan": opens the Upload dialog with the page contents prefilled (previous contents are lost!).
+* Inlining `image/*` responses into the current document regardless of file extension in URL.
+* Fixed glitch with banner not being visible until page has finished loading.
+* Fixed possible crash when creating a bookmark.
+
+## 1.10 (7)
+* Link context menu shows used identity and date of last visit in addition to the URL.
+* Removed the "Show URL on hover" setting. URLs are shown in the link context menu.
+* Inline image metadata goes under the image instead of possibly overlapping the image caption text.
+* Improved appearance of hover/open link highlighting. It no longer goes under the side elements on the page.
+* Gempub: Open books in 1:2 split mode instead of 1:1.
+* Fixed opening links in split view mode. Links would open on the wrong side.
+* Upgraded SDL to version 2.0.18.
+
+## 1.10 (6)
+* Added "Paste Preceding Line" in the input prompt dialog. Potential use cases include user-editable sections on a page and suggested/example input values.
+* Fixed UI glitches and a potential memory leak when navigating via swipes. Sometimes swipe navigation would stop working because animation placeholders were not destroyed.
+* Fixed Settings background fade.
+* Fixed sidebar background fade in portrait phone layout.
+
+## 1.10 (5)
+* Fixed positioning of native UI controls in non-animated input widgets.
+* Fixed input widgets not reacting to keyboard being dismissed by system.
+* iPad: Faster back swipe animation.
+
+## 1.10 (4)
+* Fixed crash when closing sidebar in bookmark edit mode.
+* Fixed incorrect initial height of an unfocused multiline input widget.
+* Fixed lookup results having too narrow a width.
+* Fixed padding at bottom of the upload text editor.
+* Fixed missing "Folder" field in the bookmark editor. Edited bookmarks would be moved to the root folder.
+* Fixed missing "Glyph Warnings" toggle in Settings.
+* Removed "Return Key Behavior" from Settings since it has no effect.
+* Minor improvements in page caching.
+* Tuned page swipe animations.
+* Optimized UI layout updates.
+* Audio subsystem is only initialized when actually needed.
+* Prevent state file corruption if the app happens to get killed while state is being saved.
+
+## 1.10 (3)
+* Revised layout of the Upload dialog. There is a new edit field that lets you modify the file path of the URL. Identity names are in bold.
+* Added an edit actions menu in the Upload text editor (only in portrait phone layout for now).
+* Fixed persistent storage of the Upload text field contents.
+* Fixed input widget positioning and behavior in the Upload dialog.
+* Fixed minimum width of main panel in dialogs.
+* Fixed use of cached content when the same URL was found multiple times in history. Previously, only the latest page was used.
+* Changed input field tint color to match chosen UI accent color.
+* Optimized memory use during UI event processing.
+
+## 1.10 (2)
+* Fixed pull-to-refresh on short pages.
+* Fixed URL field contents not being clipped to widget bounds.
+* Fixed major glitches in back/forward swipe navigation, e.g., top banner showing incorrect contents, incorrect theme colors, scroll position jumping.
+* Fixed major and minor UI element positioning glitches, e.g., native text fields, maximum height of input fields, input length counter, Translate dialog.
+* Fixed inappropriate font sizes, e.g., sidebar action labels.
+* Fixed color issues: tint color of native input, and footer buttons not being prominent enough.
+* Bookmarks: In Edit mode, folders still get (un)folded when tapped.
+* Feeds: Added "No Unread Entries" message.
+* Identities: Show the current page's URL in the context menu to make it clearer what "This Page" refers to.
+
+## 1.10 (1)
+* Use native iOS text input UI controls for entering text.
+* Pull-to-refresh on pages.
+* Redesigned phone sidebar that mimics Safari on iPhone. Opens half-height for better reachability of tab buttons, can be swiped up and down.
+* Bookmark edit mode for reordering and organizing bookmarks into folders.
+* Sidebar has new action buttons for Feeds and History.
+* Identity toolbar button has been revised for quickly switching between alternate identities for current site, and opening Settings > Identities.
+* Settings: Managing identities.
+* Settings: Improved widgets used in button/radio groups to closer match iOS design.
+* Settings: Added new options from desktop version.
+* Mobile-friendly layout for value input dialogs.
+* Various animation issues fixes, e.g., context menu animations on iPad.
+* Various layout issues fixed, e.g., related to safe area insets.
