@@ -25,6 +25,6 @@ override_dh_auto_configure:
 override_dh_auto_build:
 	cmake --build .
 	mkdir -p $(CURDIR)/debian/lagrange/usr/share/pixmaps
-	cp $(CURDIR)/maemo/lagrange.png $(CURDIR)/debian/lagrange/usr/share/pixmaps/
+	cp $(CURDIR)/debian/maemo/lagrange.png $(CURDIR)/debian/lagrange/usr/share/pixmaps/
 	mkdir -p $(CURDIR)/debian/lagrange/usr/share/applications/hildon
-	cp $(CURDIR)/maemo/lagrange.desktop $(CURDIR)/debian/lagrange/usr/share/applications/hildon
+	cp $(CURDIR)/debian/maemo/lagrange.desktop $(CURDIR)/debian/lagrange/usr/share/applications/hildon
