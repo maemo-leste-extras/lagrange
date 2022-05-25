@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Lagrange
+Comment=Lagrange gemini client
+Exec=/usr/bin/lagrange
+Icon=lagrange
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+X-Osso-Type=application/x-executable
