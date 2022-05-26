@@ -23,4 +23,4 @@ override_dh_auto_configure:
 	mkdir build; cd build; cmake .. $(LAGRANGE_CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=/usr/
 
 override_dh_auto_build:
-	mkdir build; cd build; cmake --build ..
+	mkdir -p build; cd build; cmake --build ..
