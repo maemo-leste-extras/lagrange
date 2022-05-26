@@ -20,7 +20,7 @@ endif
 	dh $@
 
 override_dh_auto_configure:
-	mkdir build; cp -a lib build/; cd build; cmake .. $(LAGRANGE_CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=/usr/
+	mkdir build; cd build; cmake .. $(LAGRANGE_CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=/usr/
 
 override_dh_auto_build:
 	mkdir build; cd build; cmake --build ..
