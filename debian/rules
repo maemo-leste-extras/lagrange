@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 export DH_VERBOSE = 1
 export DEB_BUILD_MAINT_OPTIONS=hardening=-format
-export LAGRANGE_CMAKE_FLAGS= -DCMAKE_BUILD_TYPE=Release -DENABLE_WINDOWPOS_FIX=YES
+export LAGRANGE_CMAKE_FLAGS= -DCMAKE_BUILD_TYPE=Release -DENABLE_WINDOWPOS_FIX=YES -DENABLE_MOBILE_PHONE -DENABLE_TUI -DLAGRANGE_ENABLE_AUDIO=1
 
 # SSE4.1 support (or lack thereof) is only a concern on x86_64/x86 machines
 ifeq ($(DEB_BUILD_ARCH), amd64)
@@ -20,7 +20,7 @@ endif
 	dh $@
 
 override_dh_auto_configure:
-	mkdir build; cd build; cmake .. $(LAGRANGE_CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=/usr/
+	cmake . $(LAGRANGE_CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=/usr/
 
 override_dh_auto_build:
 	mkdir -p build; cd build; cmake --build ..
