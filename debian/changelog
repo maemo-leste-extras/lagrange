@@ -1,8 +1,9 @@
 lagrange (0.0.2-20221218+leste1) unstable; urgency=low
 
   * maemo/chimaera release
+  * debian/source/include-binaries created, lagrange.png listed in it.
 
- -- Norayr Chilingarian <norayr@arnet.am>  Thu, 26 May 2022 04:43:00 +0400
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 19 Dec 2022 04:43:00 +0400
 
 lagrange (20220526) unstable; urgency=low
 
