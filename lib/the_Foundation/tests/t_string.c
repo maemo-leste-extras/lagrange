@@ -116,4 +116,5 @@ int main(int argc, char *argv[]) {
             delete_String(s);
         }
     }
+    deinit_Foundation();
 }

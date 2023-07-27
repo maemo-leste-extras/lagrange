@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-04-10 08:51+0000\n"
+"POT-Creation-Date: 2023-01-29 07:54+0000\n"
+"PO-Revision-Date: 2023-06-01 08:03+0000\n"
 "Last-Translator: Omar Polo <weblate@omarpolo.com>\n"
 "Language-Team: Italian <http://weblate.skyjake.fi/projects/lagrange/ui/it/>\n"
 "Language: it\n"
@@ -122,12 +124,6 @@ msgstr "Continua"
 msgid "dlg.default"
 msgstr " OK "
 
-msgid "toggle.yes"
-msgstr "SÌ"
-
-msgid "toggle.no"
-msgstr "NO"
-
 msgid "menu.title.file"
 msgstr "File"
 
@@ -214,7 +210,7 @@ msgid "menu.view.split"
 msgstr "Vista Divisa…"
 
 msgid "menu.save.downloads.open"
-msgstr "Salva nei Download e apri il file"
+msgstr "Salva negli Scaricati e apri il file"
 
 msgid "menu.sidebar.left"
 msgstr "Visualizza/Nascondi barra laterale sinistra"
@@ -384,7 +380,7 @@ msgid "dlg.input.send"
 msgstr "Invia"
 
 msgid "heading.save"
-msgstr "FILE SALVATO"
+msgstr "File Salvato"
 
 msgid "pageinfo.domain.mismatch"
 msgstr "Il nome del dominio non coincide"
@@ -900,7 +896,7 @@ msgstr "Link YYY-MM-DD"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Stile"
+msgstr "Stile della Pagina"
 
 # tab button
 msgid "heading.prefs.userinterface"
@@ -1258,7 +1254,7 @@ msgid "keys.tab.new"
 msgstr "Nuova scheda"
 
 msgid "error.manyredirects"
-msgstr "Troppi Redirect"
+msgstr "Troppi Reindirizzamenti"
 
 # button in the mobile New Identity dialog
 msgid "dlg.certimport.pickfile"
@@ -1274,7 +1270,7 @@ msgid "prefs.scrollspeed.mouse"
 msgstr "Velocità del mouse:"
 
 msgid "prefs.imageloadscroll"
-msgstr "Carica immagini allo scroll:"
+msgstr "Scarica l'immagine successiva quando si scorre con la tastiera:"
 
 msgid "prefs.theme.white"
 msgstr "Bianco"
@@ -1550,7 +1546,7 @@ msgid "dlg.bookmark.folder"
 msgstr "Cartella:"
 
 msgid "heading.bookmark.tags"
-msgstr "Etichetta Speciale"
+msgstr "Comportamento"
 
 msgid "heading.addfolder"
 msgstr "Aggiungi Cartella"
@@ -1587,13 +1583,13 @@ msgid "prefs.uilang"
 msgstr "Lingua:"
 
 msgid "prefs.time.24h"
-msgstr "Formato tempo 24 Ore"
+msgstr "Formato 24 Ore:"
 
 msgid "prefs.returnkey.linebreak"
 msgstr "Fine riga"
 
 msgid "prefs.retainwindow"
-msgstr "Ricorda Posizionamento:"
+msgstr "Ricorda Posizionamento Finestra:"
 
 msgid "prefs.doctheme.light"
 msgstr "Tema chiaro:"
@@ -1652,7 +1648,7 @@ msgid "prefs.imagestyle.preformat"
 msgstr "Colore preformattato"
 
 msgid "prefs.font.ui"
-msgstr "UI:"
+msgstr "Font UI:"
 
 # Font to use for headings and body when Monospace body is enabled.
 msgid "prefs.font.monodoc"
@@ -1801,7 +1797,7 @@ msgid "error.unsupported.protocol"
 msgstr "Protocollo non supportato"
 
 msgid "prefs.font.warnmissing"
-msgstr "Avviso Glifi:"
+msgstr "Avvertenza per i glifi mancanti:"
 
 msgid "error.proxy"
 msgstr "Errore del Proxy"
@@ -1978,19 +1974,19 @@ msgid "prefs.ostheme"
 msgstr "Usa il tema del sistema:"
 
 msgid "prefs.theme"
-msgstr "tema:"
+msgstr "Tema dell'UI:"
 
 msgid "prefs.theme.black"
 msgstr "Nero"
 
 msgid "prefs.gemtext.ansi"
-msgstr "codici ANSI:"
+msgstr "Codici ANSI nel Gemtext:"
 
 msgid "error.badredirect"
-msgstr "Redirect Invalido"
+msgstr "Reindirizzamento non valido"
 
 msgid "error.schemeredirect"
-msgstr "Redirect con cambio di schema"
+msgstr "Reindirizzamento con cambio di schema"
 
 #, c-format
 msgid "dlg.bookmarks.delete"
@@ -2055,7 +2051,7 @@ msgstr "Apri in un'altra App"
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Apri indice dell'archivio:"
+msgstr "Apri index.gmi negli archivi ZIP:"
 
 msgid "prefs.pinsplit.none"
 msgstr "Nessuno"
@@ -2088,7 +2084,7 @@ msgid "prefs.toolbaraction2"
 msgstr "Pulsante 2"
 
 msgid "prefs.sideicon"
-msgstr "Icona della capsula:"
+msgstr "Icona della capsula sul lato sinistro:"
 
 msgid "keys.subscribe"
 msgstr "Iscriviti alla pagina"
@@ -2179,7 +2175,7 @@ msgid "keys.hoverurl"
 msgstr "Alterna il mostrare l'URL al passaggio del mouse"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Formatta il testo semplice:"
+msgstr "Formatta righe lunge nel testo semplice:"
 
 msgid "keys.upload.edit"
 msgstr "Modifica la Pagina con Titan"
@@ -2196,7 +2192,7 @@ msgstr "Codice di Stato Sconosciuto"
 msgid "error.badstatus.msg"
 msgstr ""
 "Il server ha risposto con un codice di stato che non è presente nella "
-"specifica del protocollo Gemini. Forse viene dal futuro? Oppure soltanto un "
+"specifica del protocollo Gemini. Il server potrebbe avere un "
 "malfunzionamento."
 
 msgid "error.openfile"
@@ -2369,3 +2365,242 @@ msgstr "Oceanico"
 
 msgid "prefs.justify"
 msgstr "Giustificare:"
+
+msgid "error.proxyexpired"
+msgstr "Certificato del Proxy Scaduto"
+
+msgid "error.proxyverify"
+msgstr "Proxy non fidato"
+
+msgid "keys.identmenu"
+msgstr "Apri menu Identità"
+
+msgid "keys.contextmenu"
+msgstr "Apri menu contestuale"
+
+msgid "error.proxyexpired.msg"
+msgstr ""
+"La connessione è stata cancellata perché il certificato TLS del proxy è "
+"scaduto."
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"La connessione è stata interrotta perchè il certificato TLS del proxy non "
+"coincide con quello fidato.\n"
+"\n"
+"Il certificato del server proxy può essere segnato come fidato nelle "
+"Informazioni della Pagina."
+
+msgid "prefs.bottomnavbar"
+msgstr "Barra di Navigazione Inferiore"
+
+msgid "prefs.bottomtabbar"
+msgstr "Tab in fondo"
+
+msgid "prefs.markdown.viewsource"
+msgstr "Vedi Markdown come sorgente:"
+
+msgid "prefs.tui.simple"
+msgstr "Caratteri semplici:"
+
+msgid "prefs.evensplit"
+msgstr "Dividi i tab in modo uniforme:"
+
+msgid "error.incompleteheader.msg"
+msgstr ""
+"La risposta del server non contiene un header completo. Forse il serve ha un "
+"malfunzionamento, oppure hai provato a contattare un server non Gemini."
+
+msgid "error.incompleteheader"
+msgstr "Header incompleto"
+
+msgid "menu.reopentab"
+msgstr "Riapri l'ultimo Tab Chiuso"
+
+msgid "menu.viewformat.plain"
+msgstr "Vedi come Testo Semplice"
+
+msgid "menu.viewformat.gemini"
+msgstr "Vedi come Gemtext"
+
+msgid "spartan.input"
+msgstr "Inserisci il testo da inviare:"
+
+msgid "dlg.spartan.upload"
+msgstr "Apri l'Editor…"
+
+msgid "heading.upload.spartan"
+msgstr "Carica con Spartan"
+
+msgid "dlg.bookmark.parentfolder"
+msgstr "Cartella Padre:"
+
+msgid "keys.menubar.focus"
+msgstr "Dai focus alla barra del menu"
+
+msgid "menu.folder.opentab"
+msgstr "Apri in Nuovi Tab"
+
+msgid "bookmark.folder.delete"
+msgstr "Cancella Cartella Segnalibri"
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "termini separati da spazi"
+
+msgid "dlg.bookmark.notes"
+msgstr "Note:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "note private in forma libera"
+
+msgid "dlg.bookmark.identity"
+msgstr "Fissa l'identità:"
+
+msgid "menu.identity.newdomain"
+msgstr "Nuova Identità per il Dominio…"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Directory Corrente"
+
+msgid "heading.prefs.user"
+msgstr "Dati Utente"
+
+msgid "ident.unset"
+msgstr "Rimuovi"
+
+msgid "menu.email"
+msgstr "Contatta via Email"
+
+msgid "menu.movetab.left"
+msgstr "Sposta il Tab a Sinistra"
+
+msgid "menu.movetab.right"
+msgstr "Sposta il Tab a Destra"
+
+msgid "heading.prefs.appearance"
+msgstr "Aspetto"
+
+msgid "heading.prefs.layout"
+msgstr "Disposizione della Pagina"
+
+msgid "heading.prefs.content"
+msgstr "Contenuto"
+
+msgid "prefs.swipe.edge"
+msgstr "Strisciare dal bordo:"
+
+msgid "prefs.swipe.page"
+msgstr "Strisciare sulla pagina:"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Rileva lo stile dei menu Gopher automaticamente:"
+
+msgid "menu.tab.next"
+msgstr "Mostra Prossimo Tab"
+
+msgid "menu.tab.prev"
+msgstr "Mostra Tab Precedente"
+
+msgid "menu.movetab.split"
+msgstr "Sposta il Tab dall'altro lato"
+
+msgid "menu.movetab.newwindow"
+msgstr "Sposta Tab in una nuova Finestra"
+
+msgid "menu.title.window"
+msgstr "Finestra"
+
+msgid "menu.window.min"
+msgstr "Minimizza"
+
+msgid "menu.window.max"
+msgstr "Massimizza"
+
+msgid "menu.window.full"
+msgstr "Attiva/disattiva Schermo Intero"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Azera"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Catalano"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Rileva Automaticamente"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Ceco"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Danese"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Olandese"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Esperanto"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Finlandese"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Greco"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Ebreo"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Ungherese"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Indonesiano"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Irlandese"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Svedese"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Turco"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Ucraino"
+
+msgid "dlg.translate.pre"
+msgstr "Salta il preformattato:"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Coreano"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Persiano"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Polacco"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Slovacco"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Reindirizzamenti che cambiano lo schema:"

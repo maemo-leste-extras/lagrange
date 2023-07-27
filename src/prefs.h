@@ -72,6 +72,7 @@ enum iPrefsBool {
     simpleChars_PrefsBool,
     
     evenSplit_PrefsBool,
+    detachedPrefs_PrefsBool,
     
     /* Document presentation */
     sideIcon_PrefsBool,
@@ -91,9 +92,12 @@ enum iPrefsBool {
     markdownAsSource_PrefsBool,
     
     skipIndexPageOnParentNavigation_PrefsBool,
+    edgeSwipe_PrefsBool,
+    pageSwipe_PrefsBool,
     
     /* Network */
     decodeUserVisibleURLs_PrefsBool,
+    allowSchemeChangingRedirect_PrefsBool,
     
     /* Style */
     monospaceGemini_PrefsBool,
@@ -109,6 +113,7 @@ enum iPrefsBool {
     centerShortDocs_PrefsBool,
     
     plainTextWrap_PrefsBool,
+    geminiStyledGopher_PrefsBool,
     
     /* Meta */
     max_PrefsBool
@@ -138,6 +143,7 @@ struct Impl_Prefs {
             iBool simpleChars;
             
             iBool evenSplit;
+            iBool detachedPrefs;
             
             /* Document presentation */
             iBool sideIcon;
@@ -157,9 +163,12 @@ struct Impl_Prefs {
             iBool markdownAsSource;
             
             iBool skipIndexPageOnParentNavigation;
+            iBool edgeSwipe; /* mobile: one can swipe from edges to navigate */
+            iBool pageSwipe; /* mobile: one can swipe over the page to navigate */
             
             /* Network */
             iBool decodeUserVisibleURLs;
+            iBool allowSchemeChangingRedirect;
             
             /* Style */
             iBool monospaceGemini;
@@ -175,12 +184,14 @@ struct Impl_Prefs {
             iBool centerShortDocs;
             
             iBool plainTextWrap;
+            iBool geminiStyledGopher;
         };
     };
     /* UI state (belongs to state.lgr...) */
     int              dialogTab;
     int              langFrom;
     int              langTo;
+    iBool            translationIgnorePre;
     /* Colors */
     enum iColorTheme systemPreferredColorTheme[2]; /* dark, light */
     enum iColorTheme theme;    
@@ -189,6 +200,7 @@ struct Impl_Prefs {
     float            uiScale;
     enum iToolbarAction navbarActions[maxNavbarActions_Prefs];
     enum iToolbarAction toolbarActions[2];
+    int              inputZoomLevel;
     /* Document presentation */
     int              zoomPercent;
     /* Behavior */

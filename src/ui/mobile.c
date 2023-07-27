@@ -43,7 +43,7 @@ const iToolbarActionSpec toolbarActions_Mobile[max_ToolbarAction] = {
     { home_Icon, "${menu.home}", "navigate.home" },
     { upArrow_Icon, "${menu.parent}", "navigate.parent" },
     { reload_Icon, "${menu.reload}", "navigate.reload" },
-    { add_Icon, "${menu.newtab}", "tabs.new" },
+    { add_Icon, "${menu.newtab}", "tabs.new append:1" },
     { close_Icon, "${menu.closetab}", "tabs.close" },
     { bookmark_Icon, "${menu.page.bookmark}", "bookmark.add" },
     { globe_Icon, "${menu.page.translate}", "document.translate" },
@@ -450,7 +450,7 @@ static iWidget *makeValuePadding_(iWidget *value) {
     iInputWidget *input = isInstance_Object(value, &Class_InputWidget) ? (iInputWidget *) value : NULL;
     if (input) {
         setFont_InputWidget(input, labelFont_());
-        setContentPadding_InputWidget(input, 3 * gap_UI, 3 * gap_UI);
+        setContentPadding_InputWidget(input, 2 * gap_UI, 3 * gap_UI);
     }
     iWidget *pad = new_Widget();
     setBackgroundColor_Widget(pad, uiBackgroundSidebar_ColorId);
@@ -472,7 +472,7 @@ static iWidget *makeValuePaddingWithHeading_(iLabelWidget *heading, iWidget *val
                     resizeWidthOfChildren_WidgetFlag |
                     arrangeHorizontal_WidgetFlag, iTrue);
     setBackgroundColor_Widget(div, uiBackgroundSidebar_ColorId);
-    setPadding_Widget(div, gap_UI, gap_UI, 4 * gap_UI, gap_UI);
+    setPadding_Widget(div, gap_UI, gap_UI, !isInput ? 4 * gap_UI : (2 * gap_UI), gap_UI);
     addChildFlags_Widget(div, iClob(heading), 0);
     setPadding1_Widget(as_Widget(heading), 0);
     setFont_LabelWidget(heading, labelFont_());
@@ -490,7 +490,10 @@ static iWidget *makeValuePaddingWithHeading_(iLabelWidget *heading, iWidget *val
 //                                           value));
     }
     else {
-        addChildFlags_Widget(div, iClob(new_Widget()), expand_WidgetFlag);
+        setFlags_Widget(as_Widget(heading),
+                        fixedHeight_WidgetFlag /* for automatic wrap height */ |
+                        expand_WidgetFlag, iTrue);
+        setWrap_LabelWidget(heading, iTrue);
         addChild_Widget(div, iClob(value));
     }
 //    printTree_Widget(div);
@@ -704,7 +707,7 @@ void makePanelItem_Mobile(iWidget *panel, const iMenuItem *item) {
         }
         setId_Widget(as_Widget(input), id);
         setUrlContent_InputWidget(input, argLabel_Command(spec, "url"));
-        setSelectAllOnFocus_InputWidget(input, argLabel_Command(spec, "selectall"));        
+        setSelectAllOnFocus_InputWidget(input, argLabel_Command(spec, "selectall"));
         setFont_InputWidget(input, labelFont_());
         if (argLabel_Command(spec, "noheading")) {
             widget = makeValuePadding_(as_Widget(input));
@@ -712,7 +715,7 @@ void makePanelItem_Mobile(iWidget *panel, const iMenuItem *item) {
         }
         else {
             setFlags_Widget(as_Widget(input), alignRight_WidgetFlag, iTrue);
-            setContentPadding_InputWidget(input, 3 * gap_UI, 0);
+            setContentPadding_InputWidget(input, 0 * gap_UI, 0);
             if (hasLabel_Command(spec, "unit")) {
                 iWidget *unit = addChildFlags_Widget(
                     as_Widget(input),
@@ -1090,6 +1093,11 @@ void setupMenuTransition_Mobile(iWidget *sheet, iBool isIncoming) {
 }
 
 void setupSheetTransition_Mobile(iWidget *sheet, int flags) {
+    disableRefresh_App(iFalse);
+    if (isPromoted_Widget(sheet)) {
+        /* This has been promoted to a window, shouldn't animate it. */
+        return;
+    }
     const iBool isIncoming = (flags & incoming_TransitionFlag) != 0;
     const int   dir        = flags & dirMask_TransitionFlag;
     if (!isUsingPanelLayout_Mobile()) {
@@ -1189,4 +1197,55 @@ int bottomSafeInset_Mobile(void) {
 #else
     return 0;
 #endif
+}
+
+#if !defined (iPlatformAppleMobile)
+iBool isSupported_SystemMenu(void) {
+    return iFalse;
+}
+
+iBool makePopup_SystemMenu(iWidget *owner) {
+    iUnused(owner);
+    return iFalse;
+}
+
+void setRect_SystemMenu(iWidget *owner, iRect anchorRect) {
+    iUnused(owner, anchorRect);
+}
+
+void setHidden_SystemMenu(iWidget *owner, iBool hide) {
+    iUnused(owner, hide);
+}
+
+void updateItems_SystemMenu(iWidget *owner, const iMenuItem *items, size_t n) {
+    iUnused(owner);
+}
+
+void releasePopup_SystemMenu(iWidget *owner) {
+    iUnused(owner);
+}
+#endif /* !iPlatformAppleMobile */
+
+void updateAfterBoundsChange_SystemMenu(iWidget *owner) {
+    iAssert(isSupported_SystemMenu());
+    //printf("updating bounds of sysmenu owner %p\n", owner);
+    iAssert(flags_Widget(owner) & nativeMenu_WidgetFlag);
+    iWidget *parent = parent_Widget(owner);
+    if (isInstance_Object(parent, &Class_LabelWidget)) {
+        /* TODO: is this too much tree-walking to occur after every change to the bounds? */
+        const iWidget *menuFocusRoot   = focusRoot_Widget(parent);
+        const iWidget *activeFocusRoot = focusRoot_Widget(root_Widget(parent));
+        if (!isVisible_Widget(parent) || isDisabled_Widget(parent) ||
+            /* other focus root blocks the parent? */
+            (menuFocusRoot != activeFocusRoot &&
+             !hasParent_Widget(menuFocusRoot, activeFocusRoot))) {
+            setHidden_SystemMenu(owner, iTrue);
+        }
+        else {
+            setRect_SystemMenu(owner, bounds_Widget(parent));
+        }
+    }
+    else {
+        printf(" --- non-label parent for sysmenu %p !!\n", owner);
+    }
 }

@@ -64,5 +64,6 @@ int main(int argc, char *argv[]) {
         iRelease(future);
         iRelease(pool);
     }
+    deinit_Foundation();
     return 0;
 }

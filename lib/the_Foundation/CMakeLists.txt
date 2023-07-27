@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1)
 
-project (the_Foundation VERSION 1.4.0 LANGUAGES C)
+project (the_Foundation VERSION 1.7.0 LANGUAGES C)
 set (CMAKE_PROJECT_DESCRIPTION "Opinionated C11 library for low-level functionality")
 
 include (CheckIncludeFile)
@@ -169,6 +169,7 @@ set (HEADERS
 )
 set (SOURCES
     src/the_foundation.c
+    src/address.c
     src/audience.c
     src/array.c
     src/block.c
@@ -245,12 +246,11 @@ else ()
     set (iPlatformOther YES)
     set (SOURCES ${SOURCES} src/platform/generic.c)
 endif ()
-if (NOT iPlatformWindows) # POSIX
+if (NOT iPlatformWindows) # POSIX platform
     list (APPEND HEADERS
         src/platform/posix/pipe.h
     )
     list (APPEND SOURCES
-        src/platform/posix/address.c
         src/platform/posix/datagram.c
         src/platform/posix/locale.c
         src/platform/posix/pipe.c
@@ -258,30 +258,32 @@ if (NOT iPlatformWindows) # POSIX
         src/platform/posix/service.c
         src/platform/posix/socket.c
     )
-else () # WIN32
+else () # Win32 platform
     list (APPEND HEADERS
         src/platform/win32/msdirent.h
     )
     list (APPEND SOURCES
-        src/platform/win32/address.c
         src/platform/win32/datagram.c
+        src/platform/win32/pipe.c
+        src/platform/win32/pipe.h
         src/platform/win32/process.c
         src/platform/win32/service.c
         src/platform/win32/socket.c
     )
 endif ()
-if (TFDN_ENABLE_WIN32_FILE_API AND (iPlatformWindows OR iPlatformMsys))
+if (iPlatformWindows OR iPlatformMsys)
     list (APPEND SOURCES
-        src/platform/win32/file.c
+        src/platform/win32/wide.c
         src/platform/win32/wide.h
     )
+endif ()
+if (TFDN_ENABLE_WIN32_FILE_API AND (iPlatformWindows OR iPlatformMsys))
+    list (APPEND SOURCES src/platform/win32/file.c)
     set (iHaveWin32FileAPI YES)
 else ()
-    list (APPEND SOURCES
-        src/file.c
-    )
+    list (APPEND SOURCES src/file.c)
 endif ()
-if (PCRE_FOUND)
+if (PCRE2_FOUND OR PCRE_FOUND)
     set (iHaveRegExp YES)
     list (APPEND SOURCES src/regexp.c)
     list (APPEND HEADERS include/the_Foundation/regexp.h)
@@ -310,6 +312,11 @@ if (GIT_FOUND AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/.git")
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 endif ()
+if (iFoundationLibraryGitTag)
+    set (the_Foundation_VERSION_SUFFIX "-${iFoundationLibraryGitTag}")
+else ()
+    set (the_Foundation_VERSION_SUFFIX "")
+endif ()
 configure_file (config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set (TFDN_LIB the_Foundation)
@@ -329,7 +336,7 @@ write_basic_package_version_file (
 )
 set_target_properties (${TFDN_LIB} PROPERTIES
     VERSION   ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 if (iPlatformMsys)
     set_target_properties (${TFDN_LIB} PROPERTIES
@@ -363,6 +370,11 @@ if (IOS)
 endif ()
 
 # Generate a simple pkgconfig file.
+if (OPENSSL_FOUND)
+    foreach (flg ${OPENSSL_LDFLAGS})
+        set (OPENSSL_PC_LDFLAGS "${OPENSSL_PC_LDFLAGS} ${flg}")
+    endforeach (flg)
+endif ()
 configure_file (
     the_Foundation.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/the_Foundation.pc
@@ -373,6 +385,9 @@ configure_file (
 if (NOT iHaveC11Threads AND NOT ANDROID)
     # phtread is exposed via header file usage, so it must be linked publicly.
     target_link_libraries (${TFDN_LIB} PUBLIC pthread)
+endif ()
+if (ANDROID AND TFDN_ENABLE_DEBUG_OUTPUT)
+    target_link_libraries (${TFDN_LIB} PUBLIC log)
 endif ()
 target_link_libraries (${TFDN_LIB} PUBLIC m)
 tfdn_link_depends (${TFDN_LIB} ${TFDN_DEPENDS_LINK_MODE})
@@ -416,6 +431,7 @@ if (TFDN_ENABLE_TESTS)
     tfdn_add_test (test_Foundation      tests/t_test.c)
     tfdn_add_test (string_Foundation    tests/t_string.c)
     tfdn_add_test (threading_Foundation tests/t_threading.c)
+    tfdn_add_test (process_Foundation   tests/t_process.c)
     tfdn_add_test (math_Foundation      tests/t_math.c)
     tfdn_add_test (network_Foundation   tests/t_network.c)
     tfdn_add_test (udptest_Foundation   tests/t_udptest.c)

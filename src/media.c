@@ -624,12 +624,16 @@ static void finished_MediaRequest_(iAnyObject *obj) {
 }
 
 void init_MediaRequest(iMediaRequest *d, iDocumentWidget *doc, unsigned int linkId,
-                       const iString *url, iBool enableFilters) {
+                       const iString *url, iBool enableFilters,
+                       const iGmIdentity *overrideDefaultIdentity) {
     d->doc    = doc;
     d->linkId = linkId;
     d->req    = new_GmRequest(certs_App());
     setUrl_GmRequest(d->req, url);
     enableFilters_GmRequest(d->req, enableFilters);
+    if (overrideDefaultIdentity) {
+        setIdentity_GmRequest(d->req, overrideDefaultIdentity);
+    }
     iConnect(GmRequest, d->req, updated, d, updated_MediaRequest_);
     iConnect(GmRequest, d->req, finished, d, finished_MediaRequest_);
     submit_GmRequest(d->req);
@@ -639,6 +643,19 @@ void deinit_MediaRequest(iMediaRequest *d) {
     iDisconnect(GmRequest, d->req, updated, d, updated_MediaRequest_);
     iDisconnect(GmRequest, d->req, finished, d, finished_MediaRequest_);
     iRelease(d->req);
+}
+
+void resubmitWithUrl_MediaRequest(iMediaRequest *d, const iString *url) {
+    iAssert(d->req);
+    iAssert(isFinished_GmRequest(d->req));
+    const iBool enableFilters = filtersEnabled_GmRequest(d->req);
+    deinit_MediaRequest(d); /* release request, disconnect audiences */
+    d->req = new_GmRequest(certs_App());
+    setUrl_GmRequest(d->req, url);
+    enableFilters_GmRequest(d->req, enableFilters);
+    iConnect(GmRequest, d->req, updated, d, updated_MediaRequest_);
+    iConnect(GmRequest, d->req, finished, d, finished_MediaRequest_);
+    submit_GmRequest(d->req);
 }
 
 iMediaRequest *newReused_MediaRequest(iDocumentWidget *doc, unsigned int linkId,
@@ -654,6 +671,6 @@ iMediaRequest *newReused_MediaRequest(iDocumentWidget *doc, unsigned int linkId,
 
 iDefineObjectConstructionArgs(MediaRequest,
                               (iDocumentWidget *doc, unsigned int linkId, const iString *url,
-                               iBool enableFilters),
-                              doc, linkId, url, enableFilters)
+                               iBool enableFilters, const iGmIdentity *overrideDefaultIdentity),
+                              doc, linkId, url, enableFilters, overrideDefaultIdentity)
 iDefineClass(MediaRequest)

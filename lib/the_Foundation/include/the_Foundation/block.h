@@ -135,6 +135,7 @@ void            md5_Block           (const iBlock *, uint8_t md5_out[16]);
 iString *       decode_Block        (const iBlock *, const char *textEncoding);
 iString *       hexEncode_Block     (const iBlock *);
 iBlock *        hexDecode_Rangecc   (iRangecc);
+iString *       base64Encode_Block  (const iBlock *);
 iBlock *        base64Decode_Block  (const iBlock *);
 
 #define iBlockDefaultCompressionLevel   6

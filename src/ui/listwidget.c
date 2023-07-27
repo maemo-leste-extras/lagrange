@@ -431,6 +431,16 @@ static iBool endDrag_ListWidget_(iListWidget *d, iInt2 endPos) {
     return iTrue;
 }
 
+static void abortDrag_ListWidget_(iListWidget *d) {
+    if (d->dragItem != iInvalidPos) {
+        stop_Anim(&d->scrollY.pos);
+        invalidateItem_ListWidget(d, d->dragItem);
+        d->dragItem = iInvalidPos;
+        redrawHoverItem_ListWidget_(d);
+        setFlags_Widget(as_Widget(d), touchDrag_WidgetFlag, iFalse); /* mobile drag handles */
+    }
+}
+
 static iBool isScrollDisabled_ListWidget_(const iListWidget *d, const SDL_Event *ev) {
     int dir = 0;
     if (ev->type == SDL_MOUSEWHEEL) {
@@ -504,7 +514,7 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
             refresh_Widget(d);
             return iFalse;
         }
-    }
+    }        
     else if (ev->type == SDL_USEREVENT && ev->user.code == widgetTapBegins_UserEventCode) {
         d->noHoverWhileScrolling = iFalse;
     }
@@ -571,7 +581,7 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
             }
         }
     }
-    if (ev->type == SDL_MOUSEWHEEL && isHover_Widget(w)) {
+    if (ev->type == SDL_MOUSEWHEEL && isHover_Widget(w) && ev->wheel.x == 0) {
         if (d->dragHandleWidth) {
             if (d->dragItem == iInvalidPos) {
                 const iInt2 wpos = coord_MouseWheelEvent(&ev->wheel);
@@ -608,6 +618,12 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
         }
         return iTrue;
     }
+    if (ev->type == SDL_MOUSEWHEEL && isHover_Widget(w) && ev->wheel.y == 0 &&
+        isPerPixel_MouseWheelEvent(&ev->wheel) && !isInertia_MouseWheelEvent(&ev->wheel)) {
+        iInt2 coord = mouseCoord_SDLEvent(ev);
+        postCommand_Widget(w, "listswipe.moved arg:%d coord:%d %d", ev->wheel.x, coord.x, coord.y);
+        return iTrue;
+    }
     switch (processEvent_Click(&d->click, ev)) {
         case started_ClickResult:
             d->noHoverWhileScrolling = iFalse;
@@ -615,12 +631,7 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
             redrawHoverItem_ListWidget_(d);
             return iTrue;
         case aborted_ClickResult:
-            if (d->dragItem != iInvalidPos) {
-                stop_Anim(&d->scrollY.pos);
-                invalidateItem_ListWidget(d, d->dragItem);
-                d->dragItem = iInvalidPos;
-            }
-            redrawHoverItem_ListWidget_(d);
+            abortDrag_ListWidget_(d);
             break;
         case drag_ClickResult:
             if (d->click.clickButton != SDL_BUTTON_LEFT) {

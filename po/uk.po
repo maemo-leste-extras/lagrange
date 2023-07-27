@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-05-24 04:21+0000\n"
+"POT-Creation-Date: 2023-01-22 10:53+0000\n"
+"PO-Revision-Date: 2023-05-30 20:03+0000\n"
 "Last-Translator: Alyssa Liddell <e-liss@tuta.io>\n"
 "Language-Team: Ukrainian <http://weblate.skyjake.fi/projects/lagrange/ui/uk/>"
 "\n"
@@ -98,12 +100,6 @@ msgstr "Закрити"
 
 msgid "dlg.default"
 msgstr " ОК "
-
-msgid "toggle.yes"
-msgstr "ТАК"
-
-msgid "toggle.no"
-msgstr "НІ"
 
 msgid "menu.title.edit"
 msgstr "Редагувати"
@@ -508,9 +504,6 @@ msgstr ""
 "Отримано о %I:%M %p\n"
 "%b %d, %Y"
 
-msgid "feeds.entry.newtab"
-msgstr "Відкрити допис у новій вкладці"
-
 msgid "feeds.entry.markunread"
 msgstr "Позначити як непрочитане"
 
@@ -824,9 +817,6 @@ msgstr ""
 msgid "dlg.openlink"
 msgstr "Відкрити посилання"
 
-msgid "heading.certwarn"
-msgstr "НЕНАДІЙНИЙ СЕРТИФІКАТ"
-
 msgid "dlg.certwarn.different"
 msgstr ""
 "Отриманий сертифікат дійсний, але відрізняється від того, якому ми довіряємо."
@@ -1102,29 +1092,14 @@ msgstr "Арабська"
 msgid "lang.de"
 msgstr "Німецька"
 
-msgid "lang.ia"
-msgstr "Інтерлінгва"
-
 msgid "dlg.translate"
 msgstr "Перекласти"
 
 msgid "lang.zh"
 msgstr "Китайська"
 
-msgid "lang.zh.hans"
-msgstr "Китайська (спрощена)"
-
-msgid "lang.zh.hant"
-msgstr "Китайська (традиційна)"
-
 msgid "lang.en"
 msgstr "Англійська"
-
-msgid "lang.ie"
-msgstr "Інтерлінгве"
-
-msgid "lang.fi"
-msgstr "Фінська"
 
 msgid "lang.fr"
 msgstr "Французька"
@@ -1132,44 +1107,20 @@ msgstr "Французька"
 msgid "lang.it"
 msgstr "Італійська"
 
-msgid "lang.pl"
-msgstr "Польська"
-
 msgid "lang.pt"
 msgstr "Португальська"
 
 msgid "lang.ru"
 msgstr "Московитська"
 
-msgid "lang.eo"
-msgstr "Есперанто"
-
 msgid "lang.es"
 msgstr "Іспанська"
-
-msgid "lang.sk"
-msgstr "Словацька"
-
-msgid "lang.sr"
-msgstr "Сербська"
-
-msgid "lang.isv"
-msgstr "Міжслов'янська"
-
-msgid "lang.gl"
-msgstr "Галісійська"
 
 msgid "lang.hi"
 msgstr "Гінді"
 
 msgid "lang.ja"
 msgstr "Японська"
-
-msgid "lang.es.mx"
-msgstr "Іспанська (Мексика)"
-
-msgid "lang.tok"
-msgstr "Токі-пона"
 
 msgid "heading.newident"
 msgstr "Нова ідентичність"
@@ -1293,7 +1244,7 @@ msgid "dlg.bookmark.icon"
 msgstr "Значок:"
 
 msgid "heading.bookmark.tags"
-msgstr "Особливі мітки"
+msgstr "Поведінка"
 
 msgid "heading.addfolder"
 msgstr "Додати теку"
@@ -1360,7 +1311,7 @@ msgstr "Розміри"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Стиль"
+msgstr "Стиль сторінки"
 
 # tab button
 msgid "heading.prefs.userinterface"
@@ -1386,7 +1337,7 @@ msgstr "Згортати преформатований текст:"
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Відкривати index.gmi при перегляді архівів:"
+msgstr "Відкривати index.gmi у ZIP-архівах:"
 
 msgid "prefs.pinsplit"
 msgstr "Відкривати посилання:"
@@ -1410,7 +1361,7 @@ msgid "prefs.scrollspeed.mouse"
 msgstr "Швидкість миші:"
 
 msgid "prefs.theme"
-msgstr "Тема:"
+msgstr "Тема інтерфейсу користувача:"
 
 msgid "prefs.theme.light"
 msgstr "Світла"
@@ -1419,7 +1370,7 @@ msgid "prefs.theme.white"
 msgstr "Біла"
 
 msgid "prefs.imageloadscroll"
-msgstr "Схоплення зображень при прокручуванні:"
+msgstr "Схоплювати наступне зображення при прокручуванні:"
 
 msgid "prefs.hidetoolbarscroll"
 msgstr "Приховати панель інструментів при прокручуванні:"
@@ -1461,10 +1412,10 @@ msgid "prefs.animate"
 msgstr "Анімації:"
 
 msgid "prefs.retainwindow"
-msgstr "Зберігати розташування:"
+msgstr "Зберігати розташування вікна:"
 
 msgid "prefs.sideicon"
-msgstr "Значок капсули:"
+msgstr "Значок капсули ліворуч:"
 
 msgid "prefs.doctheme.light"
 msgstr "Світла тема:"
@@ -1503,9 +1454,6 @@ msgstr "Кольором фону"
 msgid "prefs.imagestyle.text"
 msgstr "Кольором тексту"
 
-msgid "prefs.headingfont"
-msgstr "Шрифт заголовків:"
-
 msgid "prefs.font"
 msgstr "Шрифт вмісту:"
 
@@ -1525,9 +1473,6 @@ msgstr "На темному"
 # Interpretation: (Bold links) on light (background).
 msgid "prefs.boldlink.light"
 msgstr "На світлому"
-
-msgid "prefs.userfont"
-msgstr "Довільний TrueType-шрифт:"
 
 msgid "prefs.linewidth"
 msgstr "Ширина лінії:"
@@ -1567,9 +1512,6 @@ msgstr "Преформатованим кольором"
 
 msgid "prefs.mono"
 msgstr "Текст сталої ширини в:"
-
-msgid "hint.prefs.userfont"
-msgstr "повний шлях до файлу TrueType-шрифту"
 
 msgid "prefs.ca.file"
 msgstr "Файл CA:"
@@ -1629,7 +1571,7 @@ msgstr ""
 msgid "error.badstatus.msg"
 msgstr ""
 "Йой! Сервер відповів кодом стану, відсутнім у специфікації протоколу Gemini. "
-"Можливо, він з майбутнього? Або ж потрапив під автобус..."
+"Певно він потрапив під автобус..."
 
 msgid "error.openfile.msg"
 msgstr ""
@@ -1689,7 +1631,7 @@ msgid "prefs.biglede"
 msgstr "Великий 1-й абзац:"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Переносити простий текст:"
+msgstr "Переносити довгі рядки простого тексту:"
 
 msgid "prefs.decodeurls"
 msgstr "Декодувати URL:"
@@ -2016,7 +1958,7 @@ msgid "prefs.bookmarks.addbottom"
 msgstr "Додати закладки у кінець списку:"
 
 msgid "prefs.font.ui"
-msgstr "Інтерфейс Користувача:"
+msgstr "Шрифт інтерфейсу користувача:"
 
 msgid "prefs.font.heading"
 msgstr "Заголовки:"
@@ -2035,7 +1977,7 @@ msgid "prefs.boldlink.visited"
 msgstr "Відвідані"
 
 msgid "prefs.gemtext.ansi"
-msgstr "Керівні символи ANSI:"
+msgstr "Керівні символи ANSI в Gemtext:"
 
 msgid "prefs.gemtext.ansi.fg"
 msgstr "Колір тексту"
@@ -2047,7 +1989,7 @@ msgid "prefs.font.warnmissing"
 msgstr "Попередження про відсутні гліфи:"
 
 msgid "prefs.font.smooth"
-msgstr "Згладжування:"
+msgstr "Згладжування шрифту:"
 
 msgid "error.ansi"
 msgstr "Емуляція терміналу"
@@ -2131,26 +2073,6 @@ msgstr "Усунути попередження"
 msgid "heading.dismiss.warning"
 msgstr "Усунути попередження?"
 
-msgid "dlg.fontpack.classic"
-msgstr "Завантажити пакет шрифтів (25 МБ)"
-
-msgid "heading.fontpack.classic"
-msgstr "Завантажити пакет шрифтів"
-
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"Шрифти, що раніше були у складі дотдатку тепер постачаються окремо. Бажаєте "
-"завантажити пакет шрифтів \"Класичний\" зараз?"
-
-msgid "lang.uk"
-msgstr "Українська"
-
-msgid "lang.cs"
-msgstr "Чеська"
-
-msgid "lang.hu"
-msgstr "Угорська"
-
 msgid "dlg.bookmark.folder"
 msgstr "Тека:"
 
@@ -2165,7 +2087,7 @@ msgid "menu.update"
 msgstr "Перевірити наявність оновлень…"
 
 msgid "prefs.time.24h"
-msgstr "24-годинний час"
+msgstr "24-годинний час:"
 
 # This label should be fairly short so it fits in a button in the sidebar.
 msgid "sidebar.action.feeds.markallread"
@@ -2504,3 +2426,188 @@ msgstr "Прості символи:"
 
 msgid "prefs.evensplit"
 msgstr "Розділяти вкладки рівномірно:"
+
+msgid "error.proxyverify"
+msgstr "Недовірений проксі"
+
+msgid "error.proxyexpired"
+msgstr "Протермінований сертифікат проксі"
+
+msgid "error.proxyexpired.msg"
+msgstr ""
+"З'єднання було скасовано через протермінування TLS сертифікату проксі "
+"сервера."
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"З'єднання було скасовано через невідповідність TLS сертифікату проксі "
+"сервера тому, якому ми довіряємо.\n"
+"\n"
+"Сертифікат проксі сервера можна зробити довіреним у Інформації про сторінку."
+
+msgid "menu.folder.opentab"
+msgstr "Відкрити у нових вкладках"
+
+msgid "dlg.bookmark.notes"
+msgstr "Примітки:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "Нотатки у вільному форматі"
+
+msgid "bookmark.folder.delete"
+msgstr "Видалити теку з закладками"
+
+msgid "dlg.bookmark.identity"
+msgstr "Закріплена ідентичність:"
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "слова, розділені проміжком"
+
+msgid "heading.prefs.user"
+msgstr "Користувацькі дані"
+
+msgid "ident.unset"
+msgstr "Відкріпити"
+
+msgid "menu.email"
+msgstr "Написати листа"
+
+msgid "menu.identity.newdomain"
+msgstr "Нова ідентичність для домену…"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Поточний каталог"
+
+msgid "menu.window.full"
+msgstr "Повноекранний режим"
+
+msgid "menu.title.window"
+msgstr "Вікно"
+
+msgid "heading.prefs.appearance"
+msgstr "Зовнішній вигляд"
+
+msgid "heading.prefs.content"
+msgstr "Вміст"
+
+msgid "menu.tab.next"
+msgstr "Показати наступну вкладку"
+
+msgid "menu.tab.prev"
+msgstr "Показати попередню вкладку"
+
+msgid "menu.window.min"
+msgstr "Згорнути"
+
+msgid "menu.window.max"
+msgstr "Розгорнути"
+
+msgid "heading.prefs.layout"
+msgstr "Макет сторінки"
+
+msgid "menu.movetab.left"
+msgstr "Зрушити вкладку ліворуч"
+
+msgid "menu.movetab.right"
+msgstr "Зрушити вкладку праворуч"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Автовизначення стилю меню Gopher:"
+
+msgid "menu.movetab.split"
+msgstr "Зрушити вкладку на інший бік"
+
+msgid "menu.movetab.newwindow"
+msgstr "Зрушити вкладку до нового вікна"
+
+msgid "prefs.swipe.page"
+msgstr "Ковзання на сторінці:"
+
+msgid "prefs.swipe.edge"
+msgstr "Ковзання від межі:"
+
+msgid "dlg.translate.pre"
+msgstr "Пропускання завчасного форматування:"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Автоматично"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Азербайджанська"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Каталонська"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Чеська"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Данська"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Нідерландська"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Есперанто"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Фінська"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Грецька"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Іврит"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Угорська"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Індонезійська"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Ірландська"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Корейська"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Фарсі"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Польська"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Словацька"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Шведська"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Турецька"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Українська"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Перенаправлення, що змінюють схему:"

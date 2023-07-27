@@ -272,7 +272,7 @@ iDeclareType(FontRun)
 iDeclareTypeConstructionArgs(FontRun, const iFontRunArgs *args, const iRangecc text, uint32_t crc)
     
 iDeclareType(StbText)
-iDeclareTypeConstructionArgs(StbText, SDL_Renderer *render)
+iDeclareTypeConstructionArgs(StbText, SDL_Renderer *render, float documentFontSizeFactor)
 
 struct Impl_StbText {
     iText          base;
@@ -429,8 +429,8 @@ static void deinitCache_StbText_(iStbText *d) {
     SDL_DestroyTexture(d->cache);
 }
 
-void init_StbText(iStbText *d, SDL_Renderer *render) {
-    init_Text(&d->base, render);
+void init_StbText(iStbText *d, SDL_Renderer *render, float documentFontSizeFactor) {
+    init_Text(&d->base, render, documentFontSizeFactor);
     iText *oldActive = current_Text();
     setCurrent_Text(&d->base);
     init_Array(&d->fonts, sizeof(iFont));
@@ -475,9 +475,9 @@ void deinit_StbText(iStbText *d) {
     deinit_Text(&d->base);
 }
 
-iText *new_Text(SDL_Renderer *render) {
+iText *new_Text(SDL_Renderer *render, float documentFontSizeFactor) {
     iStbText *d = iMalloc(StbText);
-    init_StbText(d, render);
+    init_StbText(d, render, documentFontSizeFactor);
     return (iText *) d;
 }
 
@@ -1388,7 +1388,7 @@ static iFontRun *makeOrFindCachedFontRun_StbText_(iStbText *d, const iFontRunArg
     return d->cachedFontRuns[0];
 }
 
-static iRect run_Font_(iFont *d, const iRunArgs *args) {
+static void run_Font_(iFont *d, const iRunArgs *args) {
     const int   mode         = args->mode;
     const iInt2 orig         = args->pos;
     iRect       bounds       = { orig, init_I2(0, d->font.height) };
@@ -1482,7 +1482,7 @@ static iRect run_Font_(iFont *d, const iRunArgs *args) {
                 wrapResumePos      = textLen;
                 iGlyphBuffer *buf = at_Array(&fontRun->buffers, runIndex);
                 iAssert(run->font == (iAnyFont *) buf->font);
-                iChar prevCh = 0;
+                iChar prevCh[2] = { 0, 0 };
                 lastAttrib = run->attrib;
 //                printf("checking run %zu...\n", runIndex);
                 for (unsigned int ir = 0; ir < buf->glyphCount; ir++) {
@@ -1504,11 +1504,12 @@ static iRect run_Font_(iFont *d, const iRunArgs *args) {
                                                               : args->wrap->mode;
                     iAssert(xAdvance >= 0);
                     if (wrapMode == word_WrapTextMode) {
-                        /* When word wrapping, only consider certain places breakable. */
-                        if ((prevCh == '-' || prevCh == '/' || prevCh == '\\' || prevCh == '?' ||
-                             prevCh == '!' || prevCh == '&' || prevCh == '+' || prevCh == '_' ||
-                             prevCh == '@') &&
-                            !isPunct_Char(ch)) {
+                        /* When word-wrapping, only consider certain places breakable. */
+                        if (((prevCh[0] == '-' || prevCh[0] == '/' || prevCh[0] == '\\' || prevCh[0] == '?' ||
+                             prevCh[0] == '!' || prevCh[0] == '&' || prevCh[0] == '+' || prevCh[0] == '_' ||
+                             prevCh[0] == '@') &&
+                             !isPunct_Char(ch)) ||
+                            (isAlpha_Char(prevCh[1]) && prevCh[0] == '.' && isAlpha_Char(ch))) {
                             safeBreakPos = logPos;
                             breakAdvance = wrapAdvance;
                             breakRunIndex = runIndex;
@@ -1522,7 +1523,8 @@ static iRect run_Font_(iFont *d, const iRunArgs *args) {
 //                            printf("sbp:%d breakAdv_B:%f\n", safeBreakPos, breakAdvance);
     //                        isSoftHyphenBreak = iFalse;
                         }
-                        prevCh = ch;
+                        prevCh[1] = prevCh[0];
+                        prevCh[0] = ch;
                     }
                     else {
                         safeBreakPos  = logPos;
@@ -1714,7 +1716,7 @@ static iRect run_Font_(iFont *d, const iRunArgs *args) {
             !notify_WrapText(args->wrap,
                              sourcePtr_AttributedText(attrText, wrapResumePos),
                              wrapAttrib,
-                              origin,
+                             origin,
                              iRound(wrapAdvance))) {
             willAbortDueToWrap = iTrue;
         }
@@ -1766,13 +1768,10 @@ static iRect run_Font_(iFont *d, const iRunArgs *args) {
         xCursor = 0;
         yCursor += d->font.height;
     }
-    if (args->cursorAdvance_out) {
-        *args->cursorAdvance_out = init_I2(xCursor, yCursor);
+    if (args->metrics_out) {
+        args->metrics_out->advance = init_I2(xCursor, yCursor);
+        args->metrics_out->bounds = bounds;
     }
-    if (args->runAdvance_out) {
-        *args->runAdvance_out = xCursorMax;
-    }
-    return bounds;
 }
 
 #else /* !defined (LAGRANGE_ENABLE_HARFBUZZ) */
@@ -1783,7 +1782,7 @@ static iRect run_Font_(iFont *d, const iRunArgs *args) {
 
 #endif /* defined (LAGRANGE_ENABLE_HARFBUZZ) */
 
-iRect run_Font(iBaseFont *font, const iRunArgs *args) {
+void run_Font(iBaseFont *font, const iRunArgs *args) {
     return run_Font_((iFont *) font, args);
 }
 

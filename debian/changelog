@@ -1,3 +1,9 @@
+lagrange (1.16.5+leste1) unstable; urgency=low
+
+  * update to 1.16.5, sync with releases branch and versioning.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 27 Jul 2023 04:14:00 +0400
+
 lagrange (0.0.2-20221218+leste1) unstable; urgency=low
 
   * maemo/chimaera release

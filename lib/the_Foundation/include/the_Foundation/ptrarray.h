@@ -37,6 +37,7 @@ iDeclareTypeConstruction(PtrArray)
 
 iPtrArray * newPointers_PtrArray    (void *ptr, ...); // NULL-terminated
 
+#define     copy_PtrArray(d)        copy_Array(d)
 #define     isEmpty_PtrArray(d)     isEmpty_Array(d)
 #define     size_PtrArray(d)        size_Array(d)
 

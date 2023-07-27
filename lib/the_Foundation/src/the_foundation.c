@@ -35,7 +35,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #include <time.h>
 #include <locale.h>
 
-static iBool hasBeenInitialized_ = iFalse;
+#if defined (iPlatformAndroid)
+#  include <android/log.h>
+#endif
+
+#if defined (iPlatformWindows)
+#  define WIN32_LEAN_AND_MEAN
+#  include <Windows.h>
+#  include "platform/win32/wide.h"
+void init_Windows_(void);
+void deinit_Windows_(void);
+#endif
 
 void deinitForThread_Garbage_(void); /* garbage.c */
 void deinit_DatagramThreads_(void);  /* datagram.c */
@@ -45,18 +55,29 @@ void init_DatagramThreads_(void);    /* datagram.c */
 void init_Locale(void);              /* locale */
 void init_Threads(void);             /* thread.c */
 
+static iBool hasBeenInitialized_ = iFalse;
+
+static void checkDeinit_Foundation_(void) {
+    iAssert(!isInitialized_Foundation());
+    /* If deinit happens during atexit(), things may not work as expected, e.g., the program
+       may hang on Windows. This may be because worker threads have already been forcibly
+       terminated by the OS at this time. */
+    deinit_Foundation();
+}
+
 void init_Foundation(void) {
     init_Threads();
     init_Garbage();
-    iDebug("[the_Foundation] version: %i.%i.%i%s cstd:%li\n",
-           version_Foundation.major, version_Foundation.minor, version_Foundation.patch,
-           strlen(iFoundationLibraryGitTag) ? format_CStr("-%s", iFoundationLibraryGitTag) : "",
+    iDebug("[the_Foundation] version:" iFoundationLibraryVersionCStr " cstd:%li\n",
            __STDC_VERSION__);
     /* Locale. */ {
         setLocale_Foundation();
     }
+#if defined (iPlatformWindows)
+    init_Windows_();
+#endif
     hasBeenInitialized_ = iTrue;
-    atexit(deinit_Foundation); /* should be manually called, though */
+    atexit(checkDeinit_Foundation_); /* deinit must be manually called (order undefined) */
 }
 
 void deinit_Foundation(void) {
@@ -66,6 +87,9 @@ void deinit_Foundation(void) {
         deinit_Address_();
         deinitForThread_Garbage_();
         deinit_Threads_();
+#if defined (iPlatformWindows)
+        deinit_Windows_();
+#endif
     }
 }
 
@@ -78,8 +102,27 @@ void setLocale_Foundation(void) {
 }
 
 void printMessage_Foundation(FILE *output, const char *format, ...) {
+#if defined (iPlatformAndroid)
+    iBlock msg;
+    init_Block(&msg, 0);
+    va_list args;
+    va_start(args, format);
+    vprintf_Block(&msg, format, args);
+    va_end(args);
+    __android_log_print(ANDROID_LOG_DEBUG, "tfdn", "%s", cstr_Block(&msg));
+#elif defined (iPlatformWindows)
+    iUnused(output);
+    iBlock msg;
+    init_Block(&msg, 0);
+    va_list args;
+    va_start(args, format);
+    vprintf_Block(&msg, format, args);
+    va_end(args);
+    OutputDebugStringW(toWide_CStr_(cstr_Block(&msg)));
+#else
     va_list args;
     va_start(args, format);
     vfprintf(output, format, args);
     va_end(args);
+#endif
 }

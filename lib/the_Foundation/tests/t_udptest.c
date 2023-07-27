@@ -123,5 +123,6 @@ int main(int argc, char *argv[]) {
         }
         puts("Good day!");
     }
+    deinit_Foundation();
     return 0;
 }

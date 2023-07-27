@@ -96,12 +96,14 @@ static void load_Lang_(iLang *d, const char *id) {
                        : equal_CStr(id, "eo")      ? &blobEo_Resources
                        : equal_CStr(id, "es")      ? &blobEs_Resources
                        : equal_CStr(id, "es_MX")   ? &blobEs_MX_Resources
+                       : equal_CStr(id, "eu")      ? &blobEu_Resources
                        : equal_CStr(id, "de")      ? &blobDe_Resources
                        : equal_CStr(id, "gl")      ? &blobGl_Resources
                        : equal_CStr(id, "hu")      ? &blobHu_Resources
                        : equal_CStr(id, "ia")      ? &blobIa_Resources
                        : equal_CStr(id, "ie")      ? &blobIe_Resources
                        : equal_CStr(id, "isv")     ? &blobIsv_Resources
+                       : equal_CStr(id, "ja")      ? &blobJa_Resources
                        : equal_CStr(id, "it")      ? &blobIt_Resources
                        : equal_CStr(id, "nl")      ? &blobNl_Resources
                        : equal_CStr(id, "pl")      ? &blobPl_Resources
@@ -126,7 +128,7 @@ static void load_Lang_(iLang *d, const char *id) {
         d->pluralType = polish_PluralType;
     }
     else if (data == &blobZh_Hans_Resources || data == &blobZh_Hant_Resources ||
-             data == &blobTok_Resources) {
+             data == &blobTok_Resources || data == &blobJa_Resources) {
         d->pluralType = none_PluralType;
     }
     else {

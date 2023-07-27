@@ -6,6 +6,113 @@
 ```
 # Release notes
 
+## 1.16 (Beta 21)
+* Remove whitespace from ends of a URL entered into an input field.
+
+## 1.16 (Beta 20)
+* Fixed links whose label is a single Emoji sometimes not appearing.
+* The navbar URL field only omits the "gemini:" scheme when the text actually doesn't fit horizontally, and only when the field is inactive.
+* Fixed problems with handling URLs in input fields. For example, copying the URL to the clipboard sometimes had unexpected or incorrect results.
+* Updated UI translations.
+
+## 1.16 (Beta 19)
+* Fixed broken Titan uploads due to the contents of the upload path field being mishandled.
+
+## 1.16 (Beta 18)
+* Fixed hardware Enter key handling in the navbar.
+* The "gemini://" scheme is shown in active URL input fields even when omitted otherwise.
+* Preferences: Changed order of network settings.
+* Preferences: Added option for silently following scheme-changing redirects (Network tab; default: no).
+* Tab creation and closing follows common browser conventions: new tabs are opened next to the most recently opened tab, so they retain the correct left-to-right order.
+* Page title in margin omits prefix Emoji if it matches the bookmark icon.
+* Adjusted word-wrapping to break at a period inside a word (e.g., domain names).
+* If the page is missing a level 1 heading, use the first content line as the title.
+* Fixed incorrect parsing of "hostname:port" in URL field (without `//` or `gemini://`).
+* Fixed input query dialogs not being hidden when the tab changes.
+* Fixed potential crash when switching between cached pages while navigating in history.
+* Fixed potential crash when closing split view during a scrolling animation.
+* Updated UI translations.
+
+## 1.15 (Beta 17)
+* Fixed tab order getting reversed when restoring tabs at launch.
+* Fixed order of opened tabs when using "Open in New Tabs" on a bookmark folder.
+
+## 1.15 (Beta 16)
+* Added new UI translation: Basque (euskara).
+* Improved opening and closing of tabs. New tabs now open to the right of the current tab.
+* Fixed possible crash when closing tabs.
+* Potential workaround for a crash when saved application state contains a query prompt page.
+* Allow scaling up small images up to 2x size.
+* Updated UI translations.
+
+## 1.15 (Beta 15)
+* Added 19 new translated languages, "Auto-detect" source language, and an option to skip preformatted blocks when translating.
+* Fixed several bugs in processing page contents for translation.
+* Fixed handling of redirects when fetching subscribed feed pages.
+* Fixed handling of redirects in the inline media player and file downloader.
+* Fixed scroll position being sometimes slightly off when relaunching the app.
+
+## 1.15 (Beta 14)
+* Settings: Long labels are wrapped to fit in view.
+* Removed the [+] button from the tab bar in portrait phone layout to conserve space. (New tabs can be created via the navbar menu or via customized toolbar buttons.)
+* Centered footer info text for better balance, and now it's hidden below the page in the overscroll area.
+* Fixed possible animation and scroll position issues related to swiping.
+
+## 1.15 (Beta 13)
+* Tab reordering: tab buttons are draggable.
+* Improved item grouping in the navbar menu.
+* Footer information moved under the page content, out of the margin area. This information has not been visible on the phone before.
+
+## 1.15 (Beta 12)
+* Added auto-reload indicator (reload button shown as outline).
+* Added UI settings to toggle edge/on-page navigation swipe gestures.
+
+## 1.14 (Beta 11)
+* Try to keep user data safe in unusual situations. Bookmarks and identities are saved via a system API, while also ensuring that data written to storage is not truncated. NOTE: Uninstalling the app will still delete everything, because user data is only stored locally.
+* User data files are now stored in external storage, if available.
+* Fixed determining actual name of files opened via the system file picker. This was sometimes preventing importing archived user data, for instance.
+
+## 1.14 (Beta 10)
+* Fixed tab with pinned identity not closing if it's the last tab that's being closed.
+* Fixed hang when setting a folder's parent to itself in the Edit Folder dialog.
+* Updated UI translations.
+
+## 1.14 (Beta 9)
+* Fixed pinned identity being forgotten when navigating to parent/root.
+* Improved layout of the bookmark editor dialog.
+* Avoid over-saturating green text in the Colorful Dark theme.
+* Updated UI translations.
+
+## 1.14 (Beta 8)
+* Settings: Added a "User Data" section for export/import and listing bookmarks, feeds, and downloads.
+* Improved behavior of pinned bookmark identities.
+* Indicate a pinned identity with an outline icon in the toolbar.
+* When creating new identities, make it clearer what the scope of usage will be. The UI actions explicitly say "New Identity for Domain" when the default usage will be the entire domain.
+* Page scroll position is kept when loading finishes, if the user already scrolled during loading.
+* Scroll indicators fade away in Settings are other dialogs as expected.
+* Fixed accidental backwards navigation when quickly refreshing the page twice.
+* Fixed "More..." button staying visible in identity creation dialog.
+* Fixed opening downloaded files in another app.
+* Fixed opening Gemini URIs when another app opens Lagrange.
+* Adjusted input field margins.
+
+## 1.14 (Beta 7)
+New features:
+* A bookmark folder can be opened in new tabs, one tab per contained bookmark.
+* New bookmark property "Set identity": use a specific identity when opening the bookmark, but don't apply it persistently on the bookmarked URL.
+
+Changes and enhancements:
+* Revised swipe gestures: back/forward swipe can be started anywhere on the page. Swiping from the left edge brings up the sidebar when in landscape orientation. The sidebar can also be swiped away.
+* MIME types of many new file extensions are recognized (courtesy of John Cowan).
+* Updated UI translations.
+
+Fixes:
+* Schemeless relative URLs no longer assume "gemini" as the scheme, instead using the current page's scheme as default.
+* Opening a feed entry in a background tab will mark is as read, like opening in the foreground does.
+* ANSI escapes 39 and 49 (reset FG/BG color to default) were not working.
+* Fixed a layout issue in the translation dialog.
+* Cleaned up a few UI labels.
+
 ## 1.13 (Beta 6)
 * Enabled audio output. WAV and Ogg Vorbis decoding is supported in this build. NOTE: At the moment, playback is not supported when app is in the background, or when the screen is locked. Also, playback may not start if there is already an active player on the page.
 * Fixed showing error page for an empty server response.

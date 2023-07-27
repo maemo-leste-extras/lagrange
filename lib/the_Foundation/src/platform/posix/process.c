@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <errno.h>
 #if defined (iPlatformOther)
 #   include <sys/select.h>
 #endif
@@ -145,6 +146,9 @@ iBool start_Process(iProcess *d) {
     }
     /* Start the child process. */
     rc = posix_spawn(&d->pid, argv[0], &facts, NULL, iConstCast(char **, argv), envs);
+    if (rc != 0) {
+        iWarning("[Process] spawn error: %d %s\n", errno, strerror(errno));
+    }
     free(argv);
     setCwd_Path(oldCwd);
     delete_String(oldCwd);
@@ -178,6 +182,7 @@ int exitStatus_Process(const iProcess *d) {
 
 void waitForFinished_Process(iProcess *d) {
     if (!d->pid) return;
+    close(input_Pipe(&d->pin)); /* no more input */
     int ws = 0;
     waitpid(d->pid, &ws, 0);
     if (WIFEXITED(ws)) {
@@ -197,14 +202,13 @@ size_t writeInput_Process(iProcess *d, const iBlock *data) {
         }
         else break;
     }
-    close(input_Pipe(&d->pin));
     return size_Block(data) - remain;
 }
 
 static iBlock *readFromPipe_(int fd, iBlock *readChars) {
     char buf[4096];
-    struct pollfd pfd = {.fd = fd, .events = POLLIN};
-    while (poll(&pfd, 1, 0) == 1) { // non-blocking
+    struct pollfd pfd = { .fd = fd, .events = POLLIN };
+    while (poll(&pfd, 1, 0) == 1) { /* non-blocking */
         if (pfd.revents & POLLIN) {
             ssize_t num = read(fd, buf, sizeof(buf));
             if (num > 0) {
@@ -234,34 +238,18 @@ void kill_Process(iProcess *d) {
 iBlock *readOutputUntilClosed_Process(iProcess *d) {
     iBlock *output = new_Block(0);
     const int fd = output_Pipe(&d->pout);
-    int flags = fcntl(fd, F_GETFL, 0);
-    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+    close(input_Pipe(&d->pin)); /* no more input */
     for (;;) {
-        fd_set reads, errs;
-        FD_ZERO(&reads);
-        FD_ZERO(&errs);
-        FD_SET(fd, &reads);
-        FD_SET(fd, &errs);
-        const int rc = select(fd + 1, &reads, NULL, &errs, NULL);
-        if (rc > 0) {
-            if (FD_ISSET(fd, &errs)) {
-                break;
-            }
-            if (FD_ISSET(fd, &reads)) {
-                char buf[0x20000];
-                ssize_t len = 0;
-                do {
-                    len = read(fd, buf, sizeof(buf));
-                    if (len > 0) {
-                        appendData_Block(output, buf, len);
-                    }
-                    else if (len == 0) {
-                        return output;
-                    }
-                } while (len > 0);
-            }
+        char buf[0x20000];
+        ssize_t len = read(fd, buf, sizeof(buf));
+        if (len > 0) {
+            appendData_Block(output, buf, len);
+            continue;
         }
-        else break;
+        if (len < 0 && isEmpty_Block(output)) {
+            iWarning("[Process] failed to read output: %s\n", strerror(errno));
+        }
+        break; /* EOF */
     }
     return output;
 }

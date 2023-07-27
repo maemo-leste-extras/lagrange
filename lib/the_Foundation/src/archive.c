@@ -648,7 +648,7 @@ void serialize_Archive(const iArchive *d, iStream *out) {
         iZap(local);
         local.signature   = SIG_LOCAL_FILE_HEADER;
         local.crc32       = entry->crc32;
-        local.size        = entry->size;
+        local.size        = (uint32_t) entry->size;
         local.lastModDate = packed_DOSDate_(&(iDOSDate){ .dayOfMonth = ts.day,
                                                          .month      = ts.month,
                                                          .year       = ts.year - 1980 });
@@ -660,11 +660,11 @@ void serialize_Archive(const iArchive *d, iStream *out) {
         iBlock *comp = compress_Block(entry->data);
         if (size_Block(comp) < entry->size) {
             local.compression = deflated_Compression;
-            local.compressedSize = size_Block(comp);
+            local.compressedSize = (uint32_t) size_Block(comp);
         }
         else {
             local.compression = none_Compression;
-            local.compressedSize = entry->size;
+            local.compressedSize = (uint32_t) entry->size;
             set_Block(comp, entry->data);
         }
         /* Also prepare the central file header with the same information. */
@@ -678,7 +678,7 @@ void serialize_Archive(const iArchive *d, iStream *out) {
         central->lastModDate = local.lastModDate;
         central->lastModTime = local.lastModTime;
         central->size = local.size;
-        central->relOffset = pos_Stream(out);
+        central->relOffset = (uint32_t) pos_Stream(out);
         write_LocalFileHeader_(&local, out);
         write_Stream(out, utf8_String(&entry->path));
         write_Stream(out, comp);
@@ -696,8 +696,8 @@ void serialize_Archive(const iArchive *d, iStream *out) {
         &(iCentralEnd){
             .diskEntryCount  = numEntries,
             .totalEntryCount = numEntries,
-            .size            = pos_Stream(out) - centralStartOffset - 4,
-            .offset          = centralStartOffset,
+            .size            = (uint32_t) (pos_Stream(out) - centralStartOffset - 4),
+            .offset          = (uint32_t) centralStartOffset,
         },
         out);
     deinit_Array(&centralDir);

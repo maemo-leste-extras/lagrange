@@ -123,6 +123,26 @@ static const iGmIdentity *titanIdentityForUrl_(const iString *url) {
             collectNewRange_String(urlRoot_String(url)), titanIdentity_SiteSpecKey)))));
 }
 
+void appendIdentities_MenuItem(iArray *menuItems, const char *command) {
+    iConstForEach(PtrArray, i, listIdentities_GmCerts(certs_App(), NULL, NULL)) {
+        const iGmIdentity *id = i.ptr;
+        iString *str = collect_String(copy_String(name_GmIdentity(id)));
+        prependCStr_String(str, "\x1b[1m");
+        if (!isEmpty_String(&id->notes)) {
+            appendFormat_String(
+                str, "\x1b[0m\n%s%s", escape_Color(uiTextDim_ColorId), cstr_String(&id->notes));
+        }
+        pushBack_Array(
+            menuItems,
+            &(iMenuItem){ cstr_String(str),
+                          0,
+                          0,
+                          format_CStr("%s fp:%s",
+                                      command,
+                                      cstrCollect_String(hexEncode_Block(&id->fingerprint))) });
+    }
+}
+
 static const iArray *makeIdentityItems_UploadWidget_(const iUploadWidget *d) {
     iArray *items = collectNew_Array(sizeof(iMenuItem));
     const iGmIdentity *urlId = titanIdentityForUrl_(&d->url);
@@ -133,20 +153,7 @@ static const iArray *makeIdentityItems_UploadWidget_(const iUploadWidget *d) {
                                  0, 0, "upload.setid arg:1" });
     pushBack_Array(items, &(iMenuItem){ "${dlg.upload.id.none}", 0, 0, "upload.setid arg:0" });
     pushBack_Array(items, &(iMenuItem){ "---" });
-    iConstForEach(PtrArray, i, listIdentities_GmCerts(certs_App(), NULL, NULL)) {
-        const iGmIdentity *id = i.ptr;
-        iString *str = collect_String(copy_String(name_GmIdentity(id)));
-        prependCStr_String(str, "\x1b[1m");
-        if (!isEmpty_String(&id->notes)) {
-            appendFormat_String(
-                str, "\x1b[0m\n%s%s", escape_Color(uiTextDim_ColorId), cstr_String(&id->notes));
-        }
-        pushBack_Array(
-            items,
-            &(iMenuItem){ cstr_String(str), 0, 0,
-                          format_CStr("upload.setid fp:%s",
-                                      cstrCollect_String(hexEncode_Block(&id->fingerprint))) });
-    }
+    appendIdentities_MenuItem(items, "upload.setid");
     pushBack_Array(items, &(iMenuItem){ NULL });
     return items;
 }
@@ -160,6 +167,21 @@ static void enableUploadButton_UploadWidget_(iUploadWidget *d, iBool enable) {
     else {
         /* Not on used in the desktop layout. */
     }
+}
+
+iLabelWidget *makeIdentityDropdown_LabelWidget(iWidget *headings, iWidget *values,
+                                               const iArray *identItems, const char *label,
+                                               const char *id) {
+    const iMenuItem *items    = constData_Array(identItems);
+    const size_t     numItems = size_Array(identItems);
+    iLabelWidget    *ident    = makeMenuButton_LabelWidget(label, items, numItems);
+    setFixedSize_Widget(as_Widget(ident), init_I2(-1, lineHeight_Text(uiLabel_FontId) + 2 * gap_UI));
+    setTextCStr_LabelWidget(ident, items[findWidestLabel_MenuItem(items, numItems)].label);
+    setTruncateToFit_LabelWidget(ident, iTrue);
+    iWidget *identHeading = addChild_Widget(headings, iClob(makeHeading_Widget(label)));
+    identHeading->sizeRef = as_Widget(ident);
+    setId_Widget(addChildFlags_Widget(values, iClob(ident), alignLeft_WidgetFlag), id);
+    return ident;
 }
 
 void init_UploadWidget(iUploadWidget *d, enum iUploadProtocol protocol) {
@@ -307,10 +329,10 @@ void init_UploadWidget(iUploadWidget *d, enum iUploadProtocol protocol) {
             setId_Widget(as_Widget(d->input), "upload.text");
             setFixedSize_Widget(as_Widget(d->input), init_I2(120 * gap_UI * aspectRatio, -1));
             addChild_Widget(page, iClob(d->input));
-            appendFramelessTabPage_Widget(tabs, iClob(page), "${heading.upload.text}", '1', 0);
+            appendFramelessTabPage_Widget(tabs, iClob(page), "${heading.upload.text}", none_ColorId, '1', 0);
         }
         /* File content. */ {
-            iWidget *page = appendTwoColumnTabPage_Widget(tabs, "${heading.upload.file}", '2', &headings, &values);
+            iWidget *page = appendTwoColumnTabPage_Widget(tabs, "${heading.upload.file}", none_ColorId, '2', &headings, &values);
             setBackgroundColor_Widget(page, uiBackgroundSidebar_ColorId);
             addChildFlags_Widget(headings, iClob(new_LabelWidget("${upload.file.name}", NULL)), frameless_WidgetFlag);
             d->filePathLabel = addChildFlags_Widget(values, iClob(new_LabelWidget(uiTextAction_ColorEscape "${upload.file.drophere}", NULL)), frameless_WidgetFlag);
@@ -328,14 +350,8 @@ void init_UploadWidget(iUploadWidget *d, enum iUploadProtocol protocol) {
             addChild_Widget(w, iClob(makePadding_Widget(gap_UI)));
             iWidget *page = makeTwoColumns_Widget(&headings, &values);
             /* Identity. */
-            const iArray *   identItems = makeIdentityItems_UploadWidget_(d);
-            const iMenuItem *items      = constData_Array(identItems);
-            const size_t     numItems   = size_Array(identItems);
-            d->ident                    = makeMenuButton_LabelWidget("${upload.id}", items, numItems);
-            setTextCStr_LabelWidget(d->ident, items[findWidestLabel_MenuItem(items, numItems)].label);
-            iWidget *identHeading = addChild_Widget(headings, iClob(makeHeading_Widget("${upload.id}")));
-            identHeading->sizeRef = as_Widget(d->ident);
-            setId_Widget(addChildFlags_Widget(values, iClob(d->ident), alignLeft_WidgetFlag), "upload.id");
+            d->ident = makeIdentityDropdown_LabelWidget(
+                headings, values, makeIdentityItems_UploadWidget_(d), "${upload.id}", "upload.id");
             /* Token. */
             d->token = addTwoColumnDialogInputField_Widget(
                 headings, values, "${upload.token}", "upload.token", iClob(new_InputWidget(0)));

@@ -76,5 +76,6 @@ int main(int argc, char **argv) {
         delete_String(createPath);
         iRelease(create);
     }
+    deinit_Foundation();
     return 0;
 }

@@ -506,6 +506,43 @@ iBlock *hexDecode_Rangecc(iRangecc range) {
     return d;
 }
 
+iString *base64Encode_Block(const iBlock *d) {
+    static const char *base64Table_ =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    const unsigned char *src    = constData_Block(d);
+    const size_t         len    = size_Block(d);
+    size_t               olen   = 4*((len + 2) / 3); /* 3-byte blocks to 4-byte */
+    iString *            output = new_String();
+    if (olen < len) {
+        return output; /* integer overflow */
+    }
+    resize_Block(&output->chars, olen);
+    unsigned char *      out = data_Block(&output->chars);
+    const unsigned char *end = src + len;
+    const unsigned char *in  = src;
+    unsigned char *      pos = out;
+    while (end - in >= 3) {
+        *pos++ = base64Table_[in[0] >> 2];
+        *pos++ = base64Table_[((in[0] & 0x03) << 4) | (in[1] >> 4)];
+        *pos++ = base64Table_[((in[1] & 0x0f) << 2) | (in[2] >> 6)];
+        *pos++ = base64Table_[in[2] & 0x3f];
+        in += 3;
+    }
+    if (end - in) {
+        *pos++ = base64Table_[in[0] >> 2];
+        if (end - in == 1) {
+            *pos++ = base64Table_[(in[0] & 0x03) << 4];
+            *pos++ = '=';
+        }
+        else {
+            *pos++ = base64Table_[((in[0] & 0x03) << 4) | (in[1] >> 4)];
+            *pos++ = base64Table_[(in[1] & 0x0f) << 2];
+        }
+        *pos++ = '=';
+    }
+    return output;
+}
+
 iLocalDef uint8_t base64Index_(char ch) {
     /* TODO: Replace this with a lookup table. */
     if (ch == '=') return 0; /* padding */

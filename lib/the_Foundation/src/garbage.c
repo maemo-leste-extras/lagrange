@@ -105,9 +105,11 @@ static void recycle_Collected_(iCollected *d) {
 }
 
 static void delete_Collected_(iCollected *d) {
-    recycle_Collected_(d);
-    deinit_List(&d->collected);
-    free(d);
+    if (d) {
+        recycle_Collected_(d);
+        deinit_List(&d->collected);
+        free(d);
+    }
 }
 
 static iBool pop_Collected_(iCollected *d) {

@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <the_Foundation/file.h>
 #include <the_Foundation/fileinfo.h>
 #include <the_Foundation/path.h>
+#include <the_Foundation/regexp.h>
 #include <SDL_events.h>
 #include <SDL_syswm.h>
 #include <SDL_timer.h>
@@ -163,12 +164,81 @@ API_AVAILABLE(ios(13.0))
 
 /*----------------------------------------------------------------------------------------------*/
 
+#if 0
+
+API_AVAILABLE(ios(13.0))
+@interface ContextMenuDelegate : NSObject<UIContextMenuInteractionDelegate> {
+}
+- (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location;
+@end
+
+@implementation ContextMenuDelegate
+
+- (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location {
+    printf("need context config at %d, %d\n", (int)location.x, (int)location.y);
+    return nil;
+}
+
+@end
+
+#endif
+
+/*----------------------------------------------------------------------------------------------*/
+
+@interface PopupData : NSObject {
+    iWidget *owner;
+    NSMutableDictionary<NSString *, NSString *> *commands;
+    int idNum;
+}
+@property (nonatomic, weak) UIButton *menuButton;
+@end
+
+@implementation PopupData
+
+-(id)initWithMenuButton:(UIButton *)button owningWidget:(iWidget *)ownerWidget {
+    self = [super init];
+    commands = [[NSMutableDictionary<NSString *, NSString *> alloc] init];
+    static int idGen = 1;
+    self.menuButton = button;
+    owner = ownerWidget;
+    idNum = idGen++;
+    return self;
+}
+
+-(int)popupId {
+    return idNum;
+}
+
+-(iWidget *)owningWidget {
+    return owner;
+}
+
+-(void)clearCommands {
+    [commands removeAllObjects];
+}
+
+-(void)setCommand:(NSString *)cmd forActionIdentifier:(NSString *)actionIdentifier {
+    [commands setObject:cmd forKey:actionIdentifier];
+}
+
+-(void)triggerCommand:(NSString *)actionIdentifier {
+    NSString *cmd = [commands objectForKey:actionIdentifier];
+    if (cmd) {
+        postCommand_Widget(owner, "%s", [cmd cStringUsingEncoding:NSUTF8StringEncoding]);
+    }
+}
+
+@end
+
+/*----------------------------------------------------------------------------------------------*/
+
 @interface AppState : NSObject<UIDocumentPickerDelegate, UITextFieldDelegate, UITextViewDelegate,
                                UIScrollViewDelegate, NSLayoutManagerDelegate> {
     iString *fileBeingSaved;
     iString *pickFileCommand;
     iSystemTextInput *sysCtrl;
     float sysCtrlLineSpacing;
+    NSMutableArray<PopupData *> *popupMenus;
 }
 @property (nonatomic, assign) BOOL isHapticsAvailable;
 @property (nonatomic, strong) NSObject *haptic;
@@ -185,6 +255,7 @@ static UIScrollView *statusBarTapper_; /* dummy scroll view just for getting not
     pickFileCommand = NULL;
     sysCtrl = NULL;
     sysCtrlLineSpacing = 0.0f;
+    popupMenus = [[NSMutableArray<PopupData *> alloc] init];
     return self;
 }
 
@@ -327,6 +398,32 @@ replacementString:(NSString *)string {
 - (void)textViewDidChange:(UITextView *)textView {
     iSystemTextInput *sysCtrl = [appState_ systemTextInput];
     notifyChange_SystemTextInput_(sysCtrl);
+}
+
+- (int)addPopupMenu:(UIButton *)menuButton owningWidget:(iWidget*)owner {
+    PopupData *data = [[PopupData alloc] initWithMenuButton:menuButton
+                                               owningWidget:owner];
+    [popupMenus addObject:data];
+    //printf("[ios] added sysmenu %p\n", owner);
+    return [data popupId];
+}
+
+-(PopupData *)findPopupMenu:(iWidget *)owner {
+    for (PopupData *data in popupMenus) {
+        if ([data owningWidget] == owner) {
+            return data;
+        }
+    }
+    return nil;
+}
+
+- (void)removePopupMenu:(iWidget *)owner {
+    PopupData *data = nil;
+    while ((data = [self findPopupMenu:owner])) {
+        //printf("[ios] removing system menu %d\n", [data popupId]);
+        [data.menuButton removeFromSuperview];
+        [popupMenus removeObject:data];
+    }
 }
 
 @end
@@ -476,6 +573,42 @@ void playHapticEffect_iOS(enum iHapticEffect effect) {
     }
 }
 
+static void callVoidMethod(id target, NSString *selectorName) {
+    SEL sel = NSSelectorFromString(selectorName);
+    if ([target respondsToSelector:sel]) {
+        NSInvocation *call = [NSInvocation invocationWithMethodSignature:
+                              [NSMethodSignature signatureWithObjCTypes:"v@:"]];
+        [call setSelector:sel];
+        [call invokeWithTarget:target];
+    }
+}
+
+static NSString *callStringMethod(id target, NSString *selectorName) {
+    SEL sel = NSSelectorFromString(selectorName);
+    if ([target respondsToSelector:sel]) {
+        NSInvocation *call = [NSInvocation invocationWithMethodSignature:
+                              [NSMethodSignature signatureWithObjCTypes:"@@:"]];
+        [call setSelector:sel];
+        [call invokeWithTarget:target];
+        NSString *retVal;
+        [call getReturnValue:&retVal];
+        return retVal;
+    }
+    return NULL;
+}
+
+static void callVoidMethodWithIntArgument(id target, NSString *selectorName, int argValue) {
+    SEL sel = NSSelectorFromString(selectorName);
+    if ([target respondsToSelector:sel]) {
+        NSInvocation *call = [NSInvocation invocationWithMethodSignature:
+                              [NSMethodSignature signatureWithObjCTypes:"v@:i"]];
+        [call setSelector:sel];
+        int style = argValue;
+        [call setArgument:&style atIndex:2];
+        [call invokeWithTarget:target];
+    }
+}
+
 iBool processEvent_iOS(const SDL_Event *ev) {
     if (ev->type == SDL_DISPLAYEVENT) {
         if (deviceType_App() == phone_AppDeviceType) {
@@ -496,7 +629,23 @@ iBool processEvent_iOS(const SDL_Event *ev) {
     }
     else if (ev->type == SDL_USEREVENT && ev->user.code == command_UserEventCode) {
         const char *cmd = command_UserEvent(ev);
-        if (equal_Command(cmd, "ostheme")) {
+        //NSLog(@"%s", cmd);
+        if (equal_Command(cmd, "window.unfreeze")) {
+            id<UIApplicationDelegate> dlg = [UIApplication sharedApplication].delegate;
+            callVoidMethod(dlg, @"hideLaunchScreen");
+            /* When the application is launching, it is too early to post a SDL_DROPFILE
+               event. The customized SDL application delegate saves the launch URL, so
+               we can use it now to */
+            static iBool didCheckLaunchURL = iFalse;
+            if (!didCheckLaunchURL) {
+                didCheckLaunchURL = iTrue;
+                NSString *launchURL = callStringMethod(dlg, @"getLaunchOptionsURL");
+                if (launchURL) {
+                    postCommandf_App("open newtab:1 url:%s", [launchURL UTF8String]);
+                }
+            }
+        }
+        else if (equal_Command(cmd, "ostheme")) {
             if (arg_Command(cmd)) {
                 postCommandf_App("os.theme.changed dark:%d contrast:1", isSystemDarkMode_ ? 1 : 0);
             }
@@ -506,17 +655,11 @@ iBool processEvent_iOS(const SDL_Event *ev) {
                 /* SDL doesn't expose this as a setting, so we'll rely on a hack.
                    Adding an SDL hint for this would be a cleaner solution than calling
                    a private method. */
-                UIViewController *vc = viewController_(get_Window());
-                SEL sel = NSSelectorFromString(@"setStatusStyle:"); /* custom method */
-                if ([vc respondsToSelector:sel]) {
-                    NSInvocation *call = [NSInvocation invocationWithMethodSignature:
-                                          [NSMethodSignature signatureWithObjCTypes:"v@:i"]];
-                    [call setSelector:sel];
-                    int style = isDark_ColorTheme(colorTheme_App()) ?
-                        UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
-                    [call setArgument:&style atIndex:2];
-                    [call invokeWithTarget:vc];
-                }
+                callVoidMethodWithIntArgument(viewController_(get_Window()),
+                                              @"setStatusStyle:",
+                                              isDark_ColorTheme(colorTheme_App())
+                                                ? UIStatusBarStyleLightContent
+                                                : UIStatusBarStyleDarkContent);
             }
         }
     }
@@ -748,10 +891,20 @@ iDefineTypeConstructionArgs(SystemTextInput, (iRect rect, int flags), rect, flag
 #define REF_d_field  (__bridge UITextField *)d->field
 #define REF_d_view   (__bridge UITextView *)d->view
 
+static CGRect pixelsToPoints_(const iRect *pixelRect) {
+    CGRect frame;
+    const iWindow *win = get_Window();
+    frame.origin.x = pixelRect->pos.x / win->pixelRatio;
+    frame.origin.y = pixelRect->pos.y / win->pixelRatio;
+    frame.size.width = pixelRect->size.x / win->pixelRatio;
+    frame.size.height = pixelRect->size.y / win->pixelRatio;
+    return frame;
+}
+
 static CGRect convertToCGRect_(const iRect *rect, iBool expanded) {
     const iWindow *win = get_Window();
     CGRect frame;
-    // TODO: Convert coordinates properly!
+    /* TODO: Convert coordinates properly! */
     frame.origin.x = rect->pos.x / win->pixelRatio;
     frame.origin.y = (rect->pos.y - gap_UI * 0.875f) / win->pixelRatio;
     frame.size.width = rect->size.x / win->pixelRatio;
@@ -969,4 +1122,155 @@ static void notifyChange_SystemTextInput_(iSystemTextInput *d) {
 
 static BOOL isNewlineAllowed_SystemTextInput_(const iSystemTextInput *d) {
     return (d->flags & insertNewlines_SystemTextInputFlag) != 0;
+}
+
+/*----------------------------------------------------------------------------------------------*/
+
+iBool isSupported_SystemMenu(void) {
+    if (@available(iOS 14.0, *)) {
+        return iTrue;
+    }
+    return iFalse;
+}
+
+iBool makePopup_SystemMenu(iWidget *owner) {
+    /* Setup a context menu handler. */
+    if (@available(iOS 14.0, *)) {
+        UIButton *button = [[UIButton alloc] init];
+        //button.backgroundColor = [UIColor redColor]; /* debug */
+        button.showsMenuAsPrimaryAction = YES;
+        [viewController_(get_Window()).view addSubview:button];
+        [appState_ addPopupMenu:button owningWidget:owner];
+        iConnect(Root, owner->root, arrangementChanged, owner, updateAfterBoundsChange_SystemMenu);
+        iConnect(Root, owner->root, visualOffsetsChanged, owner, updateAfterBoundsChange_SystemMenu);
+        return iTrue;
+    }
+    /* TODO: Must use non-native popups on iOS 13 and older. */
+    return iFalse;
+}
+
+void setHidden_SystemMenu(iWidget *owner, iBool hide) {
+    if (@available(iOS 14.0, *)) {
+        PopupData *data = [appState_ findPopupMenu:owner];
+        data.menuButton.hidden = hide ? YES : NO;
+    }
+}
+
+void setRect_SystemMenu(iWidget *owner, iRect rect) {
+    if (@available(iOS 14.0, *)) {
+        PopupData *data = [appState_ findPopupMenu:owner];
+        data.menuButton.hidden = NO;
+        [data.menuButton setFrame:pixelsToPoints_(&rect)];
+    }
+}
+
+void updateItems_SystemMenu(iWidget *owner, const iMenuItem *items, size_t n) {
+    if (@available(iOS 14.0, *)) {
+        iRegExp *ansi = makeAnsiEscapePattern_Text(iTrue /* with ESC */);
+        iAssert(flags_Widget(owner) & nativeMenu_WidgetFlag);
+        PopupData *data = [appState_ findPopupMenu:owner];
+        [data clearCommands];
+        NSMutableArray<UIMenuElement *> *elems = [[NSMutableArray<UIMenuElement *> alloc] init];
+        NSMutableArray<UIMenuElement *> *subElems = [[NSMutableArray<UIMenuElement *> alloc] init];
+        iBool haveSep = iFalse;
+        for (size_t i = 0; i < n && items[i].label; i++) {
+            const iMenuItem *item = &items[i];
+            if (!iCmpStr(item->label, "---")) { /* separator */
+                if ([subElems count] > 0) {
+                    haveSep = iTrue;
+                    [elems addObject:[UIMenu menuWithTitle:@""
+                                                     image:nil
+                                                identifier:nil
+                                                   options:UIMenuOptionsDisplayInline
+                                                  children:subElems]];
+                    [subElems removeAllObjects];
+                }
+                continue;
+            }
+            const char *itemLabel = item->label;
+            iBool isDisabled = iFalse;
+            iBool isSelected = iFalse;
+            if (startsWith_CStr(itemLabel, "///")) {
+                isDisabled = iTrue;
+                itemLabel += 3;
+            }
+            if (startsWith_CStr(itemLabel, "###")) {
+                isSelected = iTrue;
+                itemLabel += 3;
+            }
+            iString label;
+            initCStr_String(&label, itemLabel);
+            iChar icon = removeIconPrefix_String(&label);
+            int color = removeColorEscapes_String(&label);
+            translate_Lang(&label);
+            /* TODO: Convert to an attributed string. */
+            replaceRegExp_String(&label, ansi, "", NULL, NULL); /* remove ANSI stylings */
+            UIImage *img = nil;
+            static const struct { iChar c; const char *imgName; } sysIcons[] = {
+                { 0x2699,   "gear" },
+                { 0x2795,   "plus" },
+                { 0x2a2f,   "xmark" },
+                { 0x1f4c1,  "folder" },
+                { 0x1f50d,  "magnifyingglass" },
+                { 0x1f871,  "arrow.up" },
+                { 0x2b71,   "arrow.up.to.line" },
+                { 0x23f2,   "clock.arrow.2.circlepath" },
+                { 0x1f516,  "bookmark" },
+                { 0x2605,   "star" },
+                { 0x2606,   "star.fill" },
+                { 0x1f56e,  "book" },
+                { 0x1f310,  "globe" },
+                { 0x2ba5,   "paperplane" },
+                { 0x2ba7,   "square.and.arrow.down" },
+                { 0x270e,   "pencil" },
+            };
+            iForIndices(i, sysIcons) {
+                if (sysIcons[i].c == icon) {
+                    img = [UIImage systemImageNamed:[NSString
+                                                     stringWithUTF8String:sysIcons[i].imgName]];
+                    break;
+                }
+            }
+            /* Create the UI action. */
+            UIAction *action = [UIAction actionWithTitle:[NSString stringWithUTF8String:cstr_String(&label)]
+                                                   image:img
+                                              identifier:nil
+                                                 handler:^(UIAction *action) {
+                [data triggerCommand:action.identifier];
+            }];
+            UIMenuElementAttributes attrs = 0;
+            if (isDisabled) {
+                attrs |= UIMenuElementAttributesDisabled;
+            }
+            if (color == uiTextCaution_ColorId) {
+                attrs |= UIMenuElementAttributesDestructive;
+            }
+            [action setAttributes:attrs];
+            if (isSelected) {
+                [action setState:UIMenuElementStateOn];
+            }
+            [data setCommand:[NSString stringWithUTF8String:item->command] forActionIdentifier:action.identifier];
+            [subElems addObject:action];
+            deinit_String(&label);
+        }
+        if (haveSep && [subElems count] > 0) {
+            [elems addObject:[UIMenu menuWithTitle:@""
+                                             image:nil
+                                        identifier:nil
+                                           options:UIMenuOptionsDisplayInline children:subElems]];
+        }
+        else {
+            elems = subElems;
+        }
+        data.menuButton.menu = [UIMenu menuWithChildren:elems];
+        iRelease(ansi);
+    }
+}
+
+void releasePopup_SystemMenu(iWidget *owner) {
+    if (@available(iOS 14.0, *)) {
+        iDisconnect(Root, owner->root, arrangementChanged, owner, updateAfterBoundsChange_SystemMenu);
+        iDisconnect(Root, owner->root, visualOffsetsChanged, owner, updateAfterBoundsChange_SystemMenu);
+        [appState_ removePopupMenu:owner];
+    }
 }

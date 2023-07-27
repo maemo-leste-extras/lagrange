@@ -64,6 +64,14 @@ iLocalDef iBool isAppleDesktop_Platform(void) {
 #endif
 }
 
+iLocalDef iBool isAppleMobile_Platform(void) {
+#if defined (iPlatformAppleMobile)
+    return iTrue;
+#else
+    return iFalse;
+#endif
+}
+
 iLocalDef iBool isAndroid_Platform(void) {
 #if defined (iPlatformAndroid)
     return iTrue;
@@ -93,8 +101,11 @@ enum iFileVersion {
     addedRecentUrlFlags_FileVersion     = 4,
     bookmarkFolderState_FileVersion     = 5,
     multipleWindows_FileVersion         = 6,
+    documentSetIdentity_FileVersion     = 7,
+    responseIdentity_FileVersion        = 8,
+    recentUrlSetIdentity_FileVersion    = 9,
     /* meta */
-    latest_FileVersion = 6, /* used by state.lgr */
+    latest_FileVersion = 9, /* used by state.lgr */
     idents_FileVersion = 1, /* used by GmCerts/idents.lgr */
 };
 
@@ -251,6 +262,12 @@ iLocalDef int acceptKeyMod_ReturnKeyBehavior(int behavior) {
 #define toggleYes_Icon      check_Icon
 #define toggleNo_Icon       bullet_Icon
 #define spartan_Icon        "\U0001f4aa"
+#define keyboard_Icon       "\u2328"
+#define network_Icon        "\U0001f5a7"
+#define computer_Icon       "\U0001f5b3"
+#define palette_Icon        "\U0001f3a8"
+#define pageLayout_Icon     page_Icon //"\u21b9" //"\U0001F5B9"
+#define fonts_Icon          "\U0001f5da"
 
 #if defined (iPlatformTerminal)
 #   undef page_Icon
@@ -269,7 +286,10 @@ iLocalDef int acceptKeyMod_ReturnKeyBehavior(int behavior) {
 #   define shiftReturn_Icon shift_Icon " " return_Icon
 #endif
 
-#if defined (iPlatformAppleDesktop) && defined (LAGRANGE_ENABLE_MAC_MENUS)
+#if defined (iPlatformAppleMobile)
+#   define LAGRANGE_NATIVE_MENU
+#elif defined (iPlatformAppleDesktop) && defined (LAGRANGE_ENABLE_MAC_MENUS)
+#   define LAGRANGE_NATIVE_MENU
 #   define LAGRANGE_MAC_MENUBAR
 #   define LAGRANGE_MAC_CONTEXTMENU
 #elif defined (iPlatformDesktop)

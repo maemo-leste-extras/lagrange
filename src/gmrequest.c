@@ -55,6 +55,7 @@ void init_GmResponse(iGmResponse *d) {
     iZap(d->certValidUntil);
     init_String(&d->certSubject);
     iZap(d->when);
+    init_Block(&d->identityFingerprint, 0);
 }
 
 void initCopy_GmResponse(iGmResponse *d, const iGmResponse *other) {
@@ -66,6 +67,7 @@ void initCopy_GmResponse(iGmResponse *d, const iGmResponse *other) {
     d->certValidUntil = other->certValidUntil;
     initCopy_String(&d->certSubject, &other->certSubject);
     d->when = other->when;
+    initCopy_Block(&d->identityFingerprint, &other->identityFingerprint);
 }
 
 void deinit_GmResponse(iGmResponse *d) {
@@ -73,6 +75,7 @@ void deinit_GmResponse(iGmResponse *d) {
     deinit_Block(&d->body);
     deinit_Block(&d->certFingerprint);
     deinit_String(&d->meta);
+    deinit_Block(&d->identityFingerprint);
 }
 
 void clear_GmResponse(iGmResponse *d) {
@@ -84,6 +87,7 @@ void clear_GmResponse(iGmResponse *d) {
     iZap(d->certValidUntil);
     clear_String(&d->certSubject);
     iZap(d->when);
+    clear_Block(&d->identityFingerprint);
 }
 
 iGmResponse *copy_GmResponse(const iGmResponse *d) {
@@ -101,6 +105,7 @@ void serialize_GmResponse(const iGmResponse *d, iStream *outs) {
     serialize_Date(&d->certValidUntil, outs);
     serialize_String(&d->certSubject, outs);
     writeU64_Stream(outs, d->when.ts.tv_sec);
+    serialize_Block(&d->identityFingerprint, outs);
 }
 
 void deserialize_GmResponse(iGmResponse *d, iStream *ins) {
@@ -114,6 +119,9 @@ void deserialize_GmResponse(iGmResponse *d, iStream *ins) {
     clear_Block(&d->certFingerprint);
     if (version_Stream(ins) >= addedResponseTimestamps_FileVersion) {
         d->when.ts.tv_sec = readU64_Stream(ins);
+    }
+    if (version_Stream(ins) >= responseIdentity_FileVersion) {
+        deserialize_Block(&d->identityFingerprint, ins);
     }
 }
 
@@ -167,6 +175,7 @@ struct Impl_GmRequest {
     iGopher              gopher;
     iSocket *            spartan;
     iGmResponse *        resp;
+    iBool                isProxy;
     iBool                isFilterEnabled;
     iBool                isRespLocked;
     iBool                isRespFiltered;
@@ -190,6 +199,7 @@ static void checkServerCertificate_GmRequest_(iGmRequest *d) {
     resp->certFlags = 0;
     if (cert) {
         const iRangecc domain = range_String(hostName_Address(address_TlsRequest(d->req)));
+        const uint16_t port   = port_Address(address_TlsRequest(d->req));
         resp->certFlags |= available_GmCertFlag;
         set_Block(&resp->certFingerprint, collect_Block(publicKeyFingerprint_TlsCertificate(cert)));
         resp->certFlags |= haveFingerprint_GmCertFlag;
@@ -199,7 +209,7 @@ static void checkServerCertificate_GmRequest_(iGmRequest *d) {
         if (verifyDomain_GmCerts(cert, domain)) {
             resp->certFlags |= domainVerified_GmCertFlag;
         }
-        if (checkTrust_GmCerts(d->certs, domain, port_GmRequest_(d), cert)) {
+        if (checkTrust_GmCerts(d->certs, domain, port, cert)) {
             resp->certFlags |= trusted_GmCertFlag;
         }
         if (verify_TlsCertificate(cert) == authority_TlsCertificateVerifyStatus) {
@@ -328,12 +338,14 @@ static void requestFinished_GmRequest_(iGmRequest *d, iTlsRequest *req) {
         if (d->state == failure_GmRequestState) {
             if (!isVerified_TlsRequest(req)) {
                 if (isExpired_TlsCertificate(serverCertificate_TlsRequest(req))) {
-                    d->resp->statusCode = tlsServerCertificateExpired_GmStatusCode;
-                    setCStr_String(&d->resp->meta, "Server certificate has expired");
+                    d->resp->statusCode = d->isProxy ? proxyCertificateExpired_GmStatusCode
+                                                     : tlsServerCertificateExpired_GmStatusCode;
+                    setCStr_String(&d->resp->meta, get_GmError(d->resp->statusCode)->title);
                 }
                 else {
-                    d->resp->statusCode = tlsServerCertificateNotVerified_GmStatusCode;
-                    setCStr_String(&d->resp->meta, "Server certificate could not be verified");
+                    d->resp->statusCode = d->isProxy ? proxyCertificateNotVerified_GmStatusCode
+                                                     : tlsServerCertificateNotVerified_GmStatusCode;
+                    setCStr_String(&d->resp->meta, get_GmError(d->resp->statusCode)->title);
                 }
             }
             else {
@@ -352,27 +364,20 @@ static void requestFinished_GmRequest_(iGmRequest *d, iTlsRequest *req) {
 }
 
 static const iBlock *aboutPageSource_(iRangecc path, iRangecc query) {
-    const iBlock *src = NULL;
-    if (equalCase_Rangecc(path, "about")) {
-        return &blobAbout_Resources;
-    }
-    if (equalCase_Rangecc(path, "lagrange")) {
-        return &blobLagrange_Resources;
-    }
-    if (equalCase_Rangecc(path, "help")) {
-        return &blobHelp_Resources;
-    }
-    if (equalCase_Rangecc(path, "license")) {
-        return &blobLicense_Resources;
-    }
-    if (equalCase_Rangecc(path, "version")) {
-        return &blobVersion_Resources;
-    }
-    if (equalCase_Rangecc(path, "version-1.5")) {
-        return &blobVersion_1_5_Resources;
-    }
-    if (equalCase_Rangecc(path, "version-0.13")) {
-        return &blobVersion_0_13_Resources;
+    const struct { const char *name; const iBlock *data; } staticPages[] = {
+        { "about",          &blobAbout_Resources },
+        { "lagrange",       &blobLagrange_Resources },
+        { "help",           &blobHelp_Resources },
+        { "license",        &blobLicense_Resources },
+        { "version",        &blobVersion_Resources },
+        { "version-1.10",   &blobVersion_1_10_Resources },
+        { "version-1.5",    &blobVersion_1_5_Resources },
+        { "version-0.13",   &blobVersion_0_13_Resources },
+    };
+    iForIndices(i, staticPages) {
+        if (equalCase_Rangecc(path, staticPages[i].name)) {
+            return staticPages[i].data;
+        }
     }
     if (equalCase_Rangecc(path, "debug")) {
         return utf8_String(debugInfo_App());
@@ -393,7 +398,7 @@ static const iBlock *aboutPageSource_(iRangecc path, iRangecc query) {
     if (equalCase_Rangecc(path, "blank")) {
         return utf8_String(collectNewCStr_String("\n"));
     }
-    return src;
+    return NULL;
 }
 
 static const iBlock *replaceVariables_(const iBlock *block) {
@@ -636,6 +641,7 @@ void init_GmRequest(iGmRequest *d, iGmCerts *certs) {
     d->id              = add_Atomic(&idGen_, 1) + 1;
     d->identity        = NULL;
     d->resp            = new_GmResponse();
+    d->isProxy         = iFalse;
     d->isFilterEnabled = iTrue;
     d->isRespLocked    = iFalse;
     d->isRespFiltered  = iFalse;
@@ -769,7 +775,7 @@ void submit_GmRequest(iGmRequest *d) {
     iGmResponse *resp = d->resp;
     clear_GmResponse(resp);
 #if !defined (NDEBUG) && !defined (iPlatformTerminal)
-    printf("[GmRequest] URL: %s\n", cstr_String(&d->url)); fflush(stdout);
+    fprintf(stderr, "[GmRequest] URL: %s\n", cstr_String(&d->url)); fflush(stderr);
 #endif
     iUrl url;
     init_Url(&url, &d->url);
@@ -784,6 +790,17 @@ void submit_GmRequest(iGmRequest *d) {
             resp->statusCode = success_GmStatusCode;
             setCStr_String(&resp->meta, "text/gemini; charset=utf-8");
             set_Block(&resp->body, replaceVariables_(src));
+            if (equalCase_Rangecc(url.path, "lagrange")) {
+                /* The "Powered by" line needs dynamic updates depending on the build. */
+                iString body;
+                initBlock_String(&body, &resp->body);
+                replace_String(&body, "OpenSSL", libraryName_TlsRequest());
+#if defined (iPlatformTerminal)
+                replace_String(&body, "SDL 2", "ncurses");
+#endif
+                set_Block(&resp->body, utf8_String(&body));
+                deinit_String(&body);
+            }
             d->state = receivingBody_GmRequestState;
             iNotifyAudience(d, updated, GmRequestUpdated);
         }
@@ -1005,16 +1022,8 @@ void submit_GmRequest(iGmRequest *d) {
     }
     else if (schemeProxy_App(url.scheme)) {
         /* User has configured a proxy server for this scheme. */
-        const iString *proxy = schemeProxy_App(url.scheme);
-        if (contains_String(proxy, ':')) {
-            const size_t cpos = indexOf_String(proxy, ':');
-            port = atoi(cstr_String(proxy) + cpos + 1);
-            host = collect_String(newCStrN_String(cstr_String(proxy), cpos));
-        }
-        else {
-            host = proxy;
-            port = 0;
-        }
+        schemeProxyHostAndPort_App(url.scheme, &host, &port);
+        d->isProxy = iTrue;
     }
     else if (equalCase_Rangecc(url.scheme, "gopher")) {
         beginGopherConnection_GmRequest_(d, host, port ? port : 70);
@@ -1039,6 +1048,7 @@ void submit_GmRequest(iGmRequest *d) {
     d->req = new_TlsRequest();
     if (d->identity) {
         setCertificate_TlsRequest(d->req, d->identity->cert);
+        set_Block(&resp->identityFingerprint, &d->identity->fingerprint);
     }
     /* Site-specific settings. */ {
         iString siteRoot;
@@ -1125,6 +1135,10 @@ iBool isFinished_GmRequest(const iGmRequest *d) {
     return iTrue;
 }
 
+iBool filtersEnabled_GmRequest(const iGmRequest *d) {
+    return d->isFilterEnabled;
+}
+
 enum iGmStatusCode status_GmRequest(const iGmRequest *d) {
     if (d) {
         enum iGmStatusCode code;
@@ -1152,6 +1166,14 @@ size_t bodySize_GmRequest(const iGmRequest *d) {
 
 const iString *url_GmRequest(const iGmRequest *d) {
     return &d->url;
+}
+
+iBool isProxy_GmRequest(const iGmRequest *d) {
+    return d->isProxy;
+}
+
+const iAddress *address_GmRequest(const iGmRequest *d) {
+    return d && d->req ? address_TlsRequest(d->req) : NULL;
 }
 
 int certFlags_GmRequest(const iGmRequest *d) {

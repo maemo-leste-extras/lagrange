@@ -226,12 +226,14 @@ static const struct { int id; iMenuItem bind; int flags; } defaultBindings_[] = 
 #if !defined (iPlatformApple) /* Ctrl-Cmd-F on macOS */
     { 73, { "${keys.fullscreen}",           SDLK_F11, 0,                    "window.fullscreen"                 }, 0 },
 #endif
-    { 76, { "${keys.tab.new}",              newTab_KeyShortcut,             "tabs.new"                          }, 0 },
+    { 76, { "${keys.tab.new}",              newTab_KeyShortcut,             "tabs.new append:1"                 }, 0 },
     { 77, { "${keys.tab.close}",            closeTab_KeyShortcut,           "tabs.close"                        }, 0 },
     { 78, { "${keys.tab.close.other}",      SDLK_w, KMOD_SECONDARY,         "tabs.close toleft:1 toright:1"     }, 0 },
     { 79, { "${LC:menu.reopentab}",         SDLK_t, KMOD_SECONDARY,         "tabs.new reopen:1"                 }, 0 },        
     { 80, { "${keys.tab.prev}",             prevTab_KeyShortcut,            "tabs.prev"                         }, 0 },
     { 81, { "${keys.tab.next}",             nextTab_KeyShortcut,            "tabs.next"                         }, 0 },
+    { 84, { "${LC:menu.movetab.left}",      moveTabLeft_KeyShortcut,        "tabs.move arg:-1"                  }, 0 },
+    { 85, { "${LC:menu.movetab.right}",     moveTabRight_KeyShortcut,       "tabs.move arg:1"                   }, 0 },
     { 90, { "${keys.split.menu}",           SDLK_j, KMOD_PRIMARY,           "splitmenu.open"                    }, 0 },
     { 91, { "${keys.split.next}",           SDLK_TAB, KMOD_CTRL,            "keyroot.next",                     }, 0 },
     { 92, { "${keys.split.item} ${menu.split.merge}",           '1', 0,     "ui.split arg:0",                   }, noDirectTrigger_BindFlag },
@@ -244,6 +246,7 @@ static const struct { int id; iMenuItem bind; int flags; } defaultBindings_[] = 
     { 99, { "${keys.split.item} ${menu.split.vertical} 2:1",    SDLK_r, 0,  "ui.split arg:2 axis:1",            }, noDirectTrigger_BindFlag },
     { 100,{ "${keys.hoverurl}",             '/', KMOD_PRIMARY,              "prefs.hoverlink.toggle"            }, 0 },
     { 110,{ "${menu.save.downloads}",       SDLK_s, KMOD_PRIMARY,           "document.save"                     }, 0 },
+    { 115,{ "${LC:menu.page.translate}",    SDLK_x, KMOD_PRIMARY | KMOD_SHIFT, "document.translate"             }, 0 },
     { 120,{ "${keys.upload}",               SDLK_u, KMOD_PRIMARY,           "document.upload"                   }, 0 },
     { 121,{ "${keys.upload.edit}",          SDLK_e, KMOD_PRIMARY,           "document.upload copy:1"            }, 0 },
     { 125,{ "${keys.pageinfo}",             pageInfo_KeyShortcut,           "document.info"                     }, 0 },

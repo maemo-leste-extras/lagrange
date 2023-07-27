@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #include <sys/types.h>
 
 #if defined (iPlatformWindows)
-typedef int iProcessId;
+typedef unsigned int iProcessId;
 #else
 typedef pid_t iProcessId;
 #endif

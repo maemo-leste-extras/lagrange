@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2021-12-23 11:10+0000\n"
+"POT-Creation-Date: 2023-01-29 11:19+0000\n"
+"PO-Revision-Date: 2023-02-13 12:55+0000\n"
 "Last-Translator: Shibo Lyu <github@of.sb>\n"
 "Language-Team: Chinese (Traditional) <http://weblate.skyjake.fi/projects/"
 "lagrange/ui/zh_Hant/>\n"
@@ -27,9 +29,6 @@ msgstr "由 SDL 2、OpenSSL 和☕️驅動"
 
 msgid "cancel"
 msgstr "取消"
-
-msgid "dismiss"
-msgstr "關閉"
 
 msgid "dlg.message.ok"
 msgstr "繼續"
@@ -127,7 +126,7 @@ msgid "prefs.ostheme"
 msgstr "使用系統主題："
 
 msgid "prefs.theme"
-msgstr "主題："
+msgstr "介面主題："
 
 msgid "prefs.theme.black"
 msgstr "黑"
@@ -163,7 +162,7 @@ msgid "prefs.doctheme.dark"
 msgstr "深色主題："
 
 msgid "prefs.sideicon"
-msgstr "站點圖示："
+msgstr "左側站點圖示："
 
 msgid "prefs.retainwindow"
 msgstr "記住視窗位置："
@@ -243,9 +242,6 @@ msgstr "因伺服器與遠端主機通訊未能成功完成，代理請求失敗
 msgid "error.notfound.msg"
 msgstr "所請求的資源目前無法找到。"
 
-msgid "toggle.yes"
-msgstr "已啟用"
-
 msgid "reload.never"
 msgstr "永不"
 
@@ -321,9 +317,6 @@ msgstr "尋找"
 # Used on iOS. "Files" refers to Apple's iOS app where you can pick an iCloud folder.
 msgid "menu.save.files"
 msgstr "儲存至文件"
-
-msgid "menu.copy.source"
-msgstr "拷貝原始文字"
 
 msgid "menu.sidebar"
 msgstr "開關邊欄"
@@ -571,9 +564,6 @@ msgstr "停止在本頁使用"
 msgid "ident.stopuse.all"
 msgstr "停止在所有頁面上使用"
 
-msgid "ident.showuse"
-msgstr "顯示使用情況"
-
 msgid "heading.ident.use"
 msgstr "身分使用情況"
 
@@ -688,9 +678,6 @@ msgstr ""
 msgid "dlg.openlink"
 msgstr "開啟連結"
 
-msgid "heading.certwarn"
-msgstr "不受信任的憑證"
-
 #, c-format
 msgid "dlg.certwarn.expired"
 msgstr "收到的憑證已經於%s過期。"
@@ -731,7 +718,7 @@ msgid "dlg.certimport.nokey"
 msgstr "無私鑰"
 
 msgid "link.hint.image"
-msgstr "顯示圖片"
+msgstr "圖片"
 
 msgid "bookmark.title.blank"
 msgstr "空頁面"
@@ -821,7 +808,7 @@ msgstr "尺寸"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "樣式"
+msgstr "頁面樣式"
 
 # tab button
 msgid "heading.prefs.userinterface"
@@ -837,7 +824,7 @@ msgid "prefs.smoothscroll"
 msgstr "平滑捲動："
 
 msgid "prefs.imageloadscroll"
-msgstr "捲動時載入圖片："
+msgstr "捲動時載入下一張圖片："
 
 msgid "prefs.doctheme.light"
 msgstr "淺色主題："
@@ -863,9 +850,6 @@ msgstr "高對比度"
 msgid "prefs.saturation"
 msgstr "色彩飽和度："
 
-msgid "prefs.headingfont"
-msgstr "標題字型："
-
 msgid "prefs.font"
 msgstr "正文字型："
 
@@ -882,7 +866,7 @@ msgid "prefs.quoteicon.line"
 msgstr "線條"
 
 msgid "prefs.plaintext.wrap"
-msgstr "純文字折行："
+msgstr "對長純文字行折行："
 
 msgid "menu.binding.reset"
 msgstr "重置為預設值"
@@ -945,7 +929,7 @@ msgid "error.tls"
 msgstr "網路或 TLS 錯誤"
 
 msgid "error.tls.msg"
-msgstr "與伺服器通訊失敗。以下是錯誤資訊："
+msgstr "與伺服器通訊失敗。"
 
 msgid "error.temporary"
 msgstr "暫時性錯誤"
@@ -1030,9 +1014,6 @@ msgstr "伺服器嘗試將您重定向到一個不同協議的地址。若您認
 
 msgid "error.manyredirects"
 msgstr "重定向過多"
-
-msgid "toggle.no"
-msgstr "已關閉"
 
 msgid "error.manyredirects.msg"
 msgstr "您可能陷入了一個重定向迴圈。若您希望自行前往，如下是下一個重定向目標地址。"
@@ -1131,9 +1112,6 @@ msgstr "%m 月 %d日"
 
 msgid "feeds.today"
 msgstr "今日"
-
-msgid "feeds.entry.newtab"
-msgstr "在新標籤頁中開啟"
 
 msgid "feeds.entry.markread"
 msgstr "標記為已讀"
@@ -1257,14 +1235,8 @@ msgstr "阿拉伯語"
 msgid "lang.zh"
 msgstr "中文"
 
-msgid "lang.zh.hans"
-msgstr "簡體中文"
-
 msgid "lang.en"
 msgstr "英語"
-
-msgid "lang.fi"
-msgstr "芬蘭語"
 
 msgid "lang.fr"
 msgstr "法語"
@@ -1290,15 +1262,6 @@ msgstr "無說明的預格式文字"
 msgid "prefs.collapsepreonload"
 msgstr "收起預格式文字："
 
-msgid "lang.zh.hant"
-msgstr "繁體/正體中文"
-
-msgid "lang.ie"
-msgstr "西方國際語"
-
-msgid "lang.sr"
-msgstr "塞爾維亞語"
-
 #, c-format
 msgid "feeds.list.counts"
 msgid_plural "feeds.list.counts.n"
@@ -1322,7 +1285,7 @@ msgstr "在淺色下"
 
 # Link download progress message.
 msgid "doc.fetching"
-msgstr "獲取中"
+msgstr "載入中"
 
 # Inline download status message.
 msgid "media.download.warnclose"
@@ -1410,10 +1373,7 @@ msgstr "匯入…"
 #, c-format
 msgid "dir.summary"
 msgid_plural "dir.summary.n"
-msgstr[0] "該檔案夾內含 %zu 項。"
-
-msgid "lang.pl"
-msgstr "波蘭語"
+msgstr[0] "該檔案夾內含 %u 項。"
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
@@ -1422,7 +1382,7 @@ msgstr "檢視存檔內檔案夾時使用 index.gmi："
 #, c-format
 msgid "archive.summary"
 msgid_plural "archive.summary.n"
-msgstr[0] "該存檔內含 %zu 項，壓縮後共 %.1f MB。"
+msgstr[0] "該存檔內含 %u 項，壓縮後共 %.1f MB。"
 
 msgid "keys.split.menu"
 msgstr "設定分屏模式"
@@ -1448,12 +1408,6 @@ msgstr "在側邊打開連結"
 
 msgid "link.side.newtab"
 msgstr "在側邊新標籤頁中打開連結"
-
-msgid "lang.ia"
-msgstr "因特語"
-
-msgid "lang.tok"
-msgstr "道本語"
 
 msgid "heading.newident.missing"
 msgstr "資料缺失"
@@ -1601,9 +1555,6 @@ msgstr "更多…"
 msgid "prefs.scrollspeed.keyboard"
 msgstr "鍵盤捲動速度："
 
-msgid "prefs.userfont"
-msgstr "符號字型："
-
 msgid "keys.split.item"
 msgstr "分屏選單："
 
@@ -1617,13 +1568,13 @@ msgid "prefs.returnkey"
 msgstr "Return 鍵行為："
 
 msgid "keys.upload"
-msgstr "透過 Titan 上載頁面"
+msgstr "透過 Titan 上載"
 
 msgid "upload.port"
 msgstr "埠號…"
 
 msgid "heading.uploadport"
-msgstr "TITAN 上載埠號"
+msgstr "Titan上載埠號"
 
 msgid "dlg.uploadport.msg"
 msgstr "為此 URL 設定 Titan 伺服器埠號。埠號設定分站點儲存。"
@@ -1654,7 +1605,7 @@ msgid "media.untitled.audio"
 msgstr "聲音"
 
 msgid "status.query.tight"
-msgstr "查詢"
+msgstr "搜尋"
 
 msgid "link.file.delete"
 msgstr "刪除檔案"
@@ -1690,10 +1641,10 @@ msgid "bookmark.export.format.tags"
 msgstr "標籤以二級標題呈現。"
 
 msgid "menu.page.upload"
-msgstr "透過 Titan 上載頁面…"
+msgstr "透過 Titan 上載…"
 
 msgid "heading.upload"
-msgstr "透過 TITAN 上載"
+msgstr "透過Titan上載"
 
 msgid "heading.upload.text"
 msgstr "文字"
@@ -1739,9 +1690,6 @@ msgstr "換行"
 
 msgid "prefs.returnkey.accept"
 msgstr "提交"
-
-msgid "hint.prefs.userfont"
-msgstr "TrueType 字型位置"
 
 msgid "prefs.linespacing"
 msgstr "行距："
@@ -1815,7 +1763,7 @@ msgid "prefs.bookmarks.addbottom"
 msgstr "在底部添加書籤："
 
 msgid "prefs.time.24h"
-msgstr "24小時制"
+msgstr "24小時制："
 
 msgid "prefs.imagestyle"
 msgstr "影像著色："
@@ -1831,7 +1779,7 @@ msgid "prefs.imagestyle.bgfg"
 msgstr "背景至前景"
 
 msgid "prefs.font.ui"
-msgstr "UI："
+msgstr "介面字體："
 
 msgid "prefs.font.heading"
 msgstr "標題："
@@ -1881,7 +1829,7 @@ msgid "dlg.upload.text"
 msgstr "上載純文本"
 
 msgid "prefs.gemtext.ansi"
-msgstr "ANSI 跳脫："
+msgstr "Gemtext ANSI 跳脫："
 
 # Color of the text foreground, i.e., the characters.
 msgid "prefs.gemtext.ansi.fg"
@@ -1907,7 +1855,7 @@ msgid "heading.confirm.bookmarks.delete"
 msgstr "移除書籤"
 
 msgid "heading.bookmark.tags"
-msgstr "特殊標籤"
+msgstr "行為"
 
 msgid "heading.addfolder"
 msgstr "新增檔案夾"
@@ -1918,3 +1866,437 @@ msgstr "創建檔案夾"
 # used on mobile
 msgid "heading.settings"
 msgstr "設定"
+
+msgid "heading.archive.userdata"
+msgstr "使用者資料歸檔"
+
+msgid "menu.open.external"
+msgstr "在另一app中打開"
+
+# Active identity toolbar menu.
+msgid "menu.hide.identities"
+msgstr "隱藏身份"
+
+msgid "menu.home"
+msgstr "回到起始頁"
+
+msgid "sidebar.action.bookmarks.newfolder"
+msgstr "新增檔案夾"
+
+msgid "sidebar.action.bookmarks.edit"
+msgstr "編輯"
+
+# The %s represents the name of an identity.
+#, c-format
+msgid "ident.switch"
+msgstr "使用%s"
+
+msgid "menu.tab.next"
+msgstr "顯示下一個標籤頁"
+
+msgid "menu.tab.prev"
+msgstr "顯示上一個標籤頁"
+
+msgid "menu.movetab.split"
+msgstr "向另一側移動標籤頁"
+
+msgid "menu.movetab.newwindow"
+msgstr "移動標籤頁至新視窗"
+
+msgid "sidebar.close"
+msgstr "完成"
+
+msgid "sidebar.empty.unread"
+msgstr "無未讀項"
+
+msgid "sitespec.ansi"
+msgstr "ANSI跳脫警告："
+
+msgid "keys.pageinfo"
+msgstr "顯示頁面資訊"
+
+msgid "keys.sitespec"
+msgstr "顯示針對該站臺的設定"
+
+msgid "keys.menubar.focus"
+msgstr "聚焦到選單列"
+
+msgid "keys.contextmenu"
+msgstr "打開上下文選單"
+
+msgid "link.newwindow"
+msgstr "在新視窗中打開連結"
+
+msgid "pageinfo.settings"
+msgstr "設定"
+
+msgid "heading.sitespec"
+msgstr "針對特定站臺的設定"
+
+# Menu heading shown when customizing navbar button actions.
+msgid "menu.toolbar.setaction"
+msgstr "設定動作："
+
+msgid "sidebar.action.history.clear"
+msgstr "清除"
+
+# Paste the line preceding the clicked link into the input prompt.
+msgid "menu.input.precedingline"
+msgstr "貼上上一行"
+
+msgid "ident.unset"
+msgstr "取消釘選"
+
+msgid "menu.email"
+msgstr "電郵聯絡"
+
+msgid "menu.identities"
+msgstr "管理身分"
+
+msgid "menu.folder.opentab"
+msgstr "在新標籤頁中打開"
+
+msgid "bookmark.folder.delete"
+msgstr "刪除書籤檔案夾"
+
+msgid "menu.reopentab"
+msgstr "打開最近關閉的標籤頁"
+
+# Used in the desktop Help menu.
+msgid "menu.aboutapp"
+msgstr "關於Lagrange"
+
+msgid "menu.viewformat.plain"
+msgstr "以純文字形式檢視"
+
+msgid "sitespec.tlscache"
+msgstr "回復TLS作業階段："
+
+msgid "sitespec.accept"
+msgstr "儲存設定"
+
+msgid "keys.input.precedingline"
+msgstr "輸入提示：貼上上一行"
+
+msgid "menu.title.window"
+msgstr "視窗"
+
+msgid "menu.window.min"
+msgstr "縮到最小"
+
+msgid "menu.window.max"
+msgstr "放到最大"
+
+msgid "menu.window.full"
+msgstr "開關全熒幕模式"
+
+msgid "menu.paste.go"
+msgstr "貼上並前往"
+
+msgid "menu.viewformat.gemini"
+msgstr "以Gemtext檢視"
+
+msgid "sitespec.palette"
+msgstr "主題色板種子："
+
+msgid "keys.identmenu"
+msgstr "打開身分選單"
+
+msgid "menu.newwindow"
+msgstr "新視窗"
+
+msgid "userdata.help"
+msgstr "使用者資料包含匯出的瀏覽記錄、身份、書籤、對特定站臺的設定以及受信任的伺服器憑證指紋。可以另存備份，也可以在裝置間移轉資料。"
+
+msgid "menu.export"
+msgstr "匯出使用者資料"
+
+msgid "menu.import"
+msgstr "匯入使用者資料…"
+
+msgid "menu.identity.newdomain"
+msgstr "為此網域建立新身分…"
+
+msgid "feeds.entry.markbelowread"
+msgstr "將下方項目標為已讀"
+
+msgid "menu.openwindow"
+msgstr "在新視窗中打開"
+
+msgid "menu.movetab.left"
+msgstr "向左移動標籤頁"
+
+msgid "menu.movetab.right"
+msgstr "向右移動標籤頁"
+
+# Shows where a local file is using the Finder.
+msgid "menu.reveal.macos"
+msgstr "在Finder中顯示"
+
+msgid "menu.share"
+msgstr "分享"
+
+msgid "menu.upload.delete.confirm"
+msgstr "確認刪除全部（無法還原）"
+
+# Mobile subheading in the Upload dialog.
+msgid "upload.url"
+msgstr "URL"
+
+msgid "dlg.userdata.missing"
+msgstr "不存在的部分"
+
+msgid "hint.upload.token.long"
+msgstr "令牌—參見伺服器的指引"
+
+msgid "glyphfinder.results"
+msgstr "以下的字體包提供一個或多個缺失的字形："
+
+msgid "import.userdata"
+msgstr "匯入選中的資料"
+
+msgid "import.userdata.dupfolder"
+msgstr "匯入的重複項"
+
+msgid "import.userdata.error"
+msgstr "%s不是一個Lagrange匯出檔。"
+
+msgid "import.userdata.history"
+msgstr "歷史："
+
+msgid "heading.glyphfinder.results"
+msgstr "搜尋結果"
+
+msgid "glyphfinder.results.empty"
+msgstr "抱歉，未找到符合條件的字體包。"
+
+msgid "dlg.bookmark.parentfolder"
+msgstr "上級檔案夾："
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "空格分隔的關鍵詞"
+
+# Shows where a local file is using the File Manager.
+msgid "menu.reveal.filemgr"
+msgstr "在檔案管理員中顯示"
+
+# Mobile subheading: buttons for entering uploaded data.
+msgid "upload.content"
+msgstr "內容"
+
+msgid "heading.upload.spartan"
+msgstr "透過Spartan上載"
+
+msgid "menu.upload.delete"
+msgstr "刪除全部"
+
+msgid "heading.glyphfinder"
+msgstr "丟失字形"
+
+msgid "dlg.glyphfinder.missing"
+msgstr "無法顯示下列字形："
+
+msgid "dlg.glyphfinder.help"
+msgstr "您可以嘗試在skyjack.fi字體資源庫中搜尋能夠提供這些字形的字體，或者自行安裝新的TruType字體。"
+
+msgid "dlg.glyphfinder.help.empty"
+msgstr "請重新整理此頁面來檢查丟失字形。"
+
+msgid "heading.upload.id"
+msgstr "授權"
+
+msgid "import.userdata.trusted"
+msgstr "受信任的憑證："
+
+msgid "import.userdata.sitespec"
+msgstr "站臺設定："
+
+msgid "dlg.userdata.no"
+msgstr "無"
+
+msgid "dlg.userdata.all"
+msgstr "全部（覆蓋）"
+
+msgid "dlg.userdata.alldup"
+msgstr "全部（保留重複）"
+
+msgid "menu.page.upload.edit"
+msgstr "透過Titan編輯頁面…"
+
+msgid "spartan.input"
+msgstr "鍵入要傳送的文字："
+
+msgid "dlg.spartan.upload"
+msgstr "打開編輯器…"
+
+msgid "menu.upload.export"
+msgstr "匯出文字"
+
+msgid "hint.upload.path"
+msgstr "URL路徑"
+
+msgid "dlg.glyphfinder.disable"
+msgstr "關閉警告"
+
+msgid "dlg.glyphfinder.search"
+msgstr "搜尋字體資源庫"
+
+msgid "heading.bookmark.editfolder"
+msgstr "編輯檔案夾"
+
+msgid "dlg.newident.scope.dir"
+msgstr "當前目錄"
+
+msgid "dlg.certimport.paste"
+msgstr "自剪貼板貼上"
+
+msgid "heading.import.userdata"
+msgstr "匯入使用者資料"
+
+msgid "heading.import.userdata.error"
+msgstr "匯入失敗"
+
+msgid "import.userdata.bookmarks"
+msgstr "書籤："
+
+msgid "import.userdata.idents"
+msgstr "身分："
+
+msgid "prefs.evensplit"
+msgstr "均勻分割標籤頁："
+
+msgid "prefs.tabwidth"
+msgstr "Tab寬度："
+
+msgid "heading.prefs.user"
+msgstr "使用者資料"
+
+msgid "prefs.font.warnmissing"
+msgstr "字體缺失："
+
+msgid "keys.bookmark.addfolder"
+msgstr "新增書籤檔案夾"
+
+msgid "heading.prefs.appearance"
+msgstr "外觀"
+
+msgid "heading.prefs.layout"
+msgstr "頁面佈局"
+
+msgid "heading.prefs.content"
+msgstr "內容"
+
+msgid "prefs.bottomnavbar"
+msgstr "底部導航條"
+
+msgid "prefs.swipe.edge"
+msgstr "邊緣滑動："
+
+msgid "prefs.swipe.page"
+msgstr "頁面滑動："
+
+msgid "heading.prefs.toolbaractions"
+msgstr "工具列動作"
+
+msgid "prefs.accent.blue"
+msgstr "藍色"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "自動檢測Gopher選單樣式："
+
+msgid "error.proxyverify"
+msgstr "未受信任的代理"
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"因代理伺服器的TLA憑證與已在頁面資訊信任的憑證不符，連線已被取消。\n"
+"\n"
+"可以在頁面資訊中將代理的憑證標記為受信任的。"
+
+msgid "error.proxyexpired"
+msgstr "代理憑據過期"
+
+msgid "error.proxyexpired.msg"
+msgstr "因應代理伺服器的TLS憑證過期，連線已經取消。"
+
+msgid "heading.prefs.support"
+msgstr "支援"
+
+msgid "prefs.markdown.viewsource"
+msgstr "以原始碼形態檢視Markdown："
+
+msgid "prefs.bottomtabbar"
+msgstr "底部標籤頁"
+
+msgid "prefs.retaintabs"
+msgstr "下次啟動時還原標籤頁："
+
+msgid "prefs.blink"
+msgstr "游標閃爍："
+
+msgid "prefs.doctheme.name.oceanic"
+msgstr "海洋"
+
+msgid "prefs.toolbaraction1"
+msgstr "按鈕1"
+
+msgid "prefs.accent.gray"
+msgstr "灰色"
+
+msgid "keys.upload.edit"
+msgstr "透過Titan編輯頁面"
+
+msgid "error.ansi"
+msgstr "終端模擬"
+
+msgid "dlg.bookmark.notes"
+msgstr "註解："
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "任意格式的註解"
+
+msgid "dlg.bookmark.identity"
+msgstr "釘選的身分："
+
+# User preference that controls whether image data embedded in Data URLs gets automatically displayed when a page is loaded.
+msgid "prefs.dataurl.openimages"
+msgstr "顯示data URL中的圖片："
+
+msgid "prefs.uilayout"
+msgstr "佈局："
+
+msgid "prefs.menubar"
+msgstr "選單列"
+
+msgid "prefs.accent.red"
+msgstr "紅色"
+
+msgid "prefs.toolbaraction2"
+msgstr "按鈕2"
+
+msgid "prefs.accent.green"
+msgstr "綠色"
+
+msgid "prefs.font.smooth"
+msgstr "平滑字體："
+
+msgid "prefs.justify"
+msgstr "對齊："
+
+msgid "prefs.urlsize"
+msgstr "最大URL長度："
+
+msgid "error.incompleteheader"
+msgstr "回應頭不完整"
+
+msgid "prefs.tui.simple"
+msgstr "簡單字元："
+
+msgid "keys.feeds.showall"
+msgstr "側欄：展示全部訂閱項"
+
+msgid "keys.feeds.showunread"
+msgstr "側欄：顯示未讀訂閱項"
+
+msgid "error.incompleteheader.msg"
+msgstr "伺服器的回應頭不完整。可能是該伺服器未正常工作，亦可能是您嘗試連入非Gemini伺服器。"

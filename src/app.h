@@ -41,11 +41,17 @@ iDeclareType(Root)
 iDeclareType(Visited)
 iDeclareType(Window)
 
+typedef void iAnyWindow;
+
 /* Command line options strings. */
+#define dump_CommandLineOption              "dump;d"
+#define dumpIdentity_CommandLineOption      "dump-identity;I"
+#define userDataDir_CommandLineOption       "user;U"
 #define listTabUrls_CommandLineOption       "list-tab-urls;L"
 #define openUrlOrSearch_CommandLineOption   "url-or-search;u"
+#define replaceTab_CommandLineOption        "replace-tab"
 #define windowWidth_CommandLineOption       "width;w"
-#define windowHeight_CommandLineOption      "height;h"
+#define windowHeight_CommandLineOption      "height;h"   
 
 enum iAppDeviceType {
     desktop_AppDeviceType,
@@ -68,7 +74,12 @@ enum iUserEventCode {
        take, it could turn into a tap-and-hold for example. */
     widgetTapBegins_UserEventCode,
     widgetTouchEnds_UserEventCode, /* finger lifted, but momentum may continue */
-    releaseObject_UserEventCode, /* object that needs releasing in the main thread */
+    releaseObject_UserEventCode,   /* object that needs releasing in the main thread */
+};
+
+enum iNewTabFlag {
+    switchTo_NewTabFlag = iBit(1),
+    append_NewTabFlag   = iBit(2),
 };
 
 const iString *execPath_App     (void);
@@ -77,13 +88,14 @@ const iString *downloadDir_App  (void);
 const iString *debugInfo_App    (void);
 
 int         run_App                     (int argc, char **argv);
-void        rootOrder_App               (iRoot *roots[2]); /* TODO: max roots? */
 void        processEvents_App           (enum iAppEventMode mode);
 iBool       handleCommand_App           (const char *cmd);
 void        refresh_App                 (void);
 iBool       isRefreshPending_App        (void);
 iBool       isFinishedLaunching_App     (void);
 uint32_t    elapsedSinceLastTicker_App  (void); /* milliseconds */
+void        disableRefresh_App          (iBool); /* TODO: Get rid of this. */
+void        setTextInputActive_App      (iBool);
 
 iBool               isLandscape_App     (void);
 iLocalDef iBool     isPortrait_App      (void) { return !isLandscape_App(); }
@@ -91,6 +103,7 @@ enum iAppDeviceType deviceType_App      (void);
 iLocalDef iBool     isPortraitPhone_App (void) { return isPortrait_App() && deviceType_App() == phone_AppDeviceType; }
 iLocalDef iBool     isLandscapePhone_App(void) { return isLandscape_App() && deviceType_App() == phone_AppDeviceType; }
 iBool               isRunningUnderWindowSystem_App  (void);
+iBool               isTextInputActive_App           (void);
 
 const iCommandLine *commandLine_App     (void);
 iGmCerts *          certs_App           (void);
@@ -102,7 +115,7 @@ iDocumentWidget *   document_App        (void);
 iObjectList *       listDocuments_App   (const iRoot *rootOrNull); /* NULL for all roots of current window */
 iStringSet *        listOpenURLs_App    (void); /* all tabs */
 iPtrArray *         listWindows_App     (void);
-iDocumentWidget *   newTab_App          (const iDocumentWidget *duplicateOf, iBool switchToNew);
+iDocumentWidget *   newTab_App          (const iDocumentWidget *duplicateOf, int newTabFlags);
 void                trimCache_App       (void);
 void                trimMemory_App      (void);
 //iBool               findCachedContent_App(const iString *url, iString *mime_out, iBlock *data_out);
@@ -114,6 +127,7 @@ iBool               forceSoftwareRender_App(void);
 void                setForceSoftwareRender_App(iBool sw);
 enum iColorTheme    colorTheme_App      (void);
 const iString *     schemeProxy_App     (iRangecc scheme);
+iBool               schemeProxyHostAndPort_App(iRangecc scheme, const iString **host, uint16_t *port);
 iBool               willUseProxy_App    (const iRangecc scheme);
 const iString *     searchQueryUrl_App  (const iString *queryStringUnescaped);
 const iString *     fileNameForUrl_App  (const iString *url, const iString *mime);
@@ -129,16 +143,21 @@ void        removeTicker_App    (iTickerFunc ticker, iAny *context);
 
 void        addWindow_App       (iMainWindow *win);
 void        removeWindow_App    (iMainWindow *win);
-void        setActiveWindow_App (iMainWindow *win);
-void        closeWindow_App     (iMainWindow *win);
+void        setActiveWindow_App (iAnyWindow *mainOrExtraWin);
+iWindow *   activeWindow_App    (void);
+void        closeWindow_App     (iWindow *win); /* main or extra window */
 size_t      numWindows_App      (void);
 size_t      windowIndex_App     (const iMainWindow *win);
 iMainWindow *newMainWindow_App  (void);
 const iPtrArray *mainWindows_App(void);
+const iPtrArray *regularWindows_App(void);
 iMainWindow *    mainWindow_App (void); /* currently active main window */
+void        addExtraWindow_App  (iWindow *extra);
+void        removeExtraWindow_App(iWindow *extra);
 void        addPopup_App        (iWindow *popup);
 void        removePopup_App     (iWindow *popup);
 void        closePopups_App     (iBool doForce);
+iWindow *   findWindow_App      (int windowType, const char *widgetId);
 
 void        postRefresh_App     (void);
 void        postCommand_Root    (iRoot *, const char *command);
@@ -156,8 +175,9 @@ iLocalDef void postCommand_App(const char *command) {
 
 iDocumentWidget *   document_Command    (const char *cmd);
 
-void            openInDefaultBrowser_App(const iString *url);
+void            openInDefaultBrowser_App(const iString *url, const iString *mime);
 void            revealPath_App          (const iString *path);
 void            updateCACertificates_App(void);
 void            resetFonts_App          (void);
 void            availableFontsChanged_App(void);
+void            commitFile_App          (const char *path, const char *tempPathWithNewContents); /* latter will be removed */

@@ -47,6 +47,7 @@ iBeginDeclareClass(Widget)
     iBool (*processEvent)   (iWidget *, const SDL_Event *);
     void  (*draw)           (const iWidget *);
     void  (*sizeChanged)    (iWidget *); /* optional, defaults to NULL */
+    void  (*rootChanged)    (iWidget *); /* optional, defaults to NULL */
 iEndDeclareClass(Widget)
 
 enum iWidgetFlag {
@@ -129,6 +130,9 @@ enum iWidgetFlag2 {
     visibleOnParentSelected_WidgetFlag2     = iBit(3),
     permanentVisualOffset_WidgetFlag2       = iBit(4), /* usually visual offset overrides hiding */
     commandOnHover_WidgetFlag2              = iBit(5), /* only dispatched to the hovered widget */
+    centerChildrenVertical_WidgetFlag2      = iBit(6), /* pad top and bottom to center children in the middle */
+    usedAsPeriodicContext_WidgetFlag2       = iBit(7), /* add_Periodic() called on the widget */
+    siblingOrderDraggable_WidgetFlag2       = iBit(8),
 };
 
 enum iWidgetAddPos {
@@ -165,6 +169,8 @@ struct Impl_Widget {
     iBool      (*commandHandler)(iWidget *, const char *);
     iRoot *      root;
     iWidgetDrawBuffer *drawBuf;
+    iAnim        overflowScrollOpacity; /* scrollbar fading */
+    iString      data; /* custom user data */
 };
 
 iDeclareObjectConstruction(Widget)
@@ -313,6 +319,7 @@ iAny *  insertChildAfterFlags_Widget(iWidget *, iAnyObject *child, size_t afterI
 iAny *  removeChild_Widget          (iWidget *, iAnyObject *child); /* returns a ref */
 iAny *  child_Widget                (iWidget *, size_t index); /* O(n) */
 size_t  indexOfChild_Widget         (const iWidget *, const iAnyObject *child); /* O(n) */
+void    changeChildIndex_Widget     (iWidget *, iAnyObject *child, size_t newIndex); /* O(n) */
 void    arrange_Widget              (iWidget *);
 iBool   scrollOverflow_Widget       (iWidget *, int delta); /* moves the widget */
 iBool   dispatchEvent_Widget        (iWidget *, const SDL_Event *);
@@ -350,3 +357,8 @@ iBool       hasVisibleChildOnTop_Widget
                                     (const iWidget *parent);
 void        printTree_Widget        (const iWidget *);
 void        identify_Widget         (const iWidget *); /* prints to stdout */
+
+void        addRecentlyDeleted_Widget   (iAnyObject *obj);
+iBool       isRecentlyDeleted_Widget    (const iAnyObject *obj);
+void        clearRecentlyDeleted_Widget (void);
+    

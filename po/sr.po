@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-05-17 12:15+0000\n"
+"POT-Creation-Date: 2023-02-26 11:35+0000\n"
+"PO-Revision-Date: 2023-05-26 05:02+0000\n"
 "Last-Translator: Страхиња Радић <contact@strahinja.org>\n"
 "Language-Team: Serbian <http://weblate.skyjake.fi/projects/lagrange/ui/sr/>\n"
 "Language: sr\n"
@@ -18,17 +20,8 @@ msgstr "Верзија"
 msgid "cancel"
 msgstr "Поништи"
 
-msgid "dismiss"
-msgstr "Затвори"
-
 msgid "dlg.default"
 msgstr " ОК "
-
-msgid "toggle.yes"
-msgstr "ДА"
-
-msgid "toggle.no"
-msgstr "НЕ"
 
 msgid "menu.title.edit"
 msgstr "Уређивање"
@@ -263,9 +256,6 @@ msgstr "Користи на овој страници"
 
 msgid "ident.stopuse"
 msgstr "Престани са употребом на овој страници"
-
-msgid "ident.showuse"
-msgstr "Прикажи употребу"
 
 # %s refers to name of an identity.
 #, c-format
@@ -586,7 +576,7 @@ msgstr "Широки изглед"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Стил"
+msgstr "Стил стране"
 
 # tab button
 msgid "heading.prefs.userinterface"
@@ -608,7 +598,7 @@ msgid "prefs.ostheme"
 msgstr "Употреба системске теме:"
 
 msgid "prefs.theme"
-msgstr "Тема:"
+msgstr "Тема интерфејса:"
 
 msgid "prefs.theme.black"
 msgstr "Црна"
@@ -629,7 +619,7 @@ msgid "prefs.uiscale"
 msgstr "Фактор размере интерфејса:"
 
 msgid "prefs.retainwindow"
-msgstr "Задржавање положаја:"
+msgstr "Чување положаја прозора:"
 
 msgid "prefs.doctheme.dark"
 msgstr "Тамна тема:"
@@ -961,21 +951,12 @@ msgstr "ИСТОРИЈА"
 msgid "menu.closetab.right"
 msgstr "Затвори картице здесна"
 
-msgid "lang.zh.hans"
-msgstr "Кинески (поједностављени)"
-
 msgid "menu.closetab"
 msgstr "Затвори картицу"
-
-msgid "lang.zh.hant"
-msgstr "Кинески (традиционални)"
 
 # Used on iOS. "Files" refers to Apple's iOS app where you can pick an iCloud folder.
 msgid "menu.save.files"
 msgstr "Сачувај у Files"
-
-msgid "lang.fi"
-msgstr "Фински"
 
 # Used on desktop operating systems. "Downloads" refers to the user's configured downloads directory.
 msgid "menu.save.downloads"
@@ -983,9 +964,6 @@ msgstr "Сачувај у фасцикли за преузимања"
 
 msgid "lang.it"
 msgstr "Италијански"
-
-msgid "menu.copy.source"
-msgstr "Копирај изворни текст"
 
 msgid "menu.sidebar"
 msgstr "Смени панел"
@@ -1101,11 +1079,8 @@ msgstr "%d. %b %Y."
 msgid "prefs.smoothscroll"
 msgstr "Глатко скроловање:"
 
-msgid "feeds.entry.newtab"
-msgstr "Отвори ставку у новој картици"
-
 msgid "prefs.imageloadscroll"
-msgstr "Учитавање слика при скроловању:"
+msgstr "Учитавање следеће слике при скроловању:"
 
 msgid "feeds.entry.markunread"
 msgstr "Означи као непрочитано"
@@ -1135,7 +1110,7 @@ msgid "menu.opentab"
 msgstr "Отвори у новој картици"
 
 msgid "prefs.sideicon"
-msgstr "Икона капсуле:"
+msgstr "Икона капсуле слева:"
 
 msgid "menu.opentab.background"
 msgstr "Отвори у позадинској картици"
@@ -1160,9 +1135,6 @@ msgstr "Високи контраст"
 
 msgid "dlg.confirm.history.clear"
 msgstr "Заиста желите да очистите историју свих посећених страница?"
-
-msgid "prefs.headingfont"
-msgstr "Фонт наслова:"
 
 msgid "dlg.history.clear"
 msgstr "Очисти историју"
@@ -1196,7 +1168,7 @@ msgstr[1] "Користи се на %u УРЛ-а"
 msgstr[2] "Користи се на %u УРЛ-ова"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Прелом чистог текста:"
+msgstr "Прелом дугачких редова чистог текста:"
 
 msgid "ident.stopuse.all"
 msgstr "Престани са употребом свуда"
@@ -1282,7 +1254,7 @@ msgstr "Грешка при чувању датотеке"
 msgid "error.badstatus.msg"
 msgstr ""
 "Сервер је одговорио статусним кодом који није у спецификацији протокола "
-"Џемини. Можда је сервер из будућности? Или је само неисправан."
+"Џемини. Можда је сервер неисправан."
 
 #, c-format
 msgid "dlg.import.found"
@@ -1320,9 +1292,6 @@ msgstr ""
 "Примљено заглавље не поштује спецификацију протокола Џемини. Можда је сервер "
 "неисправан, или сте покушали да приступите не-Џемини серверу."
 
-msgid "heading.certwarn"
-msgstr "СЕРТИФИКАТ БЕЗ ПОВЕРЕЊА"
-
 msgid "error.badredirect.msg"
 msgstr ""
 "Сервер је одговорио преусмеравањем, али није послао исправан УРЛ одредишта. "
@@ -1346,12 +1315,6 @@ msgstr[2] ""
 
 msgid "error.schemeredirect"
 msgstr "Преусмеравање уз промену шеме"
-
-msgid "lang.sr"
-msgstr "Српски"
-
-msgid "lang.ie"
-msgstr "Интерлингве"
 
 #, c-format
 msgid "feeds.list.counts"
@@ -1483,9 +1446,6 @@ msgstr "Раздвој поглед…"
 msgid "dlg.save.opendownload"
 msgstr "Отвори преузету датотеку"
 
-msgid "lang.ia"
-msgstr "Интерлингва"
-
 msgid "dlg.newindent.missing.commonname"
 msgstr "Мора бити задато „Опште име“."
 
@@ -1531,7 +1491,7 @@ msgstr "Рок трајања мора бити у будућности."
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Отварање индекса архива:"
+msgstr "Отварање index.gmi у ZIP архивама:"
 
 msgid "keys.split.menu"
 msgstr "Укључивање режима раздвојеног погледа"
@@ -1576,9 +1536,6 @@ msgstr "%s је компресована архива."
 msgid "doc.archive.view"
 msgstr "Прегледај садржај архиве"
 
-msgid "lang.tok"
-msgstr "Токи пона"
-
 msgid "prefs.pinsplit"
 msgstr "Качење раздвојеног погледа:"
 
@@ -1614,9 +1571,6 @@ msgstr[2] "Овај директоријум садржи %u ставки."
 msgid "keys.tab.close.other"
 msgstr "Затварање осталих картица"
 
-msgid "lang.pl"
-msgstr "Пољски"
-
 msgid "dlg.newident.scope.domain"
 msgstr "Текућем домену"
 
@@ -1626,38 +1580,11 @@ msgstr "Текућој страници"
 msgid "dlg.newident.scope.none"
 msgstr "Не користити"
 
-msgid "keys.split.menu.merge"
-msgstr "Мени раздвојеног погледа: Спој картице"
-
-msgid "keys.split.menu.swap"
-msgstr "Мени раздвојеног погледа: Замени стране"
-
-msgid "keys.split.menu.horiz"
-msgstr "Мени раздвојеног погледа: Хоризонтално"
-
-msgid "keys.split.menu.horiz12"
-msgstr "Мени раздвојеног погледа: Хоризонтално 1:2"
-
-msgid "keys.split.menu.horiz21"
-msgstr "Мени раздвојеног погледа: Хоризонтално 2:1"
-
-msgid "keys.split.menu.vert"
-msgstr "Мени раздвојеног погледа: Вертикално"
-
-msgid "keys.split.menu.vert12"
-msgstr "Мени раздвојеног погледа: Вертикално 1:2"
-
-msgid "keys.split.menu.vert21"
-msgstr "Мени раздвојеног погледа: Вертикално 2:1"
-
 msgid "dlg.newident.more"
 msgstr "Више…"
 
 msgid "dlg.newident.scope"
 msgstr "Користити на:"
-
-msgid "prefs.userfont"
-msgstr "Фонт за симболе:"
 
 msgid "close"
 msgstr "Затвори"
@@ -1679,9 +1606,6 @@ msgstr "Мени раздвојеног погледа:"
 
 msgid "menu.save.downloads.open"
 msgstr "Сачувај у фасцикли за преузимања и отвори"
-
-msgid "hint.prefs.userfont"
-msgstr "путања TrueType фонта"
 
 msgid "menu.pageinfo"
 msgstr "Прикажи податке о страници"
@@ -1934,7 +1858,7 @@ msgid "dlg.upload.pickfile"
 msgstr "Изабери датотеку"
 
 msgid "heading.bookmark.tags"
-msgstr "Посебне ознаке"
+msgstr "Понашање"
 
 msgid "heading.addfolder"
 msgstr "Додавање фасцикле"
@@ -1963,24 +1887,6 @@ msgstr "Преформатирана боја"
 
 msgid "keys.bookmark.addfolder"
 msgstr "Додавање фасцикле са обележивачима"
-
-msgid "lang.gl"
-msgstr "Галицијски"
-
-msgid "lang.eo"
-msgstr "Есперанто"
-
-msgid "lang.es.mx"
-msgstr "Шпански (Мексико)"
-
-msgid "lang.sk"
-msgstr "Словачки"
-
-msgid "lang.isv"
-msgstr "Међусловенски"
-
-msgid "heading.fontpack.classic"
-msgstr "Преузимање пакета фонтова"
 
 msgid "prefs.gemtext.ansi.fontstyle"
 msgstr "Стил фонта"
@@ -2016,7 +1922,7 @@ msgid "prefs.bookmarks.addbottom"
 msgstr "Додавање обележивача на дно:"
 
 msgid "prefs.font.ui"
-msgstr "Интерфејс:"
+msgstr "Фонт интерфејса:"
 
 msgid "prefs.font.heading"
 msgstr "Наслови:"
@@ -2035,16 +1941,16 @@ msgid "prefs.boldlink.visited"
 msgstr "Посећено"
 
 msgid "prefs.gemtext.ansi"
-msgstr "ANSI кодови:"
+msgstr "Џемтекст ANSI кодови:"
 
 msgid "prefs.gemtext.ansi.fg"
 msgstr "Боја исписа"
 
 msgid "prefs.font.warnmissing"
-msgstr "Упозорења за глифове:"
+msgstr "Упозорења за глифове фонтова:"
 
 msgid "prefs.font.smooth"
-msgstr "Умекшавање:"
+msgstr "Умекшавање фонтова:"
 
 msgid "error.ansi"
 msgstr "Емулација терминала"
@@ -2107,19 +2013,11 @@ msgstr "Отклонити упозорење?"
 msgid "dlg.dismiss.warning"
 msgstr "Отклони упозорење"
 
-msgid "dlg.fontpack.classic"
-msgstr "Преузми пакет фонтова (25 МБ)"
-
 msgid "error.ansi.msg"
 msgstr ""
 "Ова страница можда није исправно приказана. Она користи ANSI ескејп секвенце "
 "за стилизовање текста, што је подржано само делимично. Можете пробати да "
 "употребите емулатор терминала да је прегледате."
-
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"Фонтови који су раније испоручивани уз апликацију су сада доступни посебно. "
-"Желите ли да преузмете пакет фонтова „classic-set“?"
 
 msgid "error.glyphs.msg"
 msgstr ""
@@ -2161,15 +2059,6 @@ msgstr ""
 msgid "dlg.dismiss.ansi"
 msgstr "Трајно отклонити упозорење о емулацији терминала на %s?"
 
-msgid "lang.uk"
-msgstr "Украјински"
-
-msgid "lang.cs"
-msgstr "Чешки"
-
-msgid "lang.hu"
-msgstr "Мађарски"
-
 msgid "menu.update"
 msgstr "Провери ажурирања…"
 
@@ -2184,7 +2073,7 @@ msgid "prefs.gemtext.ansi.bg"
 msgstr "Боја позадине"
 
 msgid "prefs.time.24h"
-msgstr "24-часовно време"
+msgstr "24-часовно време:"
 
 # This label should be fairly short so it fits in a button in the sidebar.
 msgid "sidebar.action.feeds.markallread"
@@ -2521,3 +2410,189 @@ msgstr ""
 
 msgid "prefs.tui.simple"
 msgstr "Једноставни знаци:"
+
+msgid "prefs.evensplit"
+msgstr "Равномерно раздвајање картице:"
+
+msgid "error.proxyverify"
+msgstr "Прокси без поверења"
+
+msgid "error.proxyexpired"
+msgstr "Сертификат проксија је истекао"
+
+msgid "error.proxyexpired.msg"
+msgstr "Повезивање је поништено јер је TLS сертификат прокси сервера истекао."
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"Повезивање је поништено јер се TLS сертификат прокси сервера не поклапа са "
+"оним коме је указано поверење.\n"
+"\n"
+"Сертификату прокси сервера са може указати поверење у Подацима о страници."
+
+msgid "menu.folder.opentab"
+msgstr "Отвори у новим картицама"
+
+msgid "bookmark.folder.delete"
+msgstr "Обриши фасциклу са обележивачима"
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "изрази раздвојени размацима"
+
+msgid "dlg.bookmark.notes"
+msgstr "Белешке:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "произвољне приватне белешке"
+
+msgid "dlg.bookmark.identity"
+msgstr "Закачени идентитет:"
+
+msgid "menu.email"
+msgstr "Контакт преко мејла"
+
+msgid "heading.prefs.user"
+msgstr "Кориснички подаци"
+
+msgid "menu.identity.newdomain"
+msgstr "Нов идентитет домена…"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Текући директоријум"
+
+msgid "ident.unset"
+msgstr "Откачи"
+
+msgid "menu.title.window"
+msgstr "Прозор"
+
+msgid "menu.window.min"
+msgstr "Минимизуј"
+
+msgid "menu.window.max"
+msgstr "Максимизуј"
+
+msgid "menu.window.full"
+msgstr "Смени пун екран"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Аутоматско детектовање стилизације Gopher менија:"
+
+msgid "menu.tab.next"
+msgstr "Прикажи следећу картицу"
+
+msgid "menu.tab.prev"
+msgstr "Прикажи претходну картицу"
+
+msgid "menu.movetab.split"
+msgstr "Премести картицу на другу страну"
+
+msgid "menu.movetab.newwindow"
+msgstr "Премести картицу у нов прозор"
+
+msgid "heading.prefs.appearance"
+msgstr "Изглед"
+
+msgid "heading.prefs.layout"
+msgstr "Организација стране"
+
+msgid "heading.prefs.content"
+msgstr "Садржај"
+
+msgid "menu.movetab.left"
+msgstr "Премести картицу улево"
+
+msgid "menu.movetab.right"
+msgstr "Премести картицу удесно"
+
+msgid "prefs.swipe.edge"
+msgstr "Превлачење са ивице:"
+
+msgid "prefs.swipe.page"
+msgstr "Превлачење на страни:"
+
+msgid "dlg.translate.pre"
+msgstr "Прескочити преформатирано:"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Аутоматска детекција"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Азербајџански"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Каталонски"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Чешки"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Дански"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Холандски"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Есперанто"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Фински"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Грчки"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Хебрејски"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Мађарски"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Индонежански"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Ирски"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Корејски"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Персијски"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Пољски"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Словачки"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Шведски"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Турски"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Украјински"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Преусмеравања која мењају шему:"

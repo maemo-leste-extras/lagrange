@@ -148,5 +148,6 @@ typedef iBool (*iTlsRequestVerifyFunc)(iTlsRequest *, const iTlsCertificate *, i
 void        setCACertificates_TlsRequest(const iString *caFile, const iString *caPath);
 void        setCiphers_TlsRequest       (const char *cipherList);
 void        setVerifyFunc_TlsRequest    (iTlsRequestVerifyFunc verifyFunc);
+const char *libraryName_TlsRequest      (void); /* "OpenSSL" or "LibreSSL", for example */
 
 iEndPublic

@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-05-05 03:36+0000\n"
+"POT-Creation-Date: 2023-01-19 04:46+0000\n"
+"PO-Revision-Date: 2023-03-30 18:15+0000\n"
 "Last-Translator: Nikolay Korotkiy <sikmir@gmail.com>\n"
 "Language-Team: Esperanto <http://weblate.skyjake.fi/projects/lagrange/ui/eo/>"
 "\n"
@@ -11,12 +13,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5.1\n"
-
-msgid "toggle.yes"
-msgstr "Jes"
-
-msgid "toggle.no"
-msgstr "Ne"
 
 msgid "menu.title.file"
 msgstr "Dosiero"
@@ -47,9 +43,6 @@ msgstr "Bela Gemini-retumilo"
 
 msgid "cancel"
 msgstr "Rezigni"
-
-msgid "dismiss"
-msgstr "Fermi"
 
 msgid "dlg.message.ok"
 msgstr "Daŭrigi"
@@ -125,9 +118,6 @@ msgstr "Listigi ĉiujn legosignojn"
 
 msgid "menu.back"
 msgstr "Malantaŭen"
-
-msgid "menu.copy.source"
-msgstr "Kopii fontotekston"
 
 msgid "menu.quit"
 msgstr "Forlasi"
@@ -217,9 +207,6 @@ msgstr "Reŝargi abonfluojn"
 msgid "bookmark.tag.home"
 msgstr "Uzi kiel hejmpaĝo"
 
-msgid "ident.showuse"
-msgstr "Montri uzadon"
-
 msgid "feeds.entry.markread"
 msgstr "Marki legita"
 
@@ -276,8 +263,8 @@ msgstr "Fidi"
 #, c-format
 msgid "dlg.import.add"
 msgid_plural "dlg.import.add.n"
-msgstr[0] "%Aldoni legosignon"
-msgstr[1] "%Aldoni %d legosignojn"
+msgstr[0] "%sAldoni legosignon"
+msgstr[1] "%sAldoni %d legosignojn"
 
 msgid "pageinfo.cert.status"
 msgstr "Stato de atestilo:"
@@ -340,17 +327,8 @@ msgstr "Araba"
 msgid "lang.zh"
 msgstr "Ĉina"
 
-msgid "lang.zh.hans"
-msgstr "Ĉina (simpligita)"
-
-msgid "lang.zh.hant"
-msgstr "Ĉina (tradicia)"
-
 msgid "lang.en"
 msgstr "Angla"
-
-msgid "lang.fi"
-msgstr "Finna"
 
 msgid "lang.fr"
 msgstr "Franca"
@@ -427,7 +405,7 @@ msgid "heading.prefs.scrolling"
 msgstr "Rulumado"
 
 msgid "prefs.theme"
-msgstr "Temo:"
+msgstr "UI-temo:"
 
 msgid "prefs.theme.black"
 msgstr "Nigra"
@@ -538,7 +516,7 @@ msgstr "Konservi legosignon"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Stilo"
+msgstr "Paĝa stilo"
 
 msgid "prefs.mono.gemini"
 msgstr "Gemini"
@@ -581,12 +559,6 @@ msgstr "Baskuligi plenekranan reĝimon"
 
 msgid "heading.import.bookmarks"
 msgstr "Importi legosignojn"
-
-msgid "lang.sr"
-msgstr "Serba"
-
-msgid "lang.ie"
-msgstr "Okcidentalo"
 
 # Used in inline audio player metadata popup.
 msgid "audio.meta.title"
@@ -646,9 +618,6 @@ msgstr "Turkisa"
 msgid "dlg.translate.from"
 msgstr "De:"
 
-msgid "lang.ia"
-msgstr "Interlingvao"
-
 msgid "hint.newident.optional"
 msgstr "nedeviga"
 
@@ -695,9 +664,6 @@ msgstr "Eldonita"
 
 msgid "gempub.meta.version"
 msgstr "Versio"
-
-msgid "lang.pl"
-msgstr "Pola"
 
 msgid "close"
 msgstr "Fermi"
@@ -1010,7 +976,7 @@ msgid "prefs.gemtext.ansi.fontstyle"
 msgstr "Tipara fasono"
 
 msgid "prefs.font.smooth"
-msgstr "Glatigo:"
+msgstr "Tipara glatigo:"
 
 msgid "prefs.ca.file"
 msgstr "CA-dosiero:"
@@ -1023,3 +989,330 @@ msgstr "Identeco:"
 
 msgid "dlg.spartan.upload"
 msgstr "Malfermi redaktilon…"
+
+msgid "menu.aboutpages"
+msgstr "Pri-paĝoj"
+
+msgid "menu.debug"
+msgstr "Sencimigaj informoj"
+
+msgid "sidebar.close"
+msgstr "Farita"
+
+msgid "sidebar.action.ident.import"
+msgstr "Importi…"
+
+msgid "sidebar.action.history.clear"
+msgstr "Nuligi"
+
+msgid "toolbar.outline"
+msgstr "Paĝa skemo"
+
+# The %s represents the name of an identity.
+#, c-format
+msgid "ident.switch"
+msgstr "Uzi %s"
+
+msgid "pageinfo.cert.trusted"
+msgstr "Fidinda"
+
+msgid "menu.share"
+msgstr "Konigi"
+
+msgid "dlg.certwarn.title"
+msgstr "Sekureca problemo"
+
+msgid "import.userdata.idents"
+msgstr "Identecoj:"
+
+msgid "dlg.userdata.no"
+msgstr "Neniu"
+
+msgid "dlg.userdata.alldup"
+msgstr "Ĉiuj (konservi duplikatojn)"
+
+msgid "upload.port"
+msgstr "Pordo…"
+
+msgid "dlg.feed.type.gemini"
+msgstr "JJJJ-MM-TT ligiloj"
+
+# tab button
+msgid "heading.prefs.keys"
+msgstr "Klavoj"
+
+msgid "heading.prefs.pagecontent"
+msgstr "Paĝaj koloroj"
+
+msgid "prefs.pinsplit.left"
+msgstr "Maldekstra langeto"
+
+msgid "prefs.font.body"
+msgstr "Korpo:"
+
+msgid "prefs.linewidth.fill"
+msgstr "Plenigi"
+
+msgid "menu.forgeturl"
+msgstr "Forgesi URL"
+
+msgid "prefs.pinsplit.right"
+msgstr "Dekstra langeto"
+
+msgid "prefs.returnkey.accept"
+msgstr "Akcepti"
+
+msgid "prefs.doctheme.name.oceanic"
+msgstr "Oceana"
+
+msgid "prefs.justify"
+msgstr "Ĝisrandigi:"
+
+msgid "prefs.memorysize"
+msgstr "Memorkapacito:"
+
+msgid "prefs.cachesize"
+msgstr "Kaŝmemorgrando:"
+
+msgid "dlg.newident.scope.domain"
+msgstr "Nuna domajno"
+
+msgid "dlg.upload.id.none"
+msgstr "Neniu"
+
+msgid "prefs.imagestyle.original"
+msgstr "Neniu"
+
+msgid "prefs.font"
+msgstr "Korpa tiparo:"
+
+msgid "upload.file.size"
+msgstr "Dosiergrando:"
+
+msgid "prefs.font.ui"
+msgstr "UI-tiparo:"
+
+msgid "prefs.boldlink.visited"
+msgstr "Vizitita"
+
+msgid "prefs.boldlink"
+msgstr "Grasaj ligiloj:"
+
+msgid "prefs.linespacing"
+msgstr "Interlinia distanco:"
+
+msgid "dlg.newident.scope.page"
+msgstr "Nuna paĝo"
+
+msgid "dir.empty"
+msgstr "Ĉi tiu dosierujo estas malplena."
+
+msgid "heading.prefs.sizing"
+msgstr "Grando"
+
+msgid "keys.tab.close.other"
+msgstr "Fermi aliajn langetojn"
+
+msgid "prefs.doctheme.name.highcontrast"
+msgstr "Alta kontrasto"
+
+msgid "error.proxy"
+msgstr "Prokura eraro"
+
+msgid "prefs.pinsplit.none"
+msgstr "Neniu"
+
+msgid "menu.openwindow"
+msgstr "Malfermi en nova fenestro"
+
+msgid "ident.notused"
+msgstr "Ne uzata"
+
+msgid "dlg.input.linebreak"
+msgstr "Linisalto"
+
+msgid "menu.website"
+msgstr "Projekta retejo…"
+
+# Interpret as "Results from page content..."
+msgid "heading.lookup.pagecontent"
+msgstr "PAĜA ENHAVO"
+
+msgid "menu.upload.delete"
+msgstr "Forigi ĉiujn"
+
+msgid "heading.glyphfinder.results"
+msgstr "Serĉrezultoj"
+
+msgid "hint.newident.date"
+msgstr "JJJJ aŭ JJJJ-MM-TT"
+
+#, c-format
+msgid "dlg.bookmarks.delete"
+msgid_plural "dlg.bookmarks.delete.n"
+msgstr[0] "Forigi legosignon"
+msgstr[1] "Forigi %u legosignojn"
+
+msgid "num.fonts"
+msgid_plural "num.fonts.n"
+msgstr[0] "%u tiparo"
+msgstr[1] "%u tiparoj"
+
+#, c-format
+msgid "fontpack.delete"
+msgstr "Forigi porĉiame \"%s\""
+
+msgid "menu.select.clear"
+msgstr "Malelekti"
+
+msgid "upload.token"
+msgstr "Ĵetono:"
+
+msgid "heading.prefs.support"
+msgstr "Subteno"
+
+msgid "dlg.bookmark.parentfolder"
+msgstr "Patra dosierujo:"
+
+msgid "dlg.feed.ignoreweb"
+msgstr "Malatenti HTTP(S) ligilojn:"
+
+msgid "menu.title.window"
+msgstr "Fenestro"
+
+msgid "dlg.bookmark.notes"
+msgstr "Notoj:"
+
+msgid "keys.scroll.down"
+msgstr "Rulumi malsupren"
+
+msgid "heading.prefs.appearance"
+msgstr "Aspekto"
+
+msgid "heading.prefs.content"
+msgstr "Enhavo"
+
+msgid "heading.bookmark.tags"
+msgstr "Konduto"
+
+msgid "keys.scroll.up"
+msgstr "Rulumi supren"
+
+msgid "menu.tab.next"
+msgstr "Montri sekvan langeton"
+
+msgid "menu.tab.prev"
+msgstr "Montri antaŭan langeton"
+
+msgid "dlg.userdata.all"
+msgstr "Ĉiuj (anstataŭigi)"
+
+# Link download progress message.
+msgid "doc.fetching"
+msgstr "Ŝargante"
+
+msgid "dlg.translate.unavail"
+msgstr "Servo nedisponebla"
+
+#, c-format
+msgid "doc.archive"
+msgstr "%s estas kompaktigita arkivo."
+
+msgid "ident.unset"
+msgstr "Malfiksi"
+
+msgid "menu.window.max"
+msgstr "Maksimumigi"
+
+msgid "menu.window.min"
+msgstr "Minimumigi"
+
+msgid "menu.window.full"
+msgstr "Baskuligi plenekranan reĝimon"
+
+msgid "dlg.translate.fail"
+msgstr "Peto malsukcesis"
+
+# This label should be fairly short so it fits in a button in the sidebar.
+msgid "sidebar.action.feeds.markallread"
+msgstr "Legi ĉion"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Aŭtomate"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Azerbajĝana"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Kataluna"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Ĉeĥa"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Dana"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Nederlanda"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Esperanto"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Finna"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Greka"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Hebrea"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Hungara"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Indonezia"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Irlanda"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Korea"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Persa"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Pola"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Slovaka"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Sveda"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Turka"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Ukraina"

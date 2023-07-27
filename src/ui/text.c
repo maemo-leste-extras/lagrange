@@ -39,9 +39,9 @@ static iText *current_Text_;
 
 int   gap_Text;                           /* cf. gap_UI in metrics.h */
 
-void init_Text(iText *d, SDL_Renderer *render) {
+void init_Text(iText *d, SDL_Renderer *render, float documentFontSizeFactor) {
     d->render          = render;
-    d->contentFontSize = contentScale_Text;
+    d->contentFontSize = contentScale_Text * documentFontSizeFactor;
     d->ansiEscape      = makeAnsiEscapePattern_Text(iFalse /* no ESC prefix */);
     d->baseFontId      = -1;
     d->baseFgColorId   = -1;
@@ -102,20 +102,17 @@ iTextMetrics measureRange_Text(int fontId, iRangecc text) {
         return (iTextMetrics){ init_Rect(0, 0, 0, lineHeight_Text(fontId)), zero_I2() };
     }
     iTextMetrics tm;
-    tm.bounds = run_Font(font_Text(fontId), &(iRunArgs){
-        .mode = measure_RunMode,
-        .text = text,
-        .cursorAdvance_out = &tm.advance
-    });
+    run_Font(font_Text(fontId),
+             &(iRunArgs){ .mode = measure_RunMode, .text = text, .metrics_out = &tm });
     return tm;
 }
 
 iRect visualBounds_Text(int fontId, iRangecc text) {
-    return run_Font(font_Text(fontId),
-                     &(iRunArgs){
-                         .mode = measure_RunMode | visualFlag_RunMode,
-                         .text = text,
-                     });
+    iTextMetrics tm;
+    run_Font(font_Text(fontId),
+             &(iRunArgs){
+                 .mode = measure_RunMode | visualFlag_RunMode, .text = text, .metrics_out = &tm });
+    return tm.bounds;
 }
 
 int runFlags_FontId(enum iFontId fontId) {
@@ -166,11 +163,11 @@ iTextMetrics measureN_Text(int fontId, const char *text, size_t n) {
                                zero_I2() };
     }
     iTextMetrics tm;
-    tm.bounds = run_Font(font_Text(fontId),
-              &(iRunArgs){ .mode              = measure_RunMode | runFlags_FontId(fontId),
-                           .text              = range_CStr(text),
-                           .maxLen            = n,
-                           .cursorAdvance_out = &tm.advance });
+    run_Font(font_Text(fontId),
+             &(iRunArgs){ .mode        = measure_RunMode | runFlags_FontId(fontId),
+                          .text        = range_CStr(text),
+                          .maxLen      = n,
+                          .metrics_out = &tm });
     return tm;
 }
 

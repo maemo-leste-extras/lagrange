@@ -1,16 +1,3 @@
-msgid ""
-msgstr ""
-"Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-01-20 04:05+0000\n"
-"Last-Translator: Tadeáš Erban <tadysekerbosek@gmail.com>\n"
-"Language-Team: Czech <http://weblate.skyjake.fi/projects/lagrange/ui/cs/>\n"
-"Language: cs\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.5.1\n"
-
 # Link download progress message.
 msgid "doc.fetching"
 msgstr "Načítání"
@@ -83,9 +70,6 @@ msgstr "Pokračovat"
 
 msgid "dlg.default"
 msgstr " OK "
-
-msgid "toggle.no"
-msgstr "NE"
 
 msgid "menu.title.file"
 msgstr "Soubor"
@@ -200,7 +184,7 @@ msgstr "Vybrat vše"
 
 # keep this short (3x1 horiz layout)
 msgid "menu.delete"
-msgstr "Smazat"
+msgstr "Odstranit"
 
 # keep this short (3x1 horiz layout)
 msgid "menu.undo"
@@ -326,9 +310,6 @@ msgstr[2] "před %d dny"
 msgid "about.logo"
 msgstr "ASCII umění: slovo \"Lagrange\" vykresleno velkým písmem"
 
-msgid "toggle.yes"
-msgstr "ANO"
-
 msgid "menu.title.bookmarks"
 msgstr "Záložky"
 
@@ -440,7 +421,7 @@ msgid "hint.findtext"
 msgstr "Najít text na stránce"
 
 msgid "status.query.tight"
-msgstr "Dotaz"
+msgstr "Vyhledat"
 
 # megabytes, used as the unit after a number
 msgid "mb"
@@ -545,9 +526,6 @@ msgstr ""
 #, c-format
 msgid "sidebar.date.thisyear"
 msgstr "%d. %b."
-
-msgid "feeds.entry.newtab"
-msgstr "Otevřít položku na nové kartě"
 
 msgid "feeds.entry.markunread"
 msgstr "Označit jako nepřečtené"
@@ -707,9 +685,6 @@ msgstr ""
 "Nastavte port pro používání s Titanem pro tuto URL. Bude uložen v "
 "konfiguraci pro tuto stránku."
 
-msgid "lang.zh.hans"
-msgstr "Čínština (Zjednodušená)"
-
 msgid "lang.pt"
 msgstr "Portugalština"
 
@@ -777,23 +752,8 @@ msgstr "Nastavit port"
 msgid "dlg.translate.to"
 msgstr "Pro:"
 
-msgid "lang.ia"
-msgstr "Interlingua"
-
-msgid "lang.ie"
-msgstr "Interlingva"
-
-msgid "lang.es.mx"
-msgstr "Španělština (Mexická)"
-
 msgid "heading.newident"
 msgstr "Nová totožnost"
-
-msgid "lang.uk"
-msgstr "Ukrajinština"
-
-msgid "lang.sr"
-msgstr "Srbština"
 
 msgid "dlg.newident.create"
 msgstr "VYTVOŘIT TOTOŽNOST"
@@ -949,7 +909,7 @@ msgstr[1] "%d minuty"
 msgstr[2] "%d minut"
 
 msgid "link.newtab"
-msgstr "Otevřít odkaz v nové kartě"
+msgstr "Otevřít odkaz na nové kartě"
 
 msgid "link.newtab.background"
 msgstr "Otevřít odkaz v kartě na pozadí"
@@ -958,7 +918,7 @@ msgid "link.side"
 msgstr "Otevřít odkaz na vedlejší straně"
 
 msgid "link.side.newtab"
-msgstr "Otevřít odkaz v nové kartě na vedlejší straně"
+msgstr "Otevřít odkaz na nové kartě na vedlejší straně"
 
 msgid "link.browser"
 msgstr "Otevřít odkaz ve výchozím prohlížeči"
@@ -1147,23 +1107,14 @@ msgstr "Arabština"
 msgid "lang.zh"
 msgstr "Čínština"
 
-msgid "lang.zh.hant"
-msgstr "Čínština (Tradiční)"
-
 msgid "lang.de"
 msgstr "Němčina"
 
 msgid "lang.en"
 msgstr "Angličtina"
 
-msgid "lang.fi"
-msgstr "Finština"
-
 msgid "lang.fr"
 msgstr "Francouzština"
-
-msgid "lang.gl"
-msgstr "Galicijština"
 
 msgid "lang.hi"
 msgstr "Hindština"
@@ -1174,20 +1125,11 @@ msgstr "Italština"
 msgid "lang.ja"
 msgstr "Japonština"
 
-msgid "lang.pl"
-msgstr "Polština"
-
 msgid "lang.ru"
 msgstr "Ruština"
 
-msgid "lang.eo"
-msgstr "Esperanto"
-
 msgid "lang.es"
 msgstr "Španělština"
-
-msgid "lang.sk"
-msgstr "Slovenština"
 
 msgid "keys.upload"
 msgstr "Nahrát pomocí Titanu"
@@ -1320,16 +1262,10 @@ msgid "keys.link.modkey"
 msgstr "Otevřít odkaz pomocí modifikační klávesy"
 
 msgid "keys.link.homerow.newtab"
-msgstr "Otevírat odkazy v nové kartě pomocí kláves na kterých spočívají prsty"
+msgstr "Otevírat odkazy na nové kartě pomocí kláves na kterých spočívají prsty"
 
 msgid "keys.link.homerow.hover"
 msgstr "Najet na odkaz pomocí kláves na kterých spočívají prsty"
-
-msgid "lang.isv"
-msgstr "Interslavic"
-
-msgid "lang.tok"
-msgstr "Toki Pona"
 
 msgid "dlg.newident.rsa.selfsign"
 msgstr "Vytváří se vlastně podepsaný 2048-bitový RSA certifikát."
@@ -1944,9 +1880,6 @@ msgstr "Příliš mnoho přesměrování"
 msgid "error.certexpired"
 msgstr "Certifikát s vypršenou platností"
 
-msgid "lang.cs"
-msgstr "Čeština"
-
 msgid "error.glyphs"
 msgstr "Chybějící znaky"
 
@@ -2039,17 +1972,6 @@ msgstr "Trvale přestat zobrazovat varování o emulaci terminálu na %s?"
 msgid "dlg.dismiss.warning"
 msgstr "Přestat ukazovat varování"
 
-msgid "heading.fontpack.classic"
-msgstr "Stáhnout písmový balíček"
-
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"Písma, které byly dříve přibaleny s aplikací jsou nyní dostupné odděleně. "
-"Chtěli byste nyní stáhnout písmový balíček \"Klasická sada\"?"
-
-msgid "dlg.fontpack.classic"
-msgstr "Stáhnout písmový balíček (25MB)"
-
 msgid "error.badrequest.msg"
 msgstr "Server nepochopil váš požadavek."
 
@@ -2126,9 +2048,6 @@ msgstr "Ukázat instalovaná písma"
 
 msgid "truetype.help.installed"
 msgstr "Toto písmo je nainstalováno ve složce uživatelských písem."
-
-msgid "lang.hu"
-msgstr "Maďarština"
 
 msgid "gempub.cover.aboutbook"
 msgstr "O této knize"
@@ -2248,3 +2167,62 @@ msgstr "Nastavit akci:"
 # Shows where a local file is using the File Manager.
 msgid "menu.reveal.filemgr"
 msgstr "Otevřít v průzkumníku souborů"
+
+msgid "menu.newwindow"
+msgstr "Nové okno"
+
+msgid "heading.archive.userdata"
+msgstr "Archiv uživatelských dat"
+
+msgid "userdata.help"
+msgstr ""
+"Archivy uživatelských dat obsahují exportovanou historii prohlížení, "
+"totožnosti, záložky, nastavení stránek a otisky důvěryhodných serverových "
+"certifikátů. Ty pak mohou být uloženy za účelem zálohování a výměny dat mezi "
+"zařízeními."
+
+msgid "menu.openwindow"
+msgstr "Otevřít v novém okně"
+
+msgid "menu.reopentab"
+msgstr "Otevřít poslední zavřenou kartu"
+
+msgid "menu.export"
+msgstr "Exportovat uživatelská data"
+
+msgid "menu.import"
+msgstr "Importovat uživatelská data…"
+
+msgid "menu.viewformat.plain"
+msgstr "Zobrazit jako prostý text"
+
+msgid "menu.viewformat.gemini"
+msgstr "Zobrazit jako gemtext"
+
+msgid "feeds.entry.markbelowread"
+msgstr "Označit vše níže jako přečtené"
+
+msgid "pageinfo.settings"
+msgstr "Nastavení"
+
+msgid "heading.sitespec"
+msgstr "Nastavení stránky"
+
+msgid "sitespec.ansi"
+msgstr "Upozornění na ANSI uvození:"
+
+msgid "dlg.spartan.upload"
+msgstr "Otevřít editor…"
+
+msgid "menu.paste.go"
+msgstr "Vložit a otevřít"
+
+# Used in the desktop Help menu.
+msgid "menu.aboutapp"
+msgstr "O Lagrange"
+
+msgid "menu.folder.opentab"
+msgstr "Otevřít na nových kartách"
+
+msgid "bookmark.folder.delete"
+msgstr "Odstranit složku"

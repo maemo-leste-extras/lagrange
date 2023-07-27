@@ -33,7 +33,7 @@ iDefineTypeConstruction(Pipe)
 
 void init_Pipe(iPipe *d) {
     if (pipe(d->fds)) {
-        iWarning("pipe: (%i) %s\n", errno, strerror(errno));
+        iWarning("[pipe] (%i) %s\n", errno, strerror(errno));
         d->fds[0] = d->fds[1] = -1;
     }
 }

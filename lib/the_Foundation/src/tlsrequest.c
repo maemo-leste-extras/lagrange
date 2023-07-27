@@ -112,16 +112,19 @@ iDefineObjectConstructionArgs(CachedSession,
                               sess, cert)
 
 static void reuse_CachedSession(const iCachedSession *d, SSL *ssl) {
-    BIO *buf = BIO_new_mem_buf(constData_Block(&d->pemSession), size_Block(&d->pemSession));
+    BIO *buf = BIO_new_mem_buf(constData_Block(&d->pemSession), (int) size_Block(&d->pemSession));
     SSL_SESSION *sess = NULL;
     PEM_read_bio_SSL_SESSION(buf, &sess, NULL, NULL);
-    SSL_SESSION_up_ref(sess);
-    SSL_set_session(ssl, sess);
+    if (sess) {
+        SSL_SESSION_up_ref(sess);
+        SSL_set_session(ssl, sess);
+        SSL_SESSION_free(sess);
+    }
     BIO_free(buf);
-    SSL_SESSION_free(sess);
 }
 
 struct Impl_Context {
+    iString               libraryName;
     SSL_CTX *             ctx;
     X509_STORE *          certStore;
     iTlsRequestVerifyFunc userVerifyFunc;
@@ -228,6 +231,12 @@ static int verifyCallback_Context_(int preverifyOk, X509_STORE_CTX *storeCtx) {
 }
 
 void init_Context(iContext *d) {
+    init_String(&d->libraryName);
+#if defined (LIBRESSL_VERSION_TEXT)
+    setCStr_String(&d->libraryName, "LibreSSL");
+#else
+    setCStr_String(&d->libraryName, "OpenSSL");
+#endif
     d->tssKeyCurrentRequest = 0;
     tss_create(&d->tssKeyCurrentRequest, NULL);
 #if OPENSSL_API_COMPAT >= 0x10100000L
@@ -261,6 +270,7 @@ void deinit_Context(iContext *d) {
     deinit_Mutex(&d->cacheMutex);
     SSL_CTX_free(d->ctx);
     tss_delete(d->tssKeyCurrentRequest);
+    deinit_String(&d->libraryName);
 }
 
 iBool isValid_Context(iContext *d) {
@@ -316,6 +326,7 @@ struct Impl_TlsCertificate {
 iDefineTypeConstruction(TlsCertificate)
 
 void init_TlsCertificate(iTlsCertificate *d) {
+    initContext_();
     d->cert  = NULL;
     d->chain = NULL;
     d->pkey  = NULL;
@@ -354,7 +365,7 @@ static iTlsCertificate *newX509Chain_TlsCertificate_(X509 *cert, STACK_OF(X509) 
 
 iTlsCertificate *newPem_TlsCertificate(const iString *pem) {
     iTlsCertificate *d = new_TlsCertificate();
-    BIO *buf = BIO_new_mem_buf(cstr_String(pem), size_String(pem));
+    BIO *buf = BIO_new_mem_buf(cstr_String(pem), (int) size_String(pem));
     PEM_read_bio_X509(buf, &d->cert, NULL /* no passphrase callback */, "" /* empty passphrase */);
     BIO_free(buf);
     return d;
@@ -362,7 +373,7 @@ iTlsCertificate *newPem_TlsCertificate(const iString *pem) {
 
 iTlsCertificate *newPemKey_TlsCertificate(const iString *certPem, const iString *keyPem) {
     iTlsCertificate *d = newPem_TlsCertificate(certPem);
-    BIO *buf = BIO_new_mem_buf(cstr_String(keyPem), size_String(keyPem));
+    BIO *buf = BIO_new_mem_buf(cstr_String(keyPem), (int) size_String(keyPem));
     PEM_read_bio_PrivateKey(buf, &d->pkey, NULL, "");
     BIO_free(buf);
     return d;
@@ -382,7 +393,7 @@ static void add_X509Name_(X509_NAME *name, const char *id, enum iTlsCertificateN
     const iString *str = findName_(names, type);
     if (str) {
         X509_NAME_add_entry_by_txt(
-            name, id, MBSTRING_UTF8, constData_Block(&str->chars), size_String(str), -1, 0);
+            name, id, MBSTRING_UTF8, constData_Block(&str->chars), (int) size_String(str), -1, 0);
     }
 }
 
@@ -394,7 +405,7 @@ static void addDomain_X509Name_(X509_NAME *name, enum iTlsCertificateNameType ty
         iRangecc comp = iNullRange;
         while (nextSplit_Rangecc(range, ".", &comp)) {
             X509_NAME_add_entry_by_txt(
-                name, "DC", MBSTRING_UTF8, (const void *) comp.start, size_Range(&comp), -1, 0);
+                name, "DC", MBSTRING_UTF8, (const void *) comp.start, (int) size_Range(&comp), -1, 0);
         }
     }
 }
@@ -422,6 +433,7 @@ static void checkErrors_(void) {
 
 iTlsCertificate *newSelfSignedRSA_TlsCertificate(
     int rsaBits, iDate validUntil, const iTlsCertificateName *names) {
+    initContext_();
     /* Seed the random number generator. */
     if (!isPrngSeeded_) {
         iTime now;
@@ -801,7 +813,7 @@ static iBool encrypt_TlsRequest_(iTlsRequest *d) {
         return iFalse;
     }
     while (!isEmpty_Block(&d->sending)) {
-        int n = SSL_write(d->ssl, constData_Block(&d->sending), size_Block(&d->sending));
+        int n = SSL_write(d->ssl, constData_Block(&d->sending), (int) size_Block(&d->sending));
         enum iSSLResult status = sslResult_TlsRequest_(d, n);
         if (n > 0) {
             remove_Block(&d->sending, 0, n);
@@ -822,6 +834,11 @@ static iBool encrypt_TlsRequest_(iTlsRequest *d) {
 void setCiphers_TlsRequest(const char *cipherList) {
     initContext_();
     SSL_CTX_set_cipher_list(context_->ctx, cipherList);
+}
+
+const char *libraryName_TlsRequest(void) {
+    initContext_();
+    return cstr_String(&context_->libraryName);
 }
 
 void init_TlsRequest(iTlsRequest *d) {
@@ -917,7 +934,7 @@ static int processIncoming_TlsRequest_(iTlsRequest *d, const char *src, size_t l
     int n;
     do {
         if (len > 0) {
-            n = BIO_write(d->rbio, src, len);
+            n = BIO_write(d->rbio, src, (int) len);
             if (n <= 0) {
                 return -1; /* assume bio write failure is unrecoverable */
             }

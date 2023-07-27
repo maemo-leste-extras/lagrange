@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-04-15 14:20+0000\n"
+"POT-Creation-Date: 2023-01-25 09:20+0000\n"
+"PO-Revision-Date: 2023-04-20 05:02+0000\n"
 "Last-Translator: Xosé M. <correoxm@disroot.org>\n"
 "Language-Team: Galician <http://weblate.skyjake.fi/projects/lagrange/ui/gl/>"
 "\n"
@@ -135,16 +137,13 @@ msgstr "Pregar texto preformatado:"
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Abrir índices do arquivo:"
+msgstr "Abrir index.gmi en arquivos ZIP:"
 
 msgid "prefs.doctheme.dark"
 msgstr "Decorado escuro:"
 
 msgid "prefs.boldlink"
 msgstr "Ligazóns resaltadas:"
-
-msgid "hint.prefs.userfont"
-msgstr "ruta á tipografía TrueType"
 
 msgid "prefs.linewidth.normal"
 msgstr "Normal"
@@ -250,12 +249,6 @@ msgstr "Continuar"
 
 msgid "dlg.default"
 msgstr " OK "
-
-msgid "toggle.yes"
-msgstr "SI"
-
-msgid "toggle.no"
-msgstr "NON"
 
 msgid "menu.title.file"
 msgstr "Ficheiro"
@@ -516,9 +509,6 @@ msgstr "%d. %b"
 
 msgid "feeds.today"
 msgstr "Hoxe"
-
-msgid "feeds.entry.newtab"
-msgstr "Abrir entrada en Nova lapela"
 
 msgid "feeds.entry.markread"
 msgstr "Marcar como lido"
@@ -815,9 +805,6 @@ msgstr ""
 msgid "dlg.openlink"
 msgstr "Abrir ligazón"
 
-msgid "heading.certwarn"
-msgstr "CERTIFICADO SEN CONFIANZA"
-
 msgid "dlg.certwarn.different"
 msgstr ""
 "O certificado recibido é válido pero diferente ao que temos establecida a "
@@ -980,26 +967,11 @@ msgstr "Árabe"
 msgid "lang.zh"
 msgstr "Chinés"
 
-msgid "lang.zh.hans"
-msgstr "Chinés (simplificado)"
-
-msgid "lang.zh.hant"
-msgstr "Chinés (tradicional)"
-
 msgid "lang.de"
 msgstr "Alemán"
 
 msgid "lang.en"
 msgstr "Inglés"
-
-msgid "lang.ia"
-msgstr "Interlingua"
-
-msgid "lang.ie"
-msgstr "Interlingua"
-
-msgid "lang.fi"
-msgstr "Finés"
 
 msgid "lang.fr"
 msgstr "Francés"
@@ -1013,20 +985,11 @@ msgstr "Italiano"
 msgid "lang.ja"
 msgstr "Xaponés"
 
-msgid "lang.pl"
-msgstr "Polaco"
-
 msgid "lang.ru"
 msgstr "Ruso"
 
 msgid "lang.es"
 msgstr "Español"
-
-msgid "lang.sr"
-msgstr "Serbio"
-
-msgid "lang.tok"
-msgstr "Toki Pona"
 
 msgid "heading.newident"
 msgstr "Nova Identidade"
@@ -1176,7 +1139,7 @@ msgstr "Desprazamento"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Estilo"
+msgstr "Estilo da páxina"
 
 # tab button
 msgid "heading.prefs.userinterface"
@@ -1216,7 +1179,7 @@ msgid "prefs.scrollspeed.mouse"
 msgstr "Velocidade do punteiro:"
 
 msgid "prefs.imageloadscroll"
-msgstr "Cargar imaxe ao desprazar:"
+msgstr "Cargar imaxe seguinte ao desprazar:"
 
 msgid "prefs.hidetoolbarscroll"
 msgstr "Agochar barra ferramentas ao desprazar:"
@@ -1270,7 +1233,7 @@ msgid "prefs.animate"
 msgstr "Animacións:"
 
 msgid "prefs.sideicon"
-msgstr "Icona da cápsula:"
+msgstr "Icona da cápsula no lado esquerdo:"
 
 msgid "prefs.doctheme.light"
 msgstr "Decorado claro:"
@@ -1299,9 +1262,6 @@ msgstr "Alto contraste"
 msgid "prefs.saturation"
 msgstr "Saturación:"
 
-msgid "prefs.headingfont"
-msgstr "Letra dos títulos:"
-
 msgid "prefs.font"
 msgstr "Letra do corpo:"
 
@@ -1322,9 +1282,6 @@ msgstr "No escuro"
 msgid "prefs.boldlink.light"
 msgstr "No claro"
 
-msgid "prefs.userfont"
-msgstr "Letra dos símbolos:"
-
 msgid "prefs.linewidth"
 msgstr "Ancho da liña:"
 
@@ -1344,7 +1301,7 @@ msgid "prefs.biglede"
 msgstr "1º parágrafo en grande:"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Pregar texto plano:"
+msgstr "Pregar liñas texto plano longo:"
 
 msgid "prefs.decodeurls"
 msgstr "Decodificar URLs:"
@@ -1400,7 +1357,7 @@ msgstr[1] "fai %d horas"
 
 # Alt-text of the preformatted logo.
 msgid "about.logo"
-msgstr "Arte ASCII: a palabra \"Lagrange\" utilizando unha tipografía enorme"
+msgstr "Arte ASCII: a palabra \"Lagrange\" utilizando letras moi grandes"
 
 msgid "menu.title.identity"
 msgstr "Identidade"
@@ -1485,8 +1442,7 @@ msgstr "Subir con Titan"
 msgid "error.badstatus.msg"
 msgstr ""
 "O servidor respondeu cun código de estado que non está na especificación do "
-"código Gemini. Igoal este servidor está no futuro? Ou simplemente funciona "
-"mal."
+"código Gemini. Pode que o servidor non funcione ben."
 
 msgid "error.unsupported.protocol.msg"
 msgstr "O protocolo solicitado non ten soporte nesta aplicación."
@@ -1527,7 +1483,7 @@ msgid "menu.parent"
 msgstr "Nivel superior"
 
 msgid "prefs.retainwindow"
-msgstr "Reter situación:"
+msgstr "Gardar posición da ventá:"
 
 #, c-format
 msgid "archive.summary"
@@ -1840,7 +1796,7 @@ msgid "dlg.upload.id.none"
 msgstr "Ningunha"
 
 msgid "heading.bookmark.tags"
-msgstr "Etiquetas especiais"
+msgstr "Comportamento"
 
 msgid "dlg.addfolder.defaulttitle"
 msgstr "Novo cartafol"
@@ -1920,21 +1876,6 @@ msgstr "Cor do preformatado"
 msgid "keys.bookmark.addfolder"
 msgstr "Engadir cartafol de marcadores"
 
-msgid "lang.gl"
-msgstr "Galego"
-
-msgid "lang.es.mx"
-msgstr "Castelán (México)"
-
-msgid "lang.sk"
-msgstr "Eslovaco"
-
-msgid "lang.isv"
-msgstr "Intereslávico"
-
-msgid "lang.eo"
-msgstr "Esperanto"
-
 msgid "num.files"
 msgid_plural "num.files.n"
 msgstr[0] "%u ficheiro"
@@ -1944,12 +1885,6 @@ msgid "num.fonts"
 msgid_plural "num.fonts.n"
 msgstr[0] "%u tipografía"
 msgstr[1] "%u tipografías"
-
-msgid "heading.fontpack.classic"
-msgstr "Descargar paquete de tipografía"
-
-msgid "dlg.fontpack.classic"
-msgstr "Descargar Paquete de tipografía (25 MB)"
 
 msgid "prefs.font.heading"
 msgstr "Titulares:"
@@ -1964,7 +1899,7 @@ msgid "prefs.bookmarks.addbottom"
 msgstr "Engadir marcadores ao final:"
 
 msgid "prefs.gemtext.ansi"
-msgstr "Escapes ANSI:"
+msgstr "Gemtext ANSI escapes:"
 
 msgid "error.ansi.msg"
 msgstr ""
@@ -1989,12 +1924,6 @@ msgstr ""
 "asociados. Unha vez instalados, as tipografías podense utilizar para contido "
 "dos documentos e IU. As tipografías activas elixense en Preferencias > Letra."
 
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"As tipografías empaquetadas previamente dentro da app están dispoñibles "
-"agora como descarga separada. Queres descargar o paquete \"Classic set\" "
-"agora?"
-
 msgid "prefs.font.body"
 msgstr "Corpo:"
 
@@ -2015,7 +1944,7 @@ msgid "menu.fonts"
 msgstr "Xestionar Letra…"
 
 msgid "prefs.font.ui"
-msgstr "IU:"
+msgstr "Tipografía:"
 
 msgid "prefs.gemtext.ansi.fg"
 msgstr "Cor FG"
@@ -2024,10 +1953,10 @@ msgid "prefs.gemtext.ansi.fontstyle"
 msgstr "Estilo de letra"
 
 msgid "prefs.font.warnmissing"
-msgstr "Avisos Glyph:"
+msgstr "Avisos caracteres Glyph:"
 
 msgid "prefs.font.smooth"
-msgstr "Suavizado:"
+msgstr "Suavizado tipografía:"
 
 msgid "error.ansi"
 msgstr "Emulación do terminal"
@@ -2117,15 +2046,6 @@ msgstr ""
 msgid "dlg.dismiss.warning"
 msgstr "Desbotar aviso"
 
-msgid "lang.uk"
-msgstr "Ucraniano"
-
-msgid "lang.cs"
-msgstr "Checo"
-
-msgid "lang.hu"
-msgstr "Húngaro"
-
 msgid "sidebar.action.show"
 msgstr "Mostrar:"
 
@@ -2137,7 +2057,7 @@ msgid "prefs.gemtext.ansi.bg"
 msgstr "Cor BG"
 
 msgid "prefs.time.24h"
-msgstr "Formato 24-Horas"
+msgstr "Formato 24 horas:"
 
 # This label should be fairly short so it fits in a button in the sidebar.
 msgid "sidebar.action.feeds.markallread"
@@ -2438,3 +2358,229 @@ msgstr "Gris"
 
 msgid "prefs.doctheme.name.oceanic"
 msgstr "Oceánico"
+
+msgid "error.proxyexpired"
+msgstr "Caducou o certificado do Proxy"
+
+msgid "error.proxyverify"
+msgstr "Proxy sen confianza"
+
+msgid "prefs.markdown.viewsource"
+msgstr "Ver Markdown como fonte:"
+
+msgid "prefs.tui.simple"
+msgstr "Caracteres simples:"
+
+msgid "keys.menubar.focus"
+msgstr "Destacar barra de menú"
+
+msgid "keys.contextmenu"
+msgstr "Abrir menú contextual"
+
+msgid "error.incompleteheader"
+msgstr "Cabeceira incompleta"
+
+msgid "error.incompleteheader.msg"
+msgstr ""
+"A resposta do servidor non ten unha cabeceira completa. Pode que o servidor "
+"non funcione ben ou que non sexa un servidor Gemini."
+
+msgid "error.proxyexpired.msg"
+msgstr ""
+"Detívose a conexion porque o certificado TLS do servidor proxy está caducado."
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"Detívose a conexión porque o certificado TLS do servidor proxy non coincide "
+"co que temos depositada a confianza.\n"
+"\n"
+"Pódese marcar como confiable o certificado do servidor proxy na Páxina de "
+"Información."
+
+msgid "prefs.evensplit"
+msgstr "Separar lapelas equitativamente:"
+
+msgid "menu.reopentab"
+msgstr "Volver abrir última lapela pechada"
+
+msgid "menu.viewformat.plain"
+msgstr "Ver como Texto plano"
+
+msgid "menu.viewformat.gemini"
+msgstr "Ver como Gemtext"
+
+msgid "keys.identmenu"
+msgstr "Abrir menú de Identidades"
+
+msgid "spartan.input"
+msgstr "Escribe o texto a enviar:"
+
+msgid "dlg.spartan.upload"
+msgstr "Abrir Editor…"
+
+msgid "heading.upload.spartan"
+msgstr "Subir con Spartan"
+
+msgid "heading.prefs.user"
+msgstr "Datos da usuaria"
+
+msgid "menu.folder.opentab"
+msgstr "Abrir en Nova lapela"
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "termos separados por espazos"
+
+msgid "dlg.bookmark.identity"
+msgstr "Identidade fixada:"
+
+msgid "ident.unset"
+msgstr "Desafixar"
+
+msgid "dlg.bookmark.notes"
+msgstr "Notas:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "notas privadas libres"
+
+msgid "menu.email"
+msgstr "Contactar por Email"
+
+msgid "menu.identity.newdomain"
+msgstr "Nova Identidade para o dominio…"
+
+msgid "bookmark.folder.delete"
+msgstr "Eliminar Cartafol do marcador"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Directorio actual"
+
+msgid "menu.tab.next"
+msgstr "Mostrar Lapela seguinte"
+
+msgid "menu.tab.prev"
+msgstr "Mostrar Lapela anterior"
+
+msgid "menu.movetab.left"
+msgstr "Mover Lapela á esquerda"
+
+msgid "heading.prefs.appearance"
+msgstr "Aparencia"
+
+msgid "heading.prefs.layout"
+msgstr "Disposición da páxina"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Detección Aut. do estilo do menú Gopher:"
+
+msgid "menu.title.window"
+msgstr "Ventá"
+
+msgid "menu.movetab.right"
+msgstr "Mover Lapela á dereita"
+
+msgid "menu.movetab.split"
+msgstr "Mover Lapela ao outro lado"
+
+msgid "menu.movetab.newwindow"
+msgstr "Mover Lapela a unha Nova ventá"
+
+msgid "menu.window.min"
+msgstr "Minimizar"
+
+msgid "menu.window.max"
+msgstr "Maximizar"
+
+msgid "menu.window.full"
+msgstr "Activar Pantalla completa"
+
+msgid "heading.prefs.content"
+msgstr "Contido"
+
+msgid "prefs.swipe.edge"
+msgstr "Desprazar desde a beira:"
+
+msgid "prefs.swipe.page"
+msgstr "Desprazamento na páxina:"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Hebreo"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Auto-detectar"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Azerbaixano"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Catalán"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Checo"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Dinamarqués"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Neerlandés"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Esperanto"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Finés"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Grego"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Húngaro"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Indonesio"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Irlandés"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Coreano"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Farsi"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Polonés"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Eslovaco"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Sueco"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Turco"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Ucraíno"
+
+msgid "dlg.translate.pre"
+msgstr "Omitir preformatado:"

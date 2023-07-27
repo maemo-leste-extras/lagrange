@@ -239,9 +239,9 @@ iString *punyEncode_Rangecc(const iRangecc d) {
     uint32_t *input = u8_to_u32((const uint8_t *) d.start, size_Range(&d), NULL, &inputLength);
     resize_Block(&out->chars, inputLength * 2);
     for (;;) {
-        uint32_t outputLength = size_Block(&out->chars);
+        uint32_t outputLength = (uint32_t) size_Block(&out->chars);
         enum iPunyStatus result =
-            encode_(inputLength, input, &outputLength, data_Block(&out->chars), NULL);
+            encode_((uint32_t) inputLength, input, &outputLength, data_Block(&out->chars), NULL);
         if (result == bigOutput_PunyStatus) {
             resize_Block(&out->chars, size_Block(&out->chars) * 2);
             continue;
@@ -259,11 +259,11 @@ iString *punyEncode_Rangecc(const iRangecc d) {
 }
 
 iString *punyDecode_Rangecc(const iRangecc d) {
-    uint32_t outputLength = size_Range(&d) * 2;
+    uint32_t outputLength = (uint32_t) size_Range(&d) * 2;
     uint32_t *out = malloc(outputLength * sizeof(uint32_t));
     iString *dec = NULL;
     for (;;) {
-        enum iPunyStatus result = decode_(size_Range(&d), d.start, &outputLength, out, NULL);
+        enum iPunyStatus result = decode_((uint32_t) size_Range(&d), d.start, &outputLength, out, NULL);
         if (result == bigOutput_PunyStatus) {
             out = realloc(out, outputLength *= 2);
             continue;
