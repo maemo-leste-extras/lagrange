@@ -591,7 +591,7 @@ Exec=${CMAKE_INSTALL_PREFIX}/bin/lagrange %U
 Terminal=false
 Type=Application
 StartupWMClass=lagrange
-Icon=fi.skyjake.Lagrange
+Icon=lagrange
 MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/spartan;
 ")
     install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
