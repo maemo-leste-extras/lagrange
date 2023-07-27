@@ -54,7 +54,8 @@ option (ENABLE_IDLE_SLEEP       "While idle, sleep in the main thread instead of
 option (ENABLE_IPC              "Use IPC to communicate between running instances" ON)
 option (ENABLE_KERNING          "Enable kerning in font renderer (slower)" ON)
 option (ENABLE_MAC_MENUS        "Use native context menus (macOS)" ON)
-option (ENABLE_MOBILE_PHONE     "Use the phone mobile UI design instead of desktop UI" OFF)
+option (ENABLE_MOBILE_PHONE     "Use the phone mobile UI design instead of
+desktop UI" ON)
 option (ENABLE_MOBILE_TABLET    "Use the tablet mobile UI design instead of desktop UI" OFF)
 option (ENABLE_POPUP_MENUS      "Use popup windows for context menus (if OFF, menus are confined inside main window)" ON)
 option (ENABLE_RELATIVE_EMBED   "Resources should always be found via relative path" OFF)
@@ -594,10 +595,10 @@ Icon=fi.skyjake.Lagrange
 MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/spartan;
 ")
     install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
-    install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
-    install (FILES res/lagrange-256.png
-         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps
-         RENAME fi.skyjake.Lagrange.png
+    install (FILES ${desktop} DESTINATION
+			${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon)
+    install (FILES debian/maemo/lagrange.png
+         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
     )
     install (FILES res/fi.skyjake.Lagrange.appdata.xml
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
