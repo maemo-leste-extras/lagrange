@@ -89,6 +89,7 @@ struct Impl_FeedJob {
     iBool       checkHeadings;
     iBool       ignoreWeb;
     iGmRequest *request;
+    int         numRedirect;
     iPtrArray   results;
 };
 
@@ -96,6 +97,7 @@ static void init_FeedJob(iFeedJob *d, const iBookmark *bookmark) {
     initCopy_String(&d->url, &bookmark->url);
     d->bookmarkId = id_Bookmark(bookmark);
     d->request = NULL;
+    d->numRedirect = 0;
     init_PtrArray(&d->results);
     iZap(d->startTime);
     d->isFirstUpdate = iFalse;
@@ -120,8 +122,7 @@ iDefineTypeConstructionArgs(FeedJob, (const iBookmark *bm), bm)
 
 /*----------------------------------------------------------------------------------------------*/
 
-static const char *feedsFilename_Feeds_         = "feeds.txt";
-static const int   updateIntervalSeconds_Feeds_ = 4 * 60 * 60;
+static const char *feedsFilename_Feeds_ = "feeds.txt";
 
 struct Impl_Feeds {
     iMutex *  mtx;
@@ -129,6 +130,7 @@ struct Impl_Feeds {
     iIntSet   previouslyCheckedFeeds; /* bookmark IDs */
     iTime     lastRefreshedAt;
     int       refreshTimer;
+    uint32_t  refreshInterval; /* milliseconds, for refreshTimer */
     iThread * worker;
     iBool     stopWorker;
     iPtrArray jobs; /* pending */
@@ -138,6 +140,10 @@ struct Impl_Feeds {
 static iFeeds feeds_;
 
 #define maxConcurrentRequests_Feeds 4
+
+static iBool isInitialized_Feeds_(const iFeeds *d) {
+    return d->mtx != NULL;
+}
 
 static void submit_FeedJob_(iFeedJob *d) {
     d->request = new_GmRequest(certs_App());
@@ -194,7 +200,18 @@ static iBool isUrlIgnored_FeedJob_(const iFeedJob *d, iRangecc url) {
     return iFalse;
 }
 
-static void parseResult_FeedJob_(iFeedJob *d) {
+static iBool parseResult_FeedJob_(iFeedJob *d) {
+    /* Returns true if the job is done and can be released. False means the job continues. */
+    if (category_GmStatusCode(status_GmRequest(d->request)) == categoryRedirect_GmStatusCode) {
+        /* Set up a new request. */
+        if (++d->numRedirect < 5) {
+            set_String(&d->url, meta_GmRequest(d->request));
+            iRelease(d->request);
+            submit_FeedJob_(d);
+            return iFalse;
+        }
+        return iTrue;
+    }
     /* TODO: Should tell the user if the request failed. */
     if (isSuccess_GmStatusCode(status_GmRequest(d->request))) {
         iBeginCollect();
@@ -208,7 +225,8 @@ static void parseResult_FeedJob_(iFeedJob *d) {
                        "([^0-9].*)",
                        0);
         iString src;
-        initBlock_String(&src, body_GmRequest(d->request));
+        initBlock_String(&src, &lockResponse_GmRequest(d->request)->body);
+        unlockResponse_GmRequest(d->request);
         iRangecc srcLine = iNullRange;
         while (nextSplit_Rangecc(range_String(&src), "\n", &srcLine)) {
             iRangecc line = srcLine;
@@ -268,6 +286,7 @@ static void parseResult_FeedJob_(iFeedJob *d) {
         iRelease(linkPattern);
         iEndCollect();
     }
+    return iTrue;
 }
 
 static void save_Feeds_(iFeeds *d) {
@@ -456,14 +475,17 @@ static iThreadResult fetch_Feeds_(iThread *thread) {
         iForIndices(i, work) {
             if (work[i]) {
                 if (isFinished_GmRequest(work[i]->request)) {
-                    /* TODO: Handle redirects. Need to resubmit the job with new URL. */
-                    parseResult_FeedJob_(work[i]);
-                    gotNew |= updateEntries_Feeds_(
-                        d, work[i]->checkHeadings, work[i]->bookmarkId, &work[i]->results);
-                    delete_FeedJob(work[i]);
-                    work[i] = NULL;
-                    numFinishedJobs++;
-                    doNotify = iTrue;
+                    if (parseResult_FeedJob_(work[i])) {
+                        gotNew |= updateEntries_Feeds_(
+                            d, work[i]->checkHeadings, work[i]->bookmarkId, &work[i]->results);
+                        delete_FeedJob(work[i]);
+                        work[i] = NULL;
+                        numFinishedJobs++;
+                        doNotify = iTrue;
+                    }
+                    else {
+                        ongoing++;
+                    }
                 }
                 else if (isTimedOut_FeedJob_(work[i])) {
                     /* Maybe we'll get it next time! */
@@ -484,6 +506,13 @@ static iThreadResult fetch_Feeds_(iThread *thread) {
         /* Stop if everything has finished. */
         if (ongoing == 0 && isEmpty_PtrArray(&d->jobs)) {
             break;
+        }
+    }
+    if (d->stopWorker) {
+        iForIndices(i, work) {
+            if (work[i]) {
+                cancel_GmRequest(work[i]->request);
+            }
         }
     }
     initCurrent_Time(&d->lastRefreshedAt);
@@ -537,9 +566,16 @@ static iBool startWorker_Feeds_(iFeeds *d) {
 }
 
 static uint32_t refresh_Feeds_(uint32_t interval, void *data) {
-    /* Called in the SDL timer thread, so let's start a worker thread for running the update. */
+    /* Called in the SDL timer thread, so let's start a worker thread for running the refresh. */
     startWorker_Feeds_(&feeds_);
-    return 1000 * updateIntervalSeconds_Feeds_;
+    return feeds_.refreshInterval;
+}
+
+static void removeRefreshTimer_Feeds_(iFeeds *d) {
+    if (d->refreshTimer) {
+        SDL_RemoveTimer(d->refreshTimer);
+        d->refreshTimer = 0;
+    }
 }
 
 static void stopWorker_Feeds_(iFeeds *d) {
@@ -682,6 +718,7 @@ static void load_Feeds_(iFeeds *d) {
 
 void init_Feeds(const char *saveDir) {
     iFeeds *d = &feeds_;
+    d->refreshTimer = 0;
     d->mtx = new_Mutex();
     initCStr_String(&d->saveDir, saveDir);
     init_IntSet(&d->previouslyCheckedFeeds);
@@ -690,18 +727,12 @@ void init_Feeds(const char *saveDir) {
     init_PtrArray(&d->jobs);
     init_SortedArray(&d->entries, sizeof(iFeedEntry *), cmp_FeedEntryPtr_);
     load_Feeds_(d);
-    /* Update feeds if it has been a while. */
-    int intervalSec = updateIntervalSeconds_Feeds_;
-    if (isValid_Time(&d->lastRefreshedAt)) {
-        const double elapsed = elapsedSeconds_Time(&d->lastRefreshedAt);
-        intervalSec = iMax(1, updateIntervalSeconds_Feeds_ - elapsed);
-    }
-    d->refreshTimer = SDL_AddTimer(1000 * intervalSec, refresh_Feeds_, NULL);
+    setRefreshInterval_Feeds(prefs_App()->feedInterval);
 }
 
 void deinit_Feeds(void) {
     iFeeds *d = &feeds_;
-    SDL_RemoveTimer(d->refreshTimer);
+    removeRefreshTimer_Feeds_(d);
     stopWorker_Feeds_(d);
     iAssert(isEmpty_PtrArray(&d->jobs));
     deinit_PtrArray(&d->jobs);
@@ -717,6 +748,19 @@ void deinit_Feeds(void) {
 
 void refresh_Feeds(void) {
     startWorker_Feeds_(&feeds_);
+}
+
+void setRefreshInterval_Feeds(enum iFeedInterval feedInterval) {
+    iFeeds *d = &feeds_;
+    if (isInitialized_Feeds_(d)) {
+        removeRefreshTimer_Feeds_(d);
+        d->refreshInterval = feedInterval * 1000;
+        if (d->refreshInterval && isValid_Time(&d->lastRefreshedAt)) {
+            const int elapsedMs  = (int) (elapsedSeconds_Time(&d->lastRefreshedAt) * 1000);
+            const int intervalMs = iMax(1000, d->refreshInterval - elapsedMs);
+            d->refreshTimer = SDL_AddTimer(intervalMs, refresh_Feeds_, NULL);
+        }
+    }
 }
 
 void refreshFinished_Feeds(void) {
@@ -764,7 +808,7 @@ void markEntryAsRead_Feeds(uint32_t feedBookmarkId, const iString *entryUrl, iBo
             }
             else {
                 unlock_Mutex(d->mtx);
-            }            
+            }
         }
         else {
             /* The unread state depends on whether the URL has been visited. */
@@ -773,7 +817,7 @@ void markEntryAsRead_Feeds(uint32_t feedBookmarkId, const iString *entryUrl, iBo
             }
             else if (isRead) {
                 visitUrl_Visited(vis, entryUrl, transient_VisitedUrlFlag | kept_VisitedUrlFlag);
-            }            
+            }
         }
     }
 }

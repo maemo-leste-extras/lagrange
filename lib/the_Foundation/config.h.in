@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 */
 
 #define iFoundationLibraryVersion { ${the_Foundation_VERSION_MAJOR}, ${the_Foundation_VERSION_MINOR}, ${the_Foundation_VERSION_PATCH} }
+#define iFoundationLibraryVersionCStr "${the_Foundation_VERSION_MAJOR}.${the_Foundation_VERSION_MINOR}.${the_Foundation_VERSION_PATCH}${the_Foundation_VERSION_SUFFIX}"
 #define iFoundationLibraryGitTag "${iFoundationLibraryGitTag}"
 
 #cmakedefine iPlatformAndroid
@@ -48,6 +49,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #cmakedefine iHaveSysDirent
 #cmakedefine iHaveOpenSSL
 #cmakedefine iHavePcre
+#cmakedefine iHavePcre2
 #cmakedefine iHavePThread
 #cmakedefine iHavePThreadCancel
 #cmakedefine iHavePThreadTimedMutex

@@ -47,8 +47,11 @@ enum iGmStatusCode {
     tlsFailure_GmStatusCode,
     tlsServerCertificateExpired_GmStatusCode,
     tlsServerCertificateNotVerified_GmStatusCode,
+    proxyCertificateExpired_GmStatusCode,
+    proxyCertificateNotVerified_GmStatusCode,
     ansiEscapes_GmStatusCode,
     missingGlyphs_GmStatusCode,
+    unsupportedMimeTypeShownAsUtf8_GmStatusCode,
 
     none_GmStatusCode                      = 0,
     /* general status code categories */
@@ -117,6 +120,7 @@ uint16_t        port_Url                (const iUrl *);
 
 iRangecc        urlScheme_String        (const iString *);
 iRangecc        urlHost_String          (const iString *);
+iRangecc        urlDirectory_String     (const iString *); /* without a file name; ends with slash */
 uint16_t        urlPort_String          (const iString *);
 iRangecc        urlUser_String          (const iString *);
 iRangecc        urlRoot_String          (const iString *);

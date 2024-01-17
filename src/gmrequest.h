@@ -49,6 +49,7 @@ struct Impl_GmResponse {
     iDate              certValidUntil;
     iString            certSubject;
     iTime              when;
+    iBlock             identityFingerprint;
 };
 
 iDeclareTypeConstruction(GmResponse)
@@ -82,11 +83,14 @@ void                unlockResponse_GmRequest    (iGmRequest *);
 
 uint32_t            id_GmRequest                (const iGmRequest *); /* unique ID */
 iBool               isFinished_GmRequest        (const iGmRequest *);
+iBool               filtersEnabled_GmRequest    (const iGmRequest *);
 enum iGmStatusCode  status_GmRequest            (const iGmRequest *);
 const iString *     meta_GmRequest              (const iGmRequest *);
 const iBlock  *     body_GmRequest              (const iGmRequest *);
 size_t              bodySize_GmRequest          (const iGmRequest *);
 const iString *     url_GmRequest               (const iGmRequest *);
+iBool               isProxy_GmRequest           (const iGmRequest *); /* was sent to a proxy */
+const iAddress *    address_GmRequest           (const iGmRequest *);
 
 int                 certFlags_GmRequest         (const iGmRequest *);
 iDate               certExpirationDate_GmRequest(const iGmRequest *);

@@ -1,3 +1,29 @@
+lagrange (1.17.6-1+leste1) unstable; urgency=low
+
+  * update to 1.17.6, sync with releases branch and versioning.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 1 Aug 2023 02:40:00 +0400
+
+lagrange (1.16.6-3+leste1) unstable; urgency=low
+
+  * update to 1.16.6, sync with releases branch and versioning.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 1 Aug 2023 02:40:00 +0400
+
+lagrange (1.16.5-3+leste1) unstable; urgency=low
+
+  * update to 1.16.5, sync with releases branch and versioning.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 27 Jul 2023 04:14:00 +0400
+
+lagrange (0.0.2-20221218+leste1) unstable; urgency=low
+
+  * maemo/chimaera release
+  * debian/source/include-binaries created, lagrange.png listed in it.
+  * removed lib/harfbuzz and lib/fribidi, using chimaera versions.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 19 Dec 2022 04:43:00 +0400
+
 lagrange (20220526) unstable; urgency=low
 
   * maemo release

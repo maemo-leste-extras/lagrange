@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include "listwidget.h"
 #include "lang.h"
 #include "lookup.h"
+#include "snippets.h"
 #include "util.h"
 #include "visited.h"
 
@@ -206,12 +207,23 @@ static float visitedRelevance_LookupJob_(const iLookupJob *d, const iVisitedUrl 
     return iMax(h, p) / (age + 1); /* extra weight for recency */
 }
 
+static float snippetRelevance_LookupJob_(const iLookupJob *d, const iRangecc name,
+                                         const iRangecc content) {
+    const float n = scoreMatch_(d->term, name);
+    const float c = scoreMatch_(d->term, content);
+    return 4 * n + c;
+}
+
 static iBool matchBookmark_LookupJob_(void *context, const iBookmark *bm) {
     return bookmarkRelevance_LookupJob_(context, bm) > 0;
 }
 
 static iBool matchIdentity_LookupJob_(void *context, const iGmIdentity *identity) {
     return identityRelevance_LookupJob_(context, identity) > 0;
+}
+
+static iBool matchSnippet_LookupJob_(void *context, const iRangecc name, const iRangecc content) {
+    return snippetRelevance_LookupJob_(context, name, content);
 }
 
 static void searchBookmarks_LookupJob_(iLookupJob *d) {
@@ -226,6 +238,7 @@ static void searchBookmarks_LookupJob_(iLookupJob *d) {
         res->icon            = bm->icon;
         set_String(&res->label, &bm->title);
         set_String(&res->url, &bm->url);
+        set_String(&res->meta, &bm->identity);
         pushBack_PtrArray(&d->results, res);
     }
 }
@@ -279,17 +292,23 @@ static void searchHistory_LookupJob_(iLookupJob *d) {
             const char *match = cstr_String(j.value);
             const size_t matchLen = argLabel_Command(match, "len");
             iRangecc text;
-            text.start = strstr(match, " str:") + 5;
-            text.end = text.start + matchLen;
-            const char *url = strstr(text.end, " url:") + 5;
-            iLookupResult *res = new_LookupResult();
-            res->type = content_LookupResultType;
-            res->relevance = ++index; /* most recent comes last */
-            setCStr_String(&res->label, "\"");
-            appendRange_String(&res->label, text);
-            appendCStr_String(&res->label, "\"");
-            setCStr_String(&res->url, url);
-            pushBack_PtrArray(&d->results, res);
+            const char *strArg = strstr(match, " str:");
+            if (strArg) {
+                text.start = strArg + 5;
+                text.end = text.start + matchLen;
+                const char *urlArg = strstr(text.end, " url:");
+                if (urlArg) {
+                    const char *url = urlArg + 5;
+                    iLookupResult *res = new_LookupResult();
+                    res->type = content_LookupResultType;
+                    res->relevance = ++index; /* most recent comes last */
+                    setCStr_String(&res->label, "\"");
+                    appendRange_String(&res->label, text);
+                    appendCStr_String(&res->label, "\"");
+                    setCStr_String(&res->url, url);
+                    pushBack_PtrArray(&d->results, res);
+                }
+            }
         }
     }
 }
@@ -309,6 +328,33 @@ static void searchIdentities_LookupJob_(iLookupJob *d) {
                    collect_String(
                        hexEncode_Block(collect_Block(fingerprint_TlsCertificate(identity->cert)))));
         pushBack_PtrArray(&d->results, res);
+    }
+}
+
+static void searchSnippets_LookupJob_(iLookupJob *d) {
+    /* Note: Called in a background thread. */
+    const char *sep = "\v"; /* vertical tab */
+    iConstForEach(StringArray, i, namesWithContent_Snippets(sep)) {
+        iRangecc name    = iNullRange;
+        iRangecc content = iNullRange;
+        iRangecc part    = iNullRange;
+        nextSplit_Rangecc(range_String(i.value), sep, &part);
+        name = part;
+        nextSplit_Rangecc(range_String(i.value), sep, &part);
+        content = part;
+        if (!isEmpty_Range(&name) && !isEmpty_Range(&content)) {
+            const float relevance = snippetRelevance_LookupJob_(d, name, content);
+            if (relevance > 0) {
+                iLookupResult *res = new_LookupResult();
+                res->type = snippet_LookupResultType;
+                res->relevance = relevance;
+                res->icon = 0x1f4cb; /* clipboard */
+                setRange_String(&res->label, name);
+                setRange_String(&res->meta, content);
+                replace_String(&res->meta, "\n", return_Icon " ");
+                pushBack_PtrArray(&d->results, res);
+            }
+        }
     }
 }
 
@@ -347,11 +393,13 @@ static iThreadResult worker_LookupWidget_(iThread *thread) {
             delete_String(pattern);
         }
         const size_t termLen = length_String(&d->pendingTerm); /* characters */
+        const iBool snippetsOnly = !cmp_String(&d->pendingTerm, "!");
         clear_String(&d->pendingTerm);
         job->docs = d->pendingDocs;
         d->pendingDocs = NULL;
         unlock_Mutex(d->mtx);
-        /* Do the lookup. */ {
+        /* Do the lookup. */
+        if (!snippetsOnly) {
             searchBookmarks_LookupJob_(job);
             searchFeeds_LookupJob_(job);
             searchVisited_LookupJob_(job);
@@ -360,6 +408,7 @@ static iThreadResult worker_LookupWidget_(iThread *thread) {
             }
             searchIdentities_LookupJob_(job);
         }
+        searchSnippets_LookupJob_(job);
         /* Submit the result. */
         lock_Mutex(d->mtx);
         if (d->finishedJob) {
@@ -475,6 +524,8 @@ static const char *cstr_LookupResultType(enum iLookupResultType d) {
             return "heading.lookup.pagecontent";
         case identity_LookupResultType:
             return "heading.lookup.identities";
+        case snippet_LookupResultType:
+            return "heading.lookup.snippets";
         default:
             return "heading.lookup.other";
     }
@@ -554,11 +605,23 @@ static void presentResults_LookupWidget_(iLookupWidget *d) {
                 item->fg = uiTextStrong_ColorId;
                 item->font = uiContent_FontId;
                 format_String(&item->text,
-                              "%s %s\u2014 %s",
+                              "%s %s",
                               cstr_String(&res->label),
-                              uiText_ColorEscape,
-                              url);
-                format_String(&item->command, "open url:%s", cstr_String(&res->url));
+                              uiText_ColorEscape);
+                setCStr_String(&item->command, "open");
+                if (!isEmpty_String(&res->meta)) {
+                    appendCStr_String(&item->command, " setident:");
+                    append_String(&item->command, &res->meta);
+                    /* Also include in the visible label. */
+                    const iGmIdentity *ident = findIdentity_GmCerts(
+                        certs_App(), collect_Block(hexDecode_Rangecc(range_String(&res->meta))));
+                    if (ident) {
+                        appendFormat_String(&item->text, " \u2014 " person_Icon " %s",
+                                            cstr_String(name_GmIdentity(ident)));
+                    }
+                }
+                appendFormat_String(&item->text, " \u2014 %s", url);
+                appendFormat_String(&item->command, " url:%s", cstr_String(&res->url));
                 break;
             }
             case feedEntry_LookupResultType: {
@@ -588,6 +651,15 @@ static void presentResults_LookupWidget_(iLookupWidget *d) {
                 item->font = uiContent_FontId;
                 format_String(&item->text, "%s \u2014 %s", url, cstr_String(&res->label));
                 format_String(&item->command, "open url:%s", cstr_String(&res->url));
+                break;
+            }
+            case snippet_LookupResultType: {
+                item->fg = uiTextStrong_ColorId;
+                item->font = uiContent_FontId;
+                format_String(&item->text, "%s \u2014 " uiText_ColorEscape "%s",
+                              cstr_String(&res->label), cstr_String(&res->meta));
+                /* A replacement string to be entered to the URL field. */
+                format_String(&item->command, "=%s%%20", cstr_String(&res->label));
                 break;
             }
             default:
@@ -711,6 +783,7 @@ static iBool processEvent_LookupWidget_(iLookupWidget *d, const SDL_Event *ev) {
         (deviceType_App() != desktop_AppDeviceType || !isFocused_Widget(w))) {
         showCollapsed_Widget(w, iFalse);
     }
+
     if (isCommand_Widget(w, ev, "focus.lost")) {
         setCursor_LookupWidget_(d, iInvalidPos);
     }
@@ -726,8 +799,14 @@ static iBool processEvent_LookupWidget_(iLookupWidget *d, const SDL_Event *ev) {
             setText_InputWidget(url, url_DocumentWidget(document_App()));
             showCollapsed_Widget(w, iFalse);
             setCursor_LookupWidget_(d, iInvalidPos);
-            postCommandString_Root(get_Root(), &item->command);
-            postCommand_App("focus.set id:"); /* unfocus */
+            if (startsWith_String(&item->command, "=")) {
+                /* Replace contents of the URL field with the item's text. */
+                postCommandf_App("navigate.focus text:%s", cstr_String(&item->command) + 1);
+            }
+            else {
+                postCommandString_Root(get_Root(), &item->command);
+                postCommand_App("focus.set id:"); /* unfocus */
+            }
         }
         return iTrue;
     }

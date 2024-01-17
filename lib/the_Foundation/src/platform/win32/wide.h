@@ -26,10 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 */
 
 #include "the_Foundation/string.h"
+#include <stdint.h>
 #include <wchar.h>
 
-static const wchar_t *toWide_CStr_(const char *u8) {
-    const iString str = iStringLiteral(u8);
-    iBlock *u16 = toUtf16_String(&str);
-    return (wchar_t *) data_Block(collect_Block(u16));
-}
+const wchar_t *   toWide_CStr_            (const char *u8);
+const char *      fromWide_CStr_          (const wchar_t *ws);
+
+const char *      errorMessage_Windows_   (uint32_t systemErrorNumber);

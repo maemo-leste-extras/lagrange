@@ -30,20 +30,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <SDL_mouse.h>
 #include <SDL_video.h>
 
-extern const iMenuItem topLevelMenus_Window[6];
+extern const iMenuItem topLevelMenus_Window[7];
 
 enum iWindowType {
     main_WindowType,
+    extra_WindowType,
     popup_WindowType,
 };
 
 iDeclareType(MainWindow)
 iDeclareType(Text)
 iDeclareType(Window)
-    
+
 iDeclareTypeConstructionArgs(Window, enum iWindowType type, iRect rect, uint32_t flags)
 iDeclareTypeConstructionArgs(MainWindow, iRect rect)
-    
+
 typedef iAny iAnyWindow;
 
 enum iWindowSnap {
@@ -84,13 +85,14 @@ enum iWindowSplit {
 
 struct Impl_Window {
     enum iWindowType type;
+    uint32_t      serial; /* incrementing serial number; creation order */
     SDL_Window *  win;
     iBool         isExposed;
     iBool         isMinimized;
     iBool         isMouseInside;
     iBool         isInvalidated;
     iAtomicInt    isRefreshPending;
-    iBool         ignoreClick;
+    iBool         ignoreClick; /* used on the Windows platform only */
     uint32_t      focusGainedAt;
     SDL_Renderer *render;
     iInt2         size;
@@ -119,7 +121,9 @@ struct Impl_MainWindow {
     int           pendingSplitMode;
     iString *     pendingSplitUrl; /* URL to open in a newly opened split */
     iString *     pendingSplitOrigin; /* tab from where split was initiated, if any */
+    iString *     pendingSplitSetIdent;
     SDL_Texture * appIcon;
+    SDL_Texture * logo;
     int           keyboardHeight; /* mobile software keyboards */
     int           maxDrawableHeight;
     iBool         enableBackBuf; /* only used on macOS with Metal (helps with refresh glitches for some reason??) */
@@ -145,7 +149,9 @@ SDL_Renderer *  renderer_Window         (const iWindow *);
 int             numRoots_Window         (const iWindow *);
 //iRoot *         findRoot_Window         (const iWindow *, const iWidget *widget);
 iRoot *         otherRoot_Window        (const iWindow *, iRoot *root);
+void            rootOrder_Window        (const iWindow *, iRoot *roots[2]);
 
+void        setTitle_Window         (iWindow *, const iString *title);
 iBool       processEvent_Window     (iWindow *, const SDL_Event *);
 iBool       dispatchEvent_Window    (iWindow *, const SDL_Event *);
 void        invalidate_Window       (iAnyWindow *); /* discard all cached graphics */
@@ -160,19 +166,29 @@ iWindow *   get_Window              (void);
 iBool       isOpenGLRenderer_Window (void);
 
 void        setCurrent_Window       (iAnyWindow *);
+void        postRefresh_Window      (iAnyWindow *);
 
 iLocalDef iBool isExposed_Window(const iWindow *d) {
     iAssert(d);
     return d->isExposed;
 }
 
+iLocalDef iBool isDrawFrozen_Window(const iWindow *d) {
+    if (d && d->type == main_WindowType) {
+        return ((const iMainWindow *) d)->isDrawFrozen;
+    }
+    return iFalse;
+}
+
 iLocalDef iWindow *as_Window(iAnyWindow *d) {
-    iAssert(type_Window(d) == main_WindowType || type_Window(d) == popup_WindowType);
+    iAssert(type_Window(d) == main_WindowType || type_Window(d) == extra_WindowType ||
+            type_Window(d) == popup_WindowType);
     return (iWindow *) d;
 }
 
 iLocalDef const iWindow *constAs_Window(const iAnyWindow *d) {
-    iAssert(type_Window(d) == main_WindowType || type_Window(d) == popup_WindowType);
+    iAssert(type_Window(d) == main_WindowType || type_Window(d) == extra_WindowType ||
+            type_Window(d) == popup_WindowType);
     return (const iWindow *) d;
 }
 
@@ -187,24 +203,27 @@ iLocalDef iWindow *asWindow_MainWindow(iMainWindow *d) {
     return &d->base;
 }
 
-void        setTitle_MainWindow             (iMainWindow *, const iString *title);
 void        setSnap_MainWindow              (iMainWindow *, int snapMode);
 void        setFreezeDraw_MainWindow        (iMainWindow *, iBool freezeDraw);
 void        setKeyboardHeight_MainWindow    (iMainWindow *, int height);
 iObjectList *listDocuments_MainWindow       (iMainWindow *, const iRoot *rootOrNull);
+iBool       isAnyDocumentRequestOngoing_MainWindow   (iMainWindow *);
 void        setSplitMode_MainWindow         (iMainWindow *, int splitMode);
 void        checkPendingSplit_MainWindow    (iMainWindow *);
 void        swapRoots_MainWindow            (iMainWindow *);
-//void        showToolbars_MainWindow         (iMainWindow *, iBool show);
 void        resize_MainWindow               (iMainWindow *, int w, int h);
 void        resizeSplits_MainWindow         (iMainWindow *, iBool updateDocumentSize);
-//iBool       processEvent_MainWindow         (iMainWindow *, const SDL_Event *);
 void        draw_MainWindow                 (iMainWindow *);
 void        drawQuick_MainWindow            (iMainWindow *);
+void        drawLogo_MainWindow             (iMainWindow *, iRect bounds);
 void        drawWhileResizing_MainWindow    (iMainWindow *, int w, int h); /* workaround for SDL bug */
 
 int         snap_MainWindow                 (const iMainWindow *);
 iBool       isFullscreen_MainWindow         (const iMainWindow *);
+
+iLocalDef int defaultSplitAxis_MainWindow(const iMainWindow *d) {
+    return (float) d->base.size.x / (float) d->base.size.y < 0.7f ? 1 : 0;
+}
 
 #if defined (LAGRANGE_ENABLE_CUSTOM_FRAME)
 SDL_HitTestResult hitTest_MainWindow(const iMainWindow *d, iInt2 pos);
@@ -224,4 +243,10 @@ iLocalDef const iMainWindow *constAs_MainWindow(const iAnyWindow *d) {
 
 /*----------------------------------------------------------------------------------------------*/
 
-iWindow *   newPopup_Window    (iInt2 screenPos, iWidget *rootWidget);
+iWindow *   newPopup_Window     (iInt2 screenPos, iWidget *rootWidget);
+iWindow *   newExtra_Window     (iWidget *rootWidget);
+
+/*----------------------------------------------------------------------------------------------*/
+
+const iArray *  updateBookmarksMenu_Widget  (iWidget *menu);
+void            cleanupBookmarksMenu_Widget (iWidget *menu);

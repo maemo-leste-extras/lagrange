@@ -112,6 +112,7 @@ void init_ListWidget(iListWidget *d) {
 void deinit_ListWidget(iListWidget *d) {
     removeTicker_App(refreshWhileScrolling_ListWidget_, d);
     clear_ListWidget(d);
+    deinit_IntSet(&d->invalidItems);
     deinit_PtrArray(&d->items);
     delete_VisBuf(d->visBuf);
 }
@@ -166,7 +167,7 @@ void updateVisible_ListWidget(iListWidget *d) {
        its visibility unless it knows its correct size. */
     arrange_Widget(as_Widget(d->scroll));
     setMax_SmoothScroll(&d->scrollY, scrollMax_ListWidget_(d));
-    setRange_ScrollWidget(d->scroll, (iRangei){ 0, d->scrollY.max });    
+    setRange_ScrollWidget(d->scroll, (iRangei){ 0, d->scrollY.max });
     setThumb_ScrollWidget(d->scroll,
                           pos_SmoothScroll(&d->scrollY),
                           contentSize > 0 ? height_Rect(bounds_Widget(as_Widget(d->scroll))) *
@@ -329,7 +330,7 @@ static void moveCursor_ListWidget_(iListWidget *d, int dir, uint32_t animSpan) {
                ((d->cursorItem < maxItem && dir >= 0) || (d->cursorItem > 0 && dir < 0))) {
             d->cursorItem += (dir >= 0 ? 1 : -1); /* Skip separators. */
         }
-    }    
+    }
     if (oldCursor != d->cursorItem) {
         invalidateItem_ListWidget(d, oldCursor);
         invalidateItem_ListWidget(d, d->cursorItem);
@@ -421,7 +422,7 @@ static iBool endDrag_ListWidget_(iListWidget *d, iInt2 endPos) {
             postCommand_Widget(d, "list.dragged arg:%zu onto:%zu", d->dragItem, index);
         }
         else {
-            postCommand_Widget(d, "list.dragged arg:%zu %s:%zu", d->dragItem, 
+            postCommand_Widget(d, "list.dragged arg:%zu %s:%zu", d->dragItem,
                                dstKind == after_DragDestination ? "after" : "before",
                                dstKind == after_DragDestination ? index - 1 : index);
         }
@@ -429,6 +430,16 @@ static iBool endDrag_ListWidget_(iListWidget *d, iInt2 endPos) {
     invalidateItem_ListWidget(d, d->dragItem);
     d->dragItem = iInvalidPos;
     return iTrue;
+}
+
+static void abortDrag_ListWidget_(iListWidget *d) {
+    if (d->dragItem != iInvalidPos) {
+        stop_Anim(&d->scrollY.pos);
+        invalidateItem_ListWidget(d, d->dragItem);
+        d->dragItem = iInvalidPos;
+        redrawHoverItem_ListWidget_(d);
+        setFlags_Widget(as_Widget(d), touchDrag_WidgetFlag, iFalse); /* mobile drag handles */
+    }
 }
 
 static iBool isScrollDisabled_ListWidget_(const iListWidget *d, const SDL_Event *ev) {
@@ -536,9 +547,15 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
                                            SDL_BUTTON_LEFT);
                     }
                     return iTrue;
+                case SDLK_BACKSPACE:
+                    if (d->cursorItem != iInvalidPos) {
+                        postCommand_Widget(w, "list.delete arg:%zu item:%p",
+                                           d->cursorItem, constCursorItem_ListWidget(d));
+                    }
+                    return iTrue;
             }
         }
-    }    
+    }
     if (ev->type == SDL_MOUSEMOTION) {
         const iInt2 mousePos = init_I2(ev->motion.x, ev->motion.y);
         if (ev->motion.state == 0 /* not dragging */) {
@@ -571,7 +588,7 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
             }
         }
     }
-    if (ev->type == SDL_MOUSEWHEEL && isHover_Widget(w)) {
+    if (ev->type == SDL_MOUSEWHEEL && isHover_Widget(w) && ev->wheel.x == 0) {
         if (d->dragHandleWidth) {
             if (d->dragItem == iInvalidPos) {
                 const iInt2 wpos = coord_MouseWheelEvent(&ev->wheel);
@@ -583,10 +600,10 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
                 }
             }
         }
+        extern iWidgetClass Class_SidebarWidget;
         if (isScrollDisabled_ListWidget_(d, ev)) {
             if (ev->wheel.which == SDL_TOUCH_MOUSEID) {
                 /* TODO: Could generalize this selection of the scrollable parent. */
-                extern iWidgetClass Class_SidebarWidget;
                 iWidget *sidebar = findParentClass_Widget(w, &Class_SidebarWidget);
                 if (sidebar) {
                     transferAffinity_Touch(w, sidebar);
@@ -599,6 +616,10 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
         if (isPerPixel_MouseWheelEvent(&ev->wheel)) {
             stop_Anim(&d->scrollY.pos);
             moveSpan_SmoothScroll(&d->scrollY, amount, 0);
+            if (isMobile_Platform() && !hasAffinity_Touch(w) &&
+                ev->wheel.which == SDL_TOUCH_MOUSEID && !isScrollDisabled_ListWidget_(d, ev)) {
+                transferAffinity_Touch(NULL, w);
+            }
         }
         else {
             /* Traditional mouse wheel. */
@@ -608,6 +629,12 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
         }
         return iTrue;
     }
+    if (ev->type == SDL_MOUSEWHEEL && isHover_Widget(w) && ev->wheel.y == 0 &&
+        isPerPixel_MouseWheelEvent(&ev->wheel) && !isInertia_MouseWheelEvent(&ev->wheel)) {
+        iInt2 coord = mouseCoord_SDLEvent(ev);
+        postCommand_Widget(w, "listswipe.moved arg:%d coord:%d %d", ev->wheel.x, coord.x, coord.y);
+        return iTrue;
+    }
     switch (processEvent_Click(&d->click, ev)) {
         case started_ClickResult:
             d->noHoverWhileScrolling = iFalse;
@@ -615,12 +642,7 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
             redrawHoverItem_ListWidget_(d);
             return iTrue;
         case aborted_ClickResult:
-            if (d->dragItem != iInvalidPos) {
-                stop_Anim(&d->scrollY.pos);
-                invalidateItem_ListWidget(d, d->dragItem);
-                d->dragItem = iInvalidPos;
-            }
-            redrawHoverItem_ListWidget_(d);
+            abortDrag_ListWidget_(d);
             break;
         case drag_ClickResult:
             if (d->click.clickButton != SDL_BUTTON_LEFT) {
@@ -646,10 +668,11 @@ static iBool processEvent_ListWidget_(iListWidget *d, const SDL_Event *ev) {
                                             zero_I2(), init_I2(-d->dragHandleWidth, 0)),
                               pos_Click(&d->click)) &&
                 d->hoverItem != iInvalidPos) {
-                postCommand_Widget(w, "list.clicked arg:%zu button:%d item:%p",
+                postCommand_Widget(w, "list.clicked arg:%zu button:%d item:%p device:%u",
                                    d->hoverItem,
                                    d->click.clickButton,
-                                   constHoverItem_ListWidget(d));
+                                   constHoverItem_ListWidget(d),
+                                   ev->button.which);
             }
             return iTrue;
         default:
@@ -768,7 +791,7 @@ static void draw_ListWidget_(const iListWidget *d) {
                 fillRect_Paint(&p, (iRect){ addY_I2(dstRect.pos, -gap_UI / 4),
                                             init_I2(width_Rect(dstRect), gap_UI / 2) },
                                uiTextAction_ColorId);
-            }                        
+            }
         }
         p.alpha = 0x80;
         setOpacity_Text(0.5f);

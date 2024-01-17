@@ -1,6 +1,23 @@
 # Changelog
 
-## 1.4 - Unreleased
+## 1.7
+* Native Windows build using MinGW64: Winsock2 for sockets, IP addresses.
+
+## 1.6.1
+* Library SOVERSION uses the major version number only. Minor versions do not break ABI compatibility.
+
+## 1.6 - 2023-01-21
+* Block: Added a method to encode contents in Base64.
+* PtrArray: Added `copy` method.
+* Process: Minor changes in how I/O is handled with the child process. Calling `writeInput` more than once is now possible.
+* Process: Added a test where processes are started concurrently from threads.
+* TlsRequest: Avoid possible crash when reusing TLS sessions.
+* TlsRequest: Added a method to query the SSL library name (OpenSSL/LibreSSL).
+
+## 1.5 - 2022-11-25
+* RegExp: PCRE2 can be used as an alternative to the older PCRE.
+
+## 1.4 - 2022-04-28
 * Block: Fixed crash when checking size of zero-initialized instance.
 * Char: Added `width` method.
 

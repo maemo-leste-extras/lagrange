@@ -106,7 +106,6 @@ static iThreadResult messageReceiver_(iThread *thread) {
         sleep_Thread(0.1);
     }
     iRelease(sock);
-    iRelease(thread);
     return 0;
 }
 
@@ -120,14 +119,15 @@ static void communicate_(iAny *d, iService *sv, iSocket *sock) {
     setUserData_Thread(receiver, ref_Object(sock));
     observeSocket_(sock);
     start_Thread(receiver);
+    iRelease(receiver);
 }
 
-static bool connectTo_(const char *address) {
+static iBool connectTo_(const char *address) {
     iSocket *sock = iClob(new_Socket(address, 14666));
     observeSocket_(sock);
     if (!open_Socket(sock)) {
         puts("Failed to connect");
-        return false;
+        return iFalse;
     }
     puts("Type to send a message (empty to quit):");
     for (;;) {
@@ -139,7 +139,7 @@ static bool connectTo_(const char *address) {
         writeData_Socket(sock, buf, strlen(buf));
     }
     puts("Good day!");
-    return true;
+    return iTrue;
 }
 
 #if defined (iHaveTlsRequest)
@@ -197,6 +197,7 @@ int main(int argc, char *argv[]) {
             else {
                 printf("Failure! CURL says: %s\n", cstr_String(errorMessage_WebRequest(web)));
             }
+            deinit_Foundation();
             return 0;
         }
 #endif
@@ -236,6 +237,7 @@ int main(int argc, char *argv[]) {
                        hexEncode_Block(collect_Block(fingerprint_TlsCertificate(cert)))));
             printf("Recreated private key:\n%s", cstrCollect_String(privateKeyPem_TlsCertificate(cert)));
             delete_TlsCertificate(cert);
+            deinit_Foundation();
             return 0;
         }
         iCommandLineArg *tlsArgs = iClob(checkArgumentValues_CommandLine(cmdline, "t;tls", 2));
@@ -252,6 +254,7 @@ int main(int argc, char *argv[]) {
             submit_TlsRequest(tls);
             waitForFinished_TlsRequest(tls);
             printf("We are done.\n");
+            deinit_Foundation();
             return 0;
         }
     }
@@ -261,6 +264,7 @@ int main(int argc, char *argv[]) {
         iConnect(Service, sv, incomingAccepted, sv, communicate_);
         if (!open_Service(sv)) {
             puts("Failed to start service");
+            deinit_Foundation();
             return 1;
         }
         puts("Press Enter to quit..."); {
@@ -269,6 +273,7 @@ int main(int argc, char *argv[]) {
                 iWarning("fgets failed\n");
             }
         }
+        close_Service(sv);
     }
     else if (contains_CommandLine(cmdline, "c;client")) {
         connectTo_("localhost");
@@ -290,5 +295,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+    deinit_Foundation();
     return 0;
 }

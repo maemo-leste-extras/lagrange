@@ -36,10 +36,12 @@ enum iWidgetTouchMode {
 iBool   processEvent_Touch      (const SDL_Event *);
 void    update_Touch            (void);
 
+void                    clear_Touch                 (void); /* forget all ongoing touches */
 float                   stopWidgetMomentum_Touch    (const iWidget *widget); /* pixels per second */
 enum iWidgetTouchMode   widgetMode_Touch            (const iWidget *widget);
 void                    widgetDestroyed_Touch       (iWidget *widget);
 void                    transferAffinity_Touch      (iWidget *src, iWidget *dst);
+iBool                   hasAffinity_Touch           (const iWidget *);
 
 iInt2   latestPosition_Touch    (void); /* valid during processing of current event */
 iInt2   latestTapPosition_Touch (void);

@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-05-17 12:15+0000\n"
+"POT-Creation-Date: 2023-02-22 20:15+0000\n"
+"PO-Revision-Date: 2023-10-24 20:14+0000\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <http://weblate.skyjake.fi/projects/lagrange/ui/tr/>\n"
 "Language: tr\n"
@@ -92,12 +94,6 @@ msgstr "Kapat"
 msgid "dlg.default"
 msgstr " Tamam "
 
-msgid "toggle.yes"
-msgstr "EVET"
-
-msgid "toggle.no"
-msgstr "HAYIR"
-
 msgid "menu.title.file"
 msgstr "Dosya"
 
@@ -165,7 +161,7 @@ msgid "menu.zoom.reset"
 msgstr "Yakınlaştırmayı sıfırla"
 
 msgid "menu.view.split"
-msgstr "Görünümü böl…"
+msgstr "Bölünmüş görünüm"
 
 msgid "menu.newfolder"
 msgstr "Yeni klasör…"
@@ -349,9 +345,6 @@ msgstr "%b. %d, %Y"
 msgid "feeds.today"
 msgstr "Bugün"
 
-msgid "feeds.entry.newtab"
-msgstr "Girdiyi yeni sekmede aç"
-
 msgid "sidebar.entry.bookmark"
 msgstr "Yer imi ekle…"
 
@@ -528,7 +521,7 @@ msgstr "Parmak izini kopyala"
 
 #, c-format
 msgid "dlg.input.prompt"
-msgstr "%s için bir girdi girin:"
+msgstr "%s için giriş yap:"
 
 msgid "dlg.input.linebreak"
 msgstr "Satır sonu"
@@ -701,7 +694,7 @@ msgid "heading.lookup.other"
 msgstr "DİĞER"
 
 msgid "heading.upload"
-msgstr "Titan ile gönder"
+msgstr "Titan ile karşıya yükle"
 
 msgid "upload.id"
 msgstr "Kimlik:"
@@ -710,7 +703,7 @@ msgid "dlg.upload.id.none"
 msgstr "Yok"
 
 msgid "dlg.upload.id.default"
-msgstr "Öntanımlı"
+msgstr "Öntanımlı kimlik"
 
 msgid "heading.upload.text"
 msgstr "Metin"
@@ -731,24 +724,24 @@ msgid "upload.token"
 msgstr "Jeton:"
 
 msgid "dlg.upload.send"
-msgstr "Gönder"
+msgstr "Karşıya yükle"
 
 msgid "upload.port"
 msgstr "Kapı…"
 
 msgid "heading.uploadport"
-msgstr "Titan gönderim kapısı"
+msgstr "Titan karşıya yükleme kapısı"
 
 msgid "dlg.uploadport.set"
 msgstr "Kapı ayarla"
 
 # used on mobile
 msgid "dlg.upload.text"
-msgstr "Düz metin gönder"
+msgstr "Düz metin karşıya yükle"
 
 # used on mobile
 msgid "dlg.upload.file"
-msgstr "Dosya göndre"
+msgstr "Dosya karşıya yükle"
 
 # used on mobile
 msgid "dlg.upload.pickfile"
@@ -888,7 +881,7 @@ msgid "dlg.bookmark.icon"
 msgstr "Simge:"
 
 msgid "heading.bookmark.tags"
-msgstr "Özel etiketler"
+msgstr "Davranış"
 
 msgid "heading.addfolder"
 msgstr "Klasör ekle"
@@ -922,7 +915,7 @@ msgstr "Arayüz"
 
 # tab button
 msgid "heading.prefs.keys"
-msgstr "Anahtarlar"
+msgstr "Düğmeler"
 
 # tab button
 msgid "heading.prefs.network"
@@ -938,14 +931,14 @@ msgid "heading.prefs.proxies"
 msgstr "Vekiller"
 
 msgid "heading.prefs.scrolling"
-msgstr "Kaydırma"
+msgstr "Sarma"
 
 msgid "heading.prefs.sizing"
 msgstr "Boyutlandırma"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Stil"
+msgstr "Sayfa biçemi"
 
 # tab button
 msgid "heading.prefs.userinterface"
@@ -961,7 +954,7 @@ msgid "prefs.centershort"
 msgstr "Dikey ortalama:"
 
 msgid "prefs.pinsplit"
-msgstr "Bölünmüş görünüm iğnelemesi:"
+msgstr "Bölünmüş görünüm sabitlemesi:"
 
 msgid "prefs.pinsplit.none"
 msgstr "Yok"
@@ -976,13 +969,13 @@ msgid "prefs.scrollspeed.mouse"
 msgstr "Fare hızı:"
 
 msgid "prefs.imageloadscroll"
-msgstr "Kaydırırken görseli yükle:"
+msgstr "Sarma düğmesinde sonraki görseli yükle:"
 
 msgid "prefs.hidetoolbarscroll"
-msgstr "Kaydırırken araç çubuğunu gizle:"
+msgstr "Sararken araç çubuğunu gizle:"
 
 msgid "prefs.theme"
-msgstr "Tema:"
+msgstr "Arayüz teması:"
 
 msgid "prefs.theme.black"
 msgstr "Siyah"
@@ -1015,10 +1008,10 @@ msgid "prefs.returnkey.linebreak"
 msgstr "Satır sonu"
 
 msgid "prefs.animate"
-msgstr "Animasyonlar:"
+msgstr "Canlandırmalar:"
 
 msgid "prefs.sideicon"
-msgstr "Kapsül simgesi:"
+msgstr "Kapsül simgesi sol tarafta:"
 
 msgid "prefs.doctheme.dark"
 msgstr "Koyu tema:"
@@ -1045,7 +1038,7 @@ msgid "prefs.doctheme.name.highcontrast"
 msgstr "Yüksek karşıtlık"
 
 msgid "prefs.saturation"
-msgstr "Kaynaşma:"
+msgstr "Doygunluk:"
 
 msgid "prefs.imagestyle.original"
 msgstr "Yok"
@@ -1057,7 +1050,7 @@ msgid "prefs.imagestyle.text"
 msgstr "Metin rengi"
 
 msgid "prefs.font.ui"
-msgstr "Kullanıcı arabirimi:"
+msgstr "Arayüz yazıtipi:"
 
 msgid "prefs.font.heading"
 msgstr "Başlıklar:"
@@ -1079,16 +1072,16 @@ msgid "prefs.boldlink.dark"
 msgstr "Koyu temada"
 
 msgid "prefs.gemtext.ansi"
-msgstr "ANSI kaçışları:"
+msgstr "Gemtext ANSI kaçışları:"
 
 msgid "prefs.gemtext.ansi.fontstyle"
-msgstr "Yazıtipi stili"
+msgstr "Yazıtipi biçemi"
 
 msgid "prefs.font.warnmissing"
-msgstr "Glif uyarıları:"
+msgstr "Yazıtipi glif uyarıları:"
 
 msgid "prefs.font.smooth"
-msgstr "Düzleştirme:"
+msgstr "Yazıtipi düzleştirme:"
 
 msgid "prefs.linewidth.normal"
 msgstr "Normal"
@@ -1100,7 +1093,7 @@ msgid "prefs.linespacing"
 msgstr "Satır aralığı:"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Düz metni kaydır:"
+msgstr "Uzun düz metin satırları kaydır:"
 
 msgid "prefs.cachesize"
 msgstr "Arabellek boyutu:"
@@ -1130,13 +1123,13 @@ msgid "keys.bottom"
 msgstr "Alta atla"
 
 msgid "keys.scroll.down"
-msgstr "Aşağı kaydır"
+msgstr "Aşağı sar"
 
 msgid "keys.scroll.halfpage.up"
-msgstr "Yarım sayfa yukarı kaydır"
+msgstr "Yarım sayfa yukarı sar"
 
 msgid "keys.scroll.page.up"
-msgstr "Bir sayfa yukarı kaydır"
+msgstr "Bir sayfa yukarı sar"
 
 msgid "keys.back"
 msgstr "Geri git"
@@ -1172,7 +1165,7 @@ msgid "keys.zoom.reset"
 msgstr "Yakınlaştırmayı sıfırla"
 
 msgid "keys.fullscreen"
-msgstr "Tam ekran kipini aç/kapa"
+msgstr "Tam ekran kipini aç/kapat"
 
 msgid "keys.tab.new"
 msgstr "Yeni sekme"
@@ -1193,7 +1186,7 @@ msgid "keys.split.next"
 msgstr "Odağı bir sonraki bölüntüye taşı"
 
 msgid "keys.upload"
-msgstr "Titan ile gönder"
+msgstr "Titan ile karşıya yükle"
 
 msgid "error.openfile.msg"
 msgstr ""
@@ -1301,7 +1294,7 @@ msgid "error.badrequest"
 msgstr "Hatalı İstek"
 
 msgid "error.badrequest.msg"
-msgstr "Sunucu isteğinizi anlamadı."
+msgstr "Sunucu, isteğinizi anlamadı."
 
 msgid "error.cert.needed"
 msgstr "Sertifika Gerekiyor"
@@ -1443,12 +1436,6 @@ msgstr "%s üzerinde uçbirim öykünmesi ile ilgili uyarıyı kalıcı olarak a
 
 msgid "dlg.dismiss.warning"
 msgstr "Uyarıyı atla"
-
-msgid "heading.fontpack.classic"
-msgstr "Yazıtipi paketini indir"
-
-msgid "dlg.fontpack.classic"
-msgstr "Yazıtipi paketini indir (25 MB)"
 
 msgid "doc.pre.nocaption"
 msgstr "Altyazısız önceden biçimlendirilmiş metin"
@@ -1722,8 +1709,8 @@ msgstr "Alınan sertifikanın süresi dolmuş VE başka bir alan adı için."
 
 msgid "dlg.certimport.help"
 msgstr ""
-"PEM ile kodlanmış bir sertifika ve/veya gizli anahtar yapıştırın\n"
-"veya pencereye bir .crt/.key dosyası bırakın."
+"PEM ile kodlanmış bir sertifika ve/veya gizli anahtar yapıştırın veya "
+"pencereye bir .crt/.key dosyası bırakın."
 
 # button in the mobile New Identity dialog
 msgid "dlg.certimport.pickfile"
@@ -1760,10 +1747,10 @@ msgid "heading.lookup.pagecontent"
 msgstr "SAYFA İÇERİĞİ"
 
 msgid "menu.page.upload"
-msgstr "Titan ile gönder…"
+msgstr "Titan ile karşıya yükle…"
 
 msgid "hint.upload.text"
-msgstr "gönderilecek metni girin"
+msgstr "karşıya yüklenecek metni girin"
 
 msgid "upload.file.drophere"
 msgstr "(pencereye bir dosyayı sürükleyip bırakın)"
@@ -1842,21 +1829,18 @@ msgstr "Arabirim renkleri"
 msgid "heading.prefs.widelayout"
 msgstr "Geniş dizilim"
 
-msgid "prefs.collapsepreonload"
-msgstr "Önceden biçimlendirilenleri daralt:"
-
 msgid "prefs.bookmarks.addbottom"
 msgstr "Yer imlerini alta ekle:"
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Arşiv belirticisini aç:"
+msgstr "index.gmi’yi ZIP arşivlerinde aç:"
 
 msgid "prefs.pinsplit.right"
 msgstr "Sağ sekme"
 
 msgid "prefs.smoothscroll"
-msgstr "Pürüzsüz kaydırma:"
+msgstr "Pürüzsüz sarma:"
 
 msgid "prefs.ostheme"
 msgstr "Sistem temasını kullan:"
@@ -1871,7 +1855,7 @@ msgid "prefs.returnkey.accept"
 msgstr "Kabul et"
 
 msgid "prefs.retainwindow"
-msgstr "Konumlandırmayı koru:"
+msgstr "Pencere konumlandırmasını kaydet:"
 
 msgid "prefs.doctheme.name.colorfuldark"
 msgstr "Renkli koyu"
@@ -1925,7 +1909,7 @@ msgid "prefs.biglede"
 msgstr "Birinci büyük paragraf:"
 
 msgid "prefs.decodeurls"
-msgstr "URL kodunu çözme:"
+msgstr "URL'lerin kodunu çöz:"
 
 msgid "prefs.ca.path"
 msgstr "CA yolu:"
@@ -1952,13 +1936,13 @@ msgstr[0] "Bu dizin %u öge içeriyor."
 msgstr[1] "Bu dizin %u öge içeriyor."
 
 msgid "keys.scroll.up"
-msgstr "Yukarı kaydır"
+msgstr "Yukarı sar"
 
 msgid "keys.scroll.halfpage.down"
-msgstr "Yarım sayfa aşağı kaydır"
+msgstr "Yarım sayfa aşağı sar"
 
 msgid "keys.scroll.page.down"
-msgstr "Bir sayfa aşağı kaydır"
+msgstr "Bir sayfa aşağı sar"
 
 msgid "keys.parent"
 msgstr "Üst dizine git"
@@ -1985,12 +1969,12 @@ msgid "keys.split.item"
 msgstr "Bölünmüş görünüm menüsü:"
 
 msgid "keys.hoverurl"
-msgstr "Üzerine geldiğinde URL'yi göster aç/kapa"
+msgstr "Üzerine geldiğinde URL'yi göster aç/kapat"
 
 msgid "error.badstatus.msg"
 msgstr ""
 "Sunucu Gemini protokolü belirtiminde bulunmayan bir durum kodu ile "
-"yanıtladı. Sunucu gelecekten olabilir mi? Bence bozulmuş."
+"yanıtladı. Sunucu hatalı davranıyor olabilir."
 
 msgid "error.unsupported.protocol.msg"
 msgstr "İstenen protokol bu uygulama tarafından desteklenmiyor."
@@ -2019,7 +2003,7 @@ msgstr ""
 "çıkarmadığına bakın. Değilse kötü niyetli bir üçüncü kişi erişmeye "
 "çalıştığınız sunucu şeklinde gizleniyor olabilir.\n"
 "\n"
-"Sayfa bilgisi bölümünde bu sertifika güvenilir olarak imlenebilir."
+"Bu sertifika, \"Sayfa bilgisi\" bölümünde güvenilir olarak imlenebilir."
 
 msgid "error.unavail.msg"
 msgstr ""
@@ -2046,7 +2030,7 @@ msgstr ""
 
 msgid "error.ansi.msg"
 msgstr ""
-"Bu sayfa düzgünce görüntülenemeyebilir. Metin stilleri için tam olarak "
+"Bu sayfa düzgünce görüntülenemeyebilir. Metin biçemleri için tam olarak "
 "desteklenmeyen ANSI kaçış dizileri kullanıyor. Görüntülemek için bir uçbirim "
 "öykünücüsü kullanabilirsiniz."
 
@@ -2066,12 +2050,6 @@ msgstr ""
 "belge içeriği ve kullanıcı arabirimi için kullanılabilir. Etkin "
 "yazıtiplerini Tercihler > Yazıtipleri bölümünden seçebilirsiniz."
 
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"Daha önceden uygulamayla birlikte gelen yazıtipleri artık ayrı olarak "
-"indirilebilir. \"Classic set\" yazıtipi paketini şimdi indirmek istiyor "
-"musunuz?"
-
 msgid "prefs.hoverlink"
 msgstr "Üzerine gelince URL'yi göster:"
 
@@ -2089,7 +2067,7 @@ msgid "sidebar.action.show"
 msgstr "Göster:"
 
 msgid "prefs.time.24h"
-msgstr "24 saat biçimi"
+msgstr "24 saat biçimi:"
 
 # This label should be fairly short so it fits in a button in the sidebar.
 msgid "sidebar.action.feeds.markallread"
@@ -2284,15 +2262,15 @@ msgstr "Kullanıcı Veri Arşivi"
 msgid "userdata.help"
 msgstr ""
 "Kullanıcı veri arşivleri, dışa aktarılmış tarama geçmişi, kimlikler, yer "
-"imleri, siteye özel ayarlar ve güvenilen sunucu sertifikalarının parmak "
-"izlerini içerir. Yedek olarak depolanabilirler ve aygıtlar arası veri "
-"aktarımında kullanılabilirler."
+"imleri, metin kırpıntıları, siteye özel ayarlar ve güvenilen sunucu "
+"sertifikalarının parmak izlerini içerir. Yedek olarak depolanabilirler ve "
+"aygıtlar arası veri aktarımında kullanılabilirler."
 
 msgid "menu.export"
-msgstr "Kullanıcı verisini dışa aktar"
+msgstr "Dışa aktar"
 
 msgid "menu.import"
-msgstr "Kullanıcı verisini içe aktar…"
+msgstr "İçe aktar…"
 
 # Used in the desktop Help menu.
 msgid "menu.aboutapp"
@@ -2413,7 +2391,7 @@ msgid "dlg.spartan.upload"
 msgstr "Düzenleyiciyi aç…"
 
 msgid "heading.upload.spartan"
-msgstr "Spartan ile gönder"
+msgstr "Spartan ile karşıya yükle"
 
 msgid "prefs.markdown.viewsource"
 msgstr "Markdown kaynağını görüntüle:"
@@ -2428,3 +2406,340 @@ msgstr ""
 
 msgid "prefs.tui.simple"
 msgstr "Yalın karakterler:"
+
+msgid "prefs.evensplit"
+msgstr "Sekmeleri eşitçe böl:"
+
+msgid "error.proxyexpired.msg"
+msgstr ""
+"Bağlantı iptal edildi; çünkü vekil sunucunun TLS sertifikasının süresi "
+"dolmuş."
+
+msgid "error.proxyverify"
+msgstr "Güvenilmeyen vekil"
+
+msgid "error.proxyexpired"
+msgstr "Süresi dolmuş vekil sertifikası"
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"Bağlantı iptal edildi; çünkü vekil sunucunun TLS sertifikası, bizim "
+"güvendiğimizle eşleşmiyor.\n"
+"\n"
+"Vekil sunucunun sertifikası, \"Sayfa bilgisi\" bölümünde güvenilir olarak "
+"imlenebilir."
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "boşlukla ayrılmış terimler"
+
+msgid "menu.folder.opentab"
+msgstr "Yeni sekmelerde aç"
+
+msgid "bookmark.folder.delete"
+msgstr "Yer imleri klasörünü sil"
+
+msgid "dlg.bookmark.notes"
+msgstr "Notlar:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "serbest biçimli özel notlar"
+
+msgid "dlg.bookmark.identity"
+msgstr "Sabitlenmiş kimlik:"
+
+msgid "menu.identity.newdomain"
+msgstr "Alan adı için yeni kimlik…"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Geçerli dizin"
+
+msgid "ident.unset"
+msgstr "Sabitlemeyi kaldır"
+
+msgid "heading.prefs.user"
+msgstr "Kullanıcı verisi"
+
+msgid "menu.email"
+msgstr "E-posta gönder"
+
+msgid "menu.movetab.left"
+msgstr "Sekmeyi sola taşı"
+
+msgid "menu.movetab.right"
+msgstr "Sekmeyi sağa taşı"
+
+msgid "heading.prefs.appearance"
+msgstr "Görünüş"
+
+msgid "heading.prefs.layout"
+msgstr "Sayfa yerleşimi"
+
+msgid "heading.prefs.content"
+msgstr "İçerik"
+
+msgid "prefs.swipe.edge"
+msgstr "Kenardan kaydırma:"
+
+msgid "prefs.swipe.page"
+msgstr "Sayfada kaydırma:"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Gopher menü biçemini otomatik algıla:"
+
+msgid "menu.title.window"
+msgstr "Pencere"
+
+msgid "menu.window.min"
+msgstr "Küçült"
+
+msgid "menu.window.max"
+msgstr "Büyüt"
+
+msgid "menu.window.full"
+msgstr "Tam ekranı aç/kapat"
+
+msgid "menu.tab.next"
+msgstr "Sonraki sekmeyi göster"
+
+msgid "menu.tab.prev"
+msgstr "Önceki sekmeyi göster"
+
+msgid "menu.movetab.split"
+msgstr "Sekmeyi diğer yana taşı"
+
+msgid "menu.movetab.newwindow"
+msgstr "Sekmeyi yeni pencereye taşı"
+
+msgid "dlg.translate.pre"
+msgstr "Önceden biçimlendirilmişi atla:"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Otomatik algıla"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Azerbaycanca"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Katalanca"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Çekçe"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Danca"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Hollandaca"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Esperanto"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Fince"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Yunanca"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "İbranice"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Macarca"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Endonezce"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "İrlandaca"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Korece"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Farsça"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Lehçe"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Slovakça"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "İsveççe"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Türkçe"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Ukraynaca"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Şema değiştiren yeniden yönlendirmeler:"
+
+msgid "menu.foldall"
+msgstr "Tümünü katla"
+
+msgid "menu.unfoldall"
+msgstr "Tümünü aç"
+
+msgid "menu.userdata"
+msgstr "Kullanıcı verisi"
+
+msgid "menu.search"
+msgstr "Ara"
+
+msgid "menu.paste.snippet"
+msgstr "Kırpıntıyı yapıştır"
+
+msgid "menu.tools"
+msgstr "Araçlar"
+
+msgid "menu.page.visitlinks"
+msgstr "Tüm bağlantıları ziyaret edilmiş olarak imle"
+
+msgid "menu.snippet.add"
+msgstr "Seçimden kırpıntı…"
+
+msgid "menu.bookmark.addtofolder"
+msgstr "Klasöre yer imi ekle:"
+
+msgid "menu.input.setprompt"
+msgstr "Bu URL'nin girdi gerektirdiğini varsay"
+
+msgid "menu.input.unsetprompt"
+msgstr "Bu URL'nin girdi gerektirdiğini varsayma"
+
+msgid "menu.input.clear"
+msgstr "Geçmişi temizle"
+
+msgid "menu.input.restore"
+msgstr "Öncekini geri yükle:"
+
+msgid "dlg.import.intofolder"
+msgstr "Klasöre ekle:"
+
+msgid "dlg.import.headings"
+msgstr "Başlıklardan alt klasörler:"
+
+msgid "dlg.import.notfound"
+msgstr "Bu sayfada bağlantı yok."
+
+msgid "link.searchurl"
+msgstr "Arama URL'si olarak kullan"
+
+msgid "link.snippet"
+msgstr "Bağlantıdan kırpıntı…"
+
+msgid "import.userdata.snippets"
+msgstr "Kırpıntılar:"
+
+# Interpret as "Results from snippets..."
+msgid "heading.lookup.snippets"
+msgstr "KIRPINTILAR"
+
+msgid "prefs.collapsepre"
+msgstr "Önden biçimlendirilmiş daralt:"
+
+msgid "collapse.never"
+msgstr "Asla"
+
+msgid "heading.prefs.snip"
+msgstr "Kırpıntılar"
+
+msgid "collapse.notbydefault"
+msgstr "Elle"
+
+msgid "collapse.bydefault"
+msgstr "Sayfa yüklenirken"
+
+msgid "collapse.always"
+msgstr "Her zaman"
+
+# Operating system's UI accent color.
+msgid "prefs.accent.system"
+msgstr "Sistem"
+
+msgid "prefs.feedinterval"
+msgstr "Besleme yenileme aralığı:"
+
+msgid "prefs.feedinterval.manual"
+msgstr "Elle"
+
+msgid "prefs.editor.highlight"
+msgstr "Sözdizim vurgulaması:"
+
+msgid "error.showutf8"
+msgstr "UTF-8 kendiliğinden algılandı"
+
+msgid "error.showutf8.msg"
+msgstr ""
+"Bu sayfadaki ortam türü tanınamadı; ancak metin geçerli UTF-8 ile kodlanan "
+"metin."
+
+msgid "sniped.new"
+msgstr "Yeni kırpıntı"
+
+msgid "menu.snip.edit"
+msgstr "Düzenle…"
+
+msgid "menu.snip.clipboard"
+msgstr "Panoya kopyala"
+
+msgid "menu.snip.delete"
+msgstr "Sil"
+
+msgid "sniped.help"
+msgstr ""
+"Bir ünlemle başlayan kırpıntılar (örn. \"!w\"), sorgu kısayolu olarak URL "
+"alanlarında kullanılabilirler."
+
+msgid "menu.snip.prefs"
+msgstr "Yapılandır…"
+
+msgid "snip.name"
+msgstr "Ad:"
+
+msgid "snip.content"
+msgstr "İçerik:"
+
+msgid "snip.accept"
+msgstr "Kırpıntıyı kaydet"
+
+msgid "menu.bookmark.movetofolder"
+msgstr "Klasöre yer imini taşı:"
+
+# A "snippet query" is where the user types (for instance) "!w orange" in the navbar URL field to look up the word "orange" with the previously configured snippet "!w" that might expand into a Wikipedia search URL.
+msgid "keys.bang"
+msgstr "Bir kırpıntı sorgusu ekle"
+
+msgid "heading.snip.new"
+msgstr "Yeni kırpıntı"
+
+msgid "heading.snip.edit"
+msgstr "Kırpıntıyı düzenle"
+
+msgid "heading.upload.dest"
+msgstr "Adres"
+
+msgid "prefs.doctheme.name.vibrantlight"
+msgstr "Canlı ışık"

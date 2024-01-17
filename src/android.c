@@ -22,6 +22,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #include "android.h"
 #include "app.h"
+#include "export.h"
 #include "resources.h"
 #include "ui/command.h"
 #include "ui/metrics.h"
@@ -29,12 +30,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include "ui/window.h"
 
 #include <the_Foundation/archive.h>
+#include <the_Foundation/buffer.h>
 #include <the_Foundation/commandline.h>
 #include <the_Foundation/file.h>
 #include <the_Foundation/fileinfo.h>
 #include <the_Foundation/path.h>
 #include <jni.h>
 #include <SDL.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <android/log.h>
 
 JNIEXPORT void JNICALL Java_fi_skyjake_lagrange_LagrangeActivity_postAppCommand(
         JNIEnv* env, jclass jcls, jstring command)
@@ -59,7 +65,43 @@ static void clearCachedFiles_(void) {
     }
 }
 
+static int pfd_[2];
+static pthread_t thr_;
+static const char *tag_ = "fi.skyjake.lagrange";
+
+static void *loggerThreadFunc_(void *p) {
+    ssize_t rdsz;
+    char buf[512];
+    while((rdsz = read(pfd_[0], buf, sizeof(buf) - 1)) > 0) {
+        if(buf[rdsz - 1] == '\n') {
+            --rdsz;
+        }
+        buf[rdsz] = 0;  /* add null-terminator */
+        __android_log_write(ANDROID_LOG_DEBUG, tag_, buf);
+    }
+    return 0;
+}
+
+static int startLogOutputThread_(void) {
+    /* make stdout line-buffered and stderr unbuffered */
+    setvbuf(stdout, 0, _IOLBF, 0);
+    setvbuf(stderr, 0, _IONBF, 0);
+    /* create the pipe and redirect stdout and stderr */
+    pipe(pfd_);
+    dup2(pfd_[1], 1);
+    dup2(pfd_[1], 2);
+    /* spawn the logging thread */
+    if (pthread_create(&thr_, 0, loggerThreadFunc_, 0) == -1) {
+        return -1;
+    }
+    pthread_detach(thr_);
+    return 0;
+}
+
 void setupApplication_Android(void) {
+#if !defined (NDEBUG)
+    startLogOutputThread_();
+#endif
     /* Cache the monospace font into a file where it can be loaded directly by the Java code. */
     const char *path = monospaceFontPath_();
     const iBlock *iosevka = dataCStr_Archive(archive_Resources(), "fonts/IosevkaTerm-Extended.ttf");
@@ -83,8 +125,8 @@ void pickFile_Android(const char *cmd) {
     javaCommand_Android("file.open cmd:%s", cmd);
 }
 
-void exportDownloadedFile_Android(const iString *localPath) {
-    javaCommand_Android("file.save path:%s", cstr_String(localPath));
+void exportDownloadedFile_Android(const iString *localPath, const iString *mime) {
+    javaCommand_Android("file.save mime:%s path:%s", cstr_String(mime), cstr_String(localPath));
 }
 
 float displayDensity_Android(void) {
@@ -117,6 +159,7 @@ void javaCommand_Android(const char *format, ...) {
 
 static int               inputIdGen_; /* unique IDs for SystemTextInputs */
 static iSystemTextInput *currentInput_;
+static iRangei           lastSelectionRange_;
 
 struct Impl_SystemTextInput {
     int id;
@@ -198,6 +241,14 @@ void setText_SystemTextInput(iSystemTextInput *d, const iString *text, iBool all
     }
 }
 
+void setSelection_SystemTextInput(iSystemTextInput *d, iRangei selection) {
+    javaCommand_Android("input.select id:%d start:%d end:%d", d->id, selection.start, selection.end);
+}
+
+iRangei lastInputSelectionRange_Android(void) {
+    return lastSelectionRange_;
+}
+
 void setFont_SystemTextInput(iSystemTextInput *d, int fontId) {
     d->font = fontId;
     const char *ttfPath = "";
@@ -225,6 +276,28 @@ int preferredHeight_SystemTextInput(const iSystemTextInput *d) {
     return d->numLines * lineHeight_Text(d->font);
 }
 
+/*----------------------------------------------------------------------------------------------*/
+
+static int userBackupTimer_;
+
+static uint32_t backupUserData_Android_(uint32_t interval, void *data) {
+    userBackupTimer_ = 0;
+    iUnused(interval, data);
+    /* This runs in a background thread. We don't want to block the UI thread for saving. */
+    iExport *backup = new_Export();
+    generatePartial_Export(backup, bookmarks_ExportFlag | identitiesAndTrust_ExportFlag |
+                           snippets_ExportFlag);
+    iBuffer *buf = new_Buffer();
+    openEmpty_Buffer(buf);
+    serialize_Archive(archive_Export(backup), stream_Buffer(buf));
+    delete_Export(backup);
+    iString *enc = base64Encode_Block(data_Buffer(buf));
+    iRelease(buf);
+    javaCommand_Android("backup.save data:%s", cstr_String(enc));
+    delete_String(enc);
+    return 0;
+}
+
 iBool handleCommand_Android(const char *cmd) {
     if (equal_Command(cmd, "android.input.changed")) {
         const int id = argLabel_Command(cmd, "id");
@@ -249,6 +322,11 @@ iBool handleCommand_Android(const char *cmd) {
         if (wasChanged && currentInput_->textChangedFunc) {
             currentInput_->textChangedFunc(currentInput_, currentInput_->textChangedContext);
         }
+        return iTrue;
+    }
+    else if (equal_Command(cmd, "android.input.selrange")) {
+        lastSelectionRange_ = (iRangei){ argLabel_Command(cmd, "start"),
+                                         argLabel_Command(cmd, "end") };
         return iTrue;
     }
     else if (equal_Command(cmd, "android.input.enter")) {
@@ -281,6 +359,31 @@ iBool handleCommand_Android(const char *cmd) {
         if (mw) {
             setKeyboardHeight_MainWindow(mw, arg_Command(cmd));
         }
+        return iTrue;
+    }
+    else if (equal_Command(cmd, "bookmarks.changed") ||
+             equal_Command(cmd, "idents.changed") ||
+             equal_Command(cmd, "backup.now")) {
+        SDL_RemoveTimer(userBackupTimer_);
+        userBackupTimer_ = SDL_AddTimer(1000, backupUserData_Android_, NULL);
+        return iFalse;
+    }
+    else if (equal_Command(cmd, "backup.found")) {
+        iString *data = suffix_Command(cmd, "data");
+        iBlock *decoded = base64Decode_Block(utf8_String(data));
+        delete_String(data);
+        iArchive *archive = new_Archive();
+        if (openData_Archive(archive, decoded)) {
+            iExport *backup = new_Export();
+            if (load_Export(backup, archive)) {
+                import_Export(backup, ifMissing_ImportMethod, all_ImportMethod,
+                              none_ImportMethod, none_ImportMethod, none_ImportMethod,
+                              all_ImportMethod);
+            }
+            delete_Export(backup);
+        }
+        iRelease(archive);
+        delete_Block(decoded);
         return iTrue;
     }
     return iFalse;

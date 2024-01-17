@@ -54,8 +54,8 @@ void init_Url(iUrl *d, const iString *text) {
     static iRegExp *authPattern_;
     if (!urlPattern_) {
         urlPattern_  = new_RegExp("^(([-.+a-z0-9]+):)?(//([^/?#]*))?"
-                                 "([^?#]*)(\\?([^#]*))?(#(.*))?",
-                                 caseInsensitive_RegExpOption);
+                                  "([^?#]*)(\\?([^#]*))?(#(.*))?",
+                                  caseInsensitive_RegExpOption);
         authPattern_ = new_RegExp("(([^@]+)@)?(([^:\\[\\]]+)"
                                   "|(\\[[0-9a-f:]+\\]))(:([0-9]+))?",
                                   caseInsensitive_RegExpOption);
@@ -232,6 +232,18 @@ iRangecc urlHost_String(const iString *d) {
     return url.host;
 }
 
+iRangecc urlDirectory_String(const iString *d) {
+    iUrl parts;
+    init_Url(&parts, d);
+    if (size_Range(&parts.path) > 0 && !endsWith_Rangecc(parts.path, "/")) {
+        /* Remove the last path segment. */
+        while (parts.path.end > parts.path.start && parts.path.end[-1] != '/') {
+            parts.path.end--;
+        }
+    }
+    return parts.path;
+}
+
 uint16_t urlPort_String(const iString *d) {
     iUrl url;
     init_Url(&url, d);
@@ -244,11 +256,13 @@ iRangecc urlUser_String(const iString *d) {
         userPats_[0] = new_RegExp("~([^/?]+)", 0);
         userPats_[1] = new_RegExp("/users/([^/?]+)", caseInsensitive_RegExpOption);
     }
+    iUrl url;
+    init_Url(&url, d);
     iRegExpMatch m;
     init_RegExpMatch(&m);
     iRangecc found = iNullRange;
     iForIndices(i, userPats_) {
-        if (matchString_RegExp(userPats_[i], d, &m)) {
+        if (matchRange_RegExp(userPats_[i], url.path, &m)) {
             found = capturedRange_RegExpMatch(&m, 1);
         }
     }
@@ -372,7 +386,7 @@ void urlEncodeQuery_String(iString *d) {
     initRange_String(&query, url.query);
     iString *encQuery = urlEncode_String(&query); /* fully encoded */
     appendCStr_String(&encoded, "?");
-    append_String(&encoded, encQuery);    
+    append_String(&encoded, encQuery);
     delete_String(encQuery);
     deinit_String(&query);
     appendRange_String(&encoded, (iRangecc){ url.query.end, constEnd_String(d) });
@@ -389,7 +403,7 @@ iBool isKnownScheme_Rangecc(iRangecc scheme) {
         if (equalCase_Rangecc(scheme, uriSchemes[i])) {
             return iTrue;
         }
-    }    
+    }
     return iFalse;
 }
 
@@ -415,7 +429,7 @@ const iString *absoluteUrl_String(const iString *d, const iString *urlMaybeRelat
         return urlMaybeRelative;
     }
     const iBool isRelative = !isDef_(rel.host);
-    iRangecc scheme = range_CStr("gemini");
+    iRangecc scheme = isDef_(orig.scheme) ? orig.scheme : range_CStr("gemini");
     if (isDef_(rel.scheme)) {
         scheme = rel.scheme;
     }
@@ -483,6 +497,9 @@ const iString *absoluteUrl_String(const iString *d, const iString *urlMaybeRelat
 }
 
 iBool isLikelyUrl_String(const iString *d) {
+    if (endsWith_String(d, ":")) {
+        return iFalse;
+    }
     /* Guess whether a human intends the string to be an URL. This is supposed to be fuzzy;
        not completely per-spec: a) begins with a scheme; b) has something that looks like a
        hostname */
@@ -593,68 +610,27 @@ const iString *findContainerArchive_Path(const iString *path) {
     return NULL;
 }
 
+const char *mimetypes[] = {
+    ".gmi", "text/gemini",
+    ".gemini", "text/gemini",
+    ".pem", "application/x-pem-file",
+    ".gpub", "application/gpub+zip",
+    ".wav", "audio/wave", /* overrides mimetypes.i entry */
+    ".fontpack", mimeType_FontPack,
+    ".md", "text/markdown",
+    ".mdown", "text/markdown",
+    ".markdn", "text/markdown",
+    ".markdown", "text/markdown",
+#include "mimetypes.i"
+#include "plaintext.i"
+    NULL, NULL
+};
+
 const char *mediaTypeFromFileExtension_String(const iString *d) {
-    if (endsWithCase_String(d, ".gmi") || endsWithCase_String(d, ".gemini")) {
-        return "text/gemini; charset=utf-8";
-    }
-    else if (endsWithCase_String(d, ".pem")) {
-        return "application/x-pem-file";
-    }
-    else if (endsWithCase_String(d, ".zip")) {
-        return "application/zip";
-    }
-    else if (endsWithCase_String(d, ".gpub")) {
-        return "application/gpub+zip";
-    }
-    else if (endsWithCase_String(d, ".fontpack")) {
-        return mimeType_FontPack;
-    }
-    else if (endsWithCase_String(d, ".ttf")) {
-        return "font/ttf";
-    }
-    else if (endsWithCase_String(d, ".xml")) {
-        return "text/xml";
-    }
-    else if (endsWithCase_String(d, ".png")) {
-        return "image/png";
-    }
-    else if (endsWithCase_String(d, ".webp")) {
-        return "image/webp";
-    }
-    else if (endsWithCase_String(d, ".jpg") || endsWithCase_String(d, ".jpeg")) {
-        return "image/jpeg";
-    }
-    else if (endsWithCase_String(d, ".gif")) {
-        return "image/gif";
-    }
-    else if (endsWithCase_String(d, ".wav")) {
-        return "audio/wave";
-    }
-    else if (endsWithCase_String(d, ".ogg")) {
-        return "audio/ogg";
-    }
-    else if (endsWithCase_String(d, ".mp3")) {
-        return "audio/mpeg";
-    }
-    else if (endsWithCase_String(d, ".mid")) {
-        return "audio/midi";
-    }
-    else if (endsWithCase_String(d, ".md") ||
-             endsWithCase_String(d, ".markdown") ||
-             endsWithCase_String(d, ".mdown") ||
-             endsWithCase_String(d, ".markdn")) {
-        return "text/markdown";
-    }
-    else if (endsWithCase_String(d, ".txt") ||
-             endsWithCase_String(d, ".ini") ||
-             endsWithCase_String(d, ".md") ||
-             endsWithCase_String(d, ".c") ||
-             endsWithCase_String(d, ".h") ||
-             endsWithCase_String(d, ".cc") ||
-             endsWithCase_String(d, ".hh") ||
-             endsWithCase_String(d, ".cpp") ||
-             endsWithCase_String(d, ".hpp")) {
-        return "text/plain";
+    for (int i = 0; mimetypes[i]; i += 2) {
+        if (endsWithCase_String(d, mimetypes[i])) {
+            return mimetypes[i + 1];
+        }
     }
     return "application/octet-stream";
 }
@@ -689,7 +665,7 @@ static void replaceAllChars_String_(iString *d, char c, const char *replacement)
         remove_Block(&d->chars, pos, 1);
         insertData_Block(&d->chars, pos, replacement, repLen);
         pos += repLen;
-    }    
+    }
 }
 
 void urlEncodeSpaces_String(iString *d) {
@@ -751,7 +727,7 @@ const iString *canonicalUrl_String(const iString *d) {
             canon = copy_String(d);
         }
         urlEncodeSpaces_String(canon);
-    }    
+    }
     return canon ? collect_String(canon) : d;
 }
 
@@ -868,6 +844,14 @@ static const struct {
       { 0x1f645, /* no good */
         "${error.certverify}",
         "${error.certverify.msg}" } },
+    { proxyCertificateExpired_GmStatusCode,
+      { 0x1f4C6, /* calendar */
+        "${error.proxyexpired}",
+        "${error.proxyexpired.msg}" } },
+    { proxyCertificateNotVerified_GmStatusCode,
+      { 0x1f645, /* no good */
+        "${error.proxyverify}",
+        "${error.proxyverify.msg}" } },
     { ansiEscapes_GmStatusCode,
       { 0x1f5b3, /* old computer */
         "${error.ansi}",
@@ -876,6 +860,10 @@ static const struct {
       { 0x1f520, /* ABCD */
         "${error.glyphs}",
         "${error.glyphs.msg}" } },
+    { unsupportedMimeTypeShownAsUtf8_GmStatusCode,
+      { 0x1f524, /* abc */
+        "${error.showutf8}",
+        "${error.showutf8.msg}" } },
     { temporaryFailure_GmStatusCode,
       { 0x1f50c, /* electric plug */
         "${error.temporary}",

@@ -37,6 +37,7 @@ iBlock blobLagrange_Resources;
 iBlock blobLicense_Resources;
 iBlock blobVersion_0_13_Resources;
 iBlock blobVersion_1_5_Resources;
+iBlock blobVersion_1_10_Resources;
 iBlock blobVersion_Resources;
 iBlock blobArghelp_Resources;
 iBlock blobCs_Resources;
@@ -45,6 +46,7 @@ iBlock blobEn_Resources;
 iBlock blobEo_Resources;
 iBlock blobEs_Resources;
 iBlock blobEs_MX_Resources;
+iBlock blobEu_Resources;
 iBlock blobFi_Resources;
 iBlock blobFr_Resources;
 iBlock blobGl_Resources;
@@ -53,6 +55,7 @@ iBlock blobIa_Resources;
 iBlock blobIe_Resources;
 iBlock blobIsv_Resources;
 iBlock blobIt_Resources;
+iBlock blobJa_Resources;
 iBlock blobNl_Resources;
 iBlock blobPl_Resources;
 iBlock blobRu_Resources;
@@ -63,6 +66,7 @@ iBlock blobTr_Resources;
 iBlock blobUk_Resources;
 iBlock blobZh_Hans_Resources;
 iBlock blobZh_Hant_Resources;
+iBlock imageLogo_Resources;
 iBlock imageShadow_Resources;
 iBlock imageLagrange64_Resources;
 iBlock blobMacosSystemFontsIni_Resources;
@@ -85,6 +89,7 @@ static struct {
     { &blobHelp_Resources, "about/help.gmi" },
     { &blobVersion_0_13_Resources, "about/version-0.13.gmi" },
     { &blobVersion_1_5_Resources, "about/version-1.5.gmi" },
+    { &blobVersion_1_10_Resources, "about/version-1.10.gmi" },
     { &blobVersion_Resources, "about/version.gmi" },
 #endif
     { &blobArghelp_Resources, "arg-help.txt" },
@@ -94,6 +99,7 @@ static struct {
     { &blobEo_Resources, "lang/eo.bin" },
     { &blobEs_Resources, "lang/es.bin" },
     { &blobEs_MX_Resources, "lang/es_MX.bin" },
+    { &blobEu_Resources, "lang/eu.bin" },
     { &blobFi_Resources, "lang/fi.bin" },
     { &blobFr_Resources, "lang/fr.bin" },
     { &blobGl_Resources, "lang/gl.bin" },
@@ -102,6 +108,7 @@ static struct {
     { &blobIe_Resources, "lang/ie.bin" },
     { &blobIsv_Resources, "lang/isv.bin" },
     { &blobIt_Resources, "lang/it.bin" },
+    { &blobJa_Resources, "lang/ja.bin" },
     { &blobNl_Resources, "lang/nl.bin" },
     { &blobPl_Resources, "lang/pl.bin" },
     { &blobRu_Resources, "lang/ru.bin" },
@@ -112,6 +119,7 @@ static struct {
     { &blobUk_Resources, "lang/uk.bin" },
     { &blobZh_Hans_Resources, "lang/zh_Hans.bin" },
     { &blobZh_Hant_Resources, "lang/zh_Hant.bin" },
+    { &imageLogo_Resources, "logo.png" },
     { &imageShadow_Resources, "shadow.png" },
     { &imageLagrange64_Resources, "lagrange-64.png" },
     { &blobMacosSystemFontsIni_Resources, "macos-system-fonts.ini" },

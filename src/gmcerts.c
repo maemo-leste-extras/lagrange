@@ -40,6 +40,7 @@ static const char *trustedFilename_GmCerts_   = "trusted.2.txt";
 static const char *identsDir_GmCerts_         = "idents";
 static const char *oldIdentsFilename_GmCerts_ = "idents.binary";
 static const char *identsFilename_GmCerts_    = "idents.lgr";
+static const char *tempIdentsFilename_GmCerts_= "idents.lgr.tmp";
 
 iDeclareClass(TrustEntry)
 
@@ -255,9 +256,9 @@ void serialize_GmCerts(const iGmCerts *d, iStream *trusted, iStream *identsMeta)
         iConstForEach(StringHash, i, d->trusted) {
             const iTrustEntry *trust = value_StringHashNode(i.value);
             format_String(&line,
-                          "%s %ld %s\n",
+                          "%s %llu %s\n",
                           cstr_String(key_StringHashConstIterator(&i)),
-                          integralSeconds_Time(&trust->validUntil),
+                          (unsigned long long) integralSeconds_Time(&trust->validUntil),
                           cstrCollect_String(hexEncode_Block(&trust->fingerprint)));
             write_Stream(trusted, &line.chars);
         }
@@ -277,11 +278,15 @@ void serialize_GmCerts(const iGmCerts *d, iStream *trusted, iStream *identsMeta)
 }
 
 void saveIdentities_GmCerts(const iGmCerts *d) {
-    iFile *f = new_File(collect_String(concatCStr_Path(&d->saveDir, identsFilename_GmCerts_)));
+    const iString *tempPath = collect_String(
+            concatCStr_Path(&d->saveDir, tempIdentsFilename_GmCerts_));
+    iFile *f = new_File(tempPath);
     if (open_File(f, writeOnly_FileMode)) {
         serialize_GmCerts(d, NULL, stream_File(f));
     }
     iRelease(f);
+    commitFile_App(cstrCollect_String(concatCStr_Path(&d->saveDir, identsFilename_GmCerts_)),
+                   cstr_String(tempPath));
 }
 
 static void save_GmCerts_(const iGmCerts *d) {
@@ -400,6 +405,32 @@ iGmIdentity *findIdentity_GmCerts(iGmCerts *d, const iBlock *fingerprint) {
     return NULL;
 }
 
+iGmIdentity *findIdentityFuzzy_GmCerts(iGmCerts *d, const iString *fuzzy) {
+    if (isEmpty_String(fuzzy)) {
+        return NULL;
+    }
+    iGmIdentity *found = NULL;
+    iForEach(PtrArray, i, &d->idents) {
+        iBeginCollect();
+        iGmIdentity *ident = i.ptr;
+        if (indexOfCStrSc_String(collect_String(hexEncode_Block(&ident->fingerprint)),
+                                 cstr_String(fuzzy), &iCaseInsensitive) != iInvalidPos) {
+            found = ident;
+        }
+        if (!found) {
+            const iString *name = name_GmIdentity(ident);
+            if (indexOfCStrSc_String(name, cstr_String(fuzzy), &iCaseInsensitive) != iInvalidPos) {
+                found = ident;
+            }
+        }
+        iEndCollect();
+        if (found) {
+            break;
+        }
+    }    
+    return found;
+}
+
 void deserializeTrusted_GmCerts(iGmCerts *d, iStream *ins, enum iImportMethod method) {
     iRegExp *      pattern = new_RegExp("([^\\s]+) ([0-9]+) ([a-z0-9]+)", 0);
     const iRangecc src     = range_Block(collect_Block(readAll_Stream(ins)));
@@ -413,8 +444,9 @@ void deserializeTrusted_GmCerts(iGmCerts *d, iStream *ins, enum iImportMethod me
             const iRangecc key   = capturedRange_RegExpMatch(&m, 1);
             const iRangecc until = capturedRange_RegExpMatch(&m, 2);
             const iRangecc fp    = capturedRange_RegExpMatch(&m, 3);
-            time_t sec;
-            sscanf(until.start, "%ld", &sec);
+            long long lsec;
+            sscanf(until.start, "%lld", &lsec);
+            time_t sec = lsec;
             iDate untilDate;
             initSinceEpoch_Date(&untilDate, sec);
             /* TODO: import method? */

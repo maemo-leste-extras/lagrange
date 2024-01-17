@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"POT-Creation-Date: 2021-03-23 09:09+0000\n"
-"PO-Revision-Date: 2022-05-24 11:55+0000\n"
+"POT-Creation-Date: 2023-03-09 05:32+0000\n"
+"PO-Revision-Date: 2023-10-21 04:38+0000\n"
 "Last-Translator: Weblate Admin <jaakko.keranen@iki.fi>\n"
 "Language-Team: Finnish <http://weblate.skyjake.fi/projects/lagrange/ui/fi/>\n"
 "Language: fi\n"
@@ -28,20 +28,11 @@ msgstr "SDL 2:n, OpenSSL:n ja ☕️:n voimalla"
 msgid "cancel"
 msgstr "Peruuta"
 
-msgid "dismiss"
-msgstr "Takaisin"
-
 msgid "dlg.message.ok"
 msgstr "Jatketaan"
 
 msgid "dlg.default"
 msgstr " OK "
-
-msgid "toggle.yes"
-msgstr "Kyllä"
-
-msgid "toggle.no"
-msgstr "Ei"
 
 msgid "menu.title.file"
 msgstr "Tiedosto"
@@ -93,9 +84,6 @@ msgstr "Tallenna tiedostoon"
 
 msgid "menu.save.downloads"
 msgstr "Tallenna latauskansioon"
-
-msgid "menu.copy.source"
-msgstr "Kopioi lähdeteksti"
 
 msgid "menu.sidebar"
 msgstr "Näytä/piilota sivupaneeli"
@@ -282,9 +270,6 @@ msgstr "Mt"
 msgid "kb"
 msgstr "kt"
 
-msgid "bytes"
-msgstr "tavua"
-
 msgid "page.timestamp"
 msgstr ""
 "Vastaanotettu %H:%M\n"
@@ -298,9 +283,6 @@ msgstr "%b %d, %Y"
 
 msgid "feeds.today"
 msgstr "Tänään"
-
-msgid "feeds.entry.newtab"
-msgstr "Avaa artikkeli uuteen välilehteen"
 
 msgid "feeds.entry.markread"
 msgstr "Merkitse luetuksi"
@@ -408,9 +390,6 @@ msgstr "Lopeta käyttö tällä sivulla"
 
 msgid "ident.stopuse.all"
 msgstr "Lopeta käyttö kaikkialla"
-
-msgid "ident.showuse"
-msgstr "Näytä käyttö"
 
 msgid "heading.ident.use"
 msgstr "Identiteetin käyttö"
@@ -573,9 +552,6 @@ msgstr ""
 
 msgid "dlg.openlink"
 msgstr "Avaa linkki"
-
-msgid "heading.certwarn"
-msgstr "SERTIFIKAATTIVAROITUS"
 
 msgid "dlg.certwarn.mayberenewed"
 msgid_plural "dlg.certwarn.mayberenewed.n"
@@ -796,7 +772,7 @@ msgid "heading.prefs.widelayout"
 msgstr "Leveä ulkoasu"
 
 msgid "heading.prefs.style"
-msgstr "Tyyli"
+msgstr "Sivun tyyli"
 
 msgid "heading.prefs.userinterface"
 msgstr "Käyttöliittymä"
@@ -817,7 +793,7 @@ msgid "prefs.smoothscroll"
 msgstr "Pehmeä vieritys:"
 
 msgid "prefs.imageloadscroll"
-msgstr "Lataa kuva vieritettäessä:"
+msgstr "Lataa seuraava kuva vieritettäessä:"
 
 msgid "prefs.hidetoolbarscroll"
 msgstr "Piilota alapalkki vieritettäessä:"
@@ -826,7 +802,7 @@ msgid "prefs.ostheme"
 msgstr "Käytä järjestelmän teemaa:"
 
 msgid "prefs.theme"
-msgstr "Teema:"
+msgstr "Käyttöliittymän teema:"
 
 msgid "prefs.theme.black"
 msgstr "Musta"
@@ -856,10 +832,10 @@ msgid "prefs.customframe"
 msgstr "Mukautetut reunukset:"
 
 msgid "prefs.retainwindow"
-msgstr "Säilytä sijainti:"
+msgstr "Säilytä ikkunan sijainti:"
 
 msgid "prefs.sideicon"
-msgstr "Kapselin ikoni:"
+msgstr "Kapselin ikoni vasemmalla:"
 
 msgid "prefs.doctheme.dark"
 msgstr "Tumma teema:"
@@ -890,9 +866,6 @@ msgstr "Korkea kontrasti"
 
 msgid "prefs.saturation"
 msgstr "Saturaatio:"
-
-msgid "prefs.headingfont"
-msgstr "Otsakkeet:"
 
 msgid "prefs.font"
 msgstr "Leipäteksti:"
@@ -928,7 +901,7 @@ msgid "prefs.biglede"
 msgstr "Suuri 1. kappale:"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Rivitä selväteksti:"
+msgstr "Rivitä pitkä selväteksti:"
 
 msgid "prefs.decodeurls"
 msgstr "Pura URL-koodaus:"
@@ -1049,8 +1022,8 @@ msgstr "Tuo identiteetti"
 
 msgid "dlg.certimport.help"
 msgstr ""
-"Liimaa PEM-koodattu sertifikaatti ja/tai salainen avain,\n"
-"tai pudota .crt/.key-tiedosto ikkunaan."
+"Liimaa PEM-koodattu sertifikaatti ja/tai salainen avain, tai pudota .crt/."
+"key-tiedosto ikkunaan."
 
 msgid "prefs.uilang"
 msgstr "Kieli:"
@@ -1081,9 +1054,6 @@ msgstr "Ei sertifikaattia"
 
 msgid "dlg.certimport.nokey"
 msgstr "Ei salaista avainta"
-
-msgid "lang.fi"
-msgstr "Suomi"
 
 msgid "error.openfile"
 msgstr "Tiedoston avaus epäonnistui"
@@ -1208,7 +1178,7 @@ msgstr "Tuntematon tilakoodi"
 msgid "error.badstatus.msg"
 msgstr ""
 "Palvelin vastasi tilakoodilla, jota ei ole määritelty Gemini-protokollan "
-"spesifikaatiossa. Ehkä palvelin on tulevaisuudesta? Tai vain epäkunnossa."
+"spesifikaatiossa. Palvelin voi olla epäkunnossa."
 
 msgid "error.unsupported.media.msg"
 msgstr "Vastaanotettua sisältöä ei voi toistaa tällä sovelluksella."
@@ -1249,9 +1219,6 @@ msgid "error.cert.auth.msg"
 msgstr ""
 "Käytössä oleva asiakassertifikaatti on kelvollinen, mutta sille ei ole "
 "myönnetty lupaa pyydettyyn resurssiin."
-
-msgid "lang.zh.hans"
-msgstr "Kiina"
 
 msgid "keys.subscribe"
 msgstr "Tilaa sivu syötteenä"
@@ -1305,18 +1272,6 @@ msgstr[1] "%d tuntia"
 
 msgid "doc.pre.nocaption"
 msgstr "Esimuotoiltua tekstiä ilman kuvausta"
-
-msgid "prefs.collapsepreonload"
-msgstr "Piilota esimuotoillut:"
-
-msgid "lang.zh.hant"
-msgstr "Kiina (perinteisin merkein)"
-
-msgid "lang.ie"
-msgstr "Interlingue"
-
-msgid "lang.sr"
-msgstr "Serbia"
 
 # Used in about:feeds.
 msgid "feeds.list.title"
@@ -1443,9 +1398,6 @@ msgstr "Vaaka"
 msgid "menu.split.vertical"
 msgstr "Pysty"
 
-msgid "lang.ia"
-msgstr "Interlingua"
-
 msgid "gempub.cover.untitled"
 msgstr "Nimetön kirja"
 
@@ -1483,7 +1435,7 @@ msgid "menu.split.swap"
 msgstr "Vaihda keskenään"
 
 msgid "menu.view.split"
-msgstr "Jaa kahtia…"
+msgstr "Jaa kahtia"
 
 msgid "link.side"
 msgstr "Avaa linkki viereen"
@@ -1506,9 +1458,6 @@ msgstr "Näytä arkiston sisältö"
 
 msgid "bookmark.tag.linksplit"
 msgstr "Linkit aukeavat viereen"
-
-msgid "lang.tok"
-msgstr "Toki Pona"
 
 msgid "heading.newident.missing"
 msgstr "Puuttuva tieto"
@@ -1547,7 +1496,7 @@ msgstr "Tämä hakemisto on tyhjä."
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Avaa arkistojen index-sivut:"
+msgstr "Avaa ZIP-arkistojen index.gmi-sivut:"
 
 #, c-format
 msgid "dir.summary"
@@ -1572,9 +1521,6 @@ msgstr "Aseta näkymän jakaus"
 msgid "keys.split.next"
 msgstr "Aktivoi seuraava jakaus"
 
-msgid "lang.pl"
-msgstr "Puola"
-
 msgid "close"
 msgstr "Sulje"
 
@@ -1593,12 +1539,6 @@ msgstr "Käytössä:"
 msgid "dlg.newident.more"
 msgstr "Lisää…"
 
-msgid "prefs.userfont"
-msgstr "Kuvakefontti:"
-
-msgid "keys.split.menu.vert21"
-msgstr "Jaetun näkymän valikko: pysty 2:1"
-
 msgid "dlg.newident.scope.domain"
 msgstr "Tämä verkkotunnus"
 
@@ -1607,27 +1547,6 @@ msgstr "Tämä sivu"
 
 msgid "dlg.newident.scope.none"
 msgstr "Ei käytetä"
-
-msgid "keys.split.menu.merge"
-msgstr "Jaetun näkymän valikko: yhdistä välilehdet"
-
-msgid "keys.split.menu.swap"
-msgstr "Jaetun näkymän valikko: vaihda puolia"
-
-msgid "keys.split.menu.horiz"
-msgstr "Jaetun näkymän valikko: vaaka"
-
-msgid "keys.split.menu.horiz12"
-msgstr "Jaetun näkymän valikko: vaaka 1:2"
-
-msgid "keys.split.menu.horiz21"
-msgstr "Jaetun näkymän valikko: vaaka 2:1"
-
-msgid "keys.split.menu.vert"
-msgstr "Jaetun näkymän valikko: pysty"
-
-msgid "keys.split.menu.vert12"
-msgstr "Jaetun näkymän valikko: pysty 1:2"
 
 msgid "prefs.animate"
 msgstr "Animaatiot:"
@@ -1676,9 +1595,6 @@ msgstr "Näppäimistön nopeus:"
 
 msgid "prefs.scrollspeed.mouse"
 msgstr "Hiiren nopeus:"
-
-msgid "hint.prefs.userfont"
-msgstr "TrueType-fontin polku"
 
 msgid "prefs.linespacing"
 msgstr "Riviväli:"
@@ -1854,7 +1770,7 @@ msgid "dlg.upload.id.none"
 msgstr "Ei identiteettiä"
 
 msgid "dlg.upload.id.default"
-msgstr "Oletus"
+msgstr "Oletusidentiteetti"
 
 # used on mobile
 msgid "dlg.upload.file"
@@ -1865,7 +1781,7 @@ msgid "dlg.upload.pickfile"
 msgstr "Valitse tiedosto"
 
 msgid "heading.bookmark.tags"
-msgstr "Erikoisavainsanat"
+msgstr "Ominaisuudet"
 
 msgid "heading.addfolder"
 msgstr "Lisää kansio"
@@ -1894,21 +1810,6 @@ msgstr "Esimuotoillun tekstin väri"
 msgid "keys.bookmark.addfolder"
 msgstr "Lisää kirjanmerkkikansio"
 
-msgid "lang.sk"
-msgstr "Slovakki"
-
-msgid "lang.es.mx"
-msgstr "Espanja (Meksiko)"
-
-msgid "lang.eo"
-msgstr "Esperanto"
-
-msgid "lang.gl"
-msgstr "Galicia"
-
-msgid "lang.isv"
-msgstr "Interslaavi"
-
 msgid "menu.website"
 msgstr "Projektin verkkosivut…"
 
@@ -1919,10 +1820,10 @@ msgid "dlg.feed.ignoreweb"
 msgstr "Sivuuta HTTP(S)-linkit:"
 
 msgid "prefs.gemtext.ansi"
-msgstr "ANSI-koodit:"
+msgstr "ANSI-koodit gemtext:ssä:"
 
 msgid "prefs.font.smooth"
-msgstr "Pehmennys:"
+msgstr "Tekstin pehmennys:"
 
 msgid "error.ansi.msg"
 msgstr ""
@@ -1956,7 +1857,7 @@ msgstr ""
 "tulee sivuuttaa."
 
 msgid "prefs.font.ui"
-msgstr "Käyttöliittymä:"
+msgstr "Käyttöliittymän kirjasinlaji:"
 
 msgid "prefs.font.heading"
 msgstr "Otsikot:"
@@ -2017,7 +1918,7 @@ msgid "prefs.gemtext.ansi.fontstyle"
 msgstr "Kirjasinlaji"
 
 msgid "prefs.font.warnmissing"
-msgstr "Varoita puuttuvista:"
+msgstr "Varoita puuttuvista merkeistä:"
 
 msgid "error.ansi"
 msgstr "Pääte-emulointi"
@@ -2104,26 +2005,6 @@ msgstr "Poista pääte-emulaatiovaroitus sivustolla %s?"
 msgid "dlg.dismiss.warning"
 msgstr "Poista varoitus"
 
-msgid "dlg.fontpack.classic"
-msgstr "Lataa fonttipaketti (25 Mt)"
-
-msgid "heading.fontpack.classic"
-msgstr "Lataa fonttipaketti"
-
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"Aiemmin sovelluksen kanssa tulleet fontit ovat nyt saatavilla erillisenä "
-"latauksena. Haluaisitko ladata Classic set -fonttipaketin nyt?"
-
-msgid "lang.uk"
-msgstr "Ukraina"
-
-msgid "lang.hu"
-msgstr "Unkari"
-
-msgid "lang.cs"
-msgstr "Tšekki"
-
 msgid "sidebar.action.show"
 msgstr "Näytä:"
 
@@ -2138,7 +2019,7 @@ msgid "menu.update"
 msgstr "Tarkista päivitykset…"
 
 msgid "prefs.time.24h"
-msgstr "24 tunnin kellonajat"
+msgstr "24 tunnin kellonajat:"
 
 # This label should be fairly short so it fits in a button in the sidebar.
 msgid "sidebar.action.feeds.markallread"
@@ -2332,9 +2213,9 @@ msgstr "Arkistoidut käyttäjän tiedot"
 msgid "userdata.help"
 msgstr ""
 "Arkistoidut käyttäjät tiedot sisältävät käyttäjän selaushistorian, "
-"identiteetit, kirjanmerkit, palvelinkohtaiset asetukset, ja luotettujen "
-"sertifikaattien sormenjäljet. Tämän avulla voit varmuuskopioida nämä tiedot "
-"tai siirtää ne laitteesta toiseen."
+"identiteetit, kirjanmerkit, tekstikatkelmat, palvelinkohtaiset asetukset, ja "
+"luotettujen sertifikaattien sormenjäljet. Tämän avulla voit varmuuskopioida "
+"nämä tiedot tai siirtää ne laitteesta toiseen."
 
 msgid "sitespec.tlscache"
 msgstr "Tallenna ja jatka TLS-istuntoja:"
@@ -2358,10 +2239,10 @@ msgid "feeds.entry.markbelowread"
 msgstr "Merkitse alla olevat luetuksi"
 
 msgid "menu.export"
-msgstr "Vie käyttäjän tiedot"
+msgstr "Vie"
 
 msgid "menu.import"
-msgstr "Tuo käyttäjän tiedot…"
+msgstr "Tuo…"
 
 msgid "heading.import.userdata"
 msgstr "Tuo käyttäjän tiedot"
@@ -2412,7 +2293,7 @@ msgid "prefs.bottomnavbar"
 msgstr "Nav.palkki alhaalla"
 
 msgid "prefs.bottomtabbar"
-msgstr "Välisivut alhaalla"
+msgstr "Välilehdet alhaalla"
 
 msgid "prefs.menubar"
 msgstr "Valikkorivi"
@@ -2433,7 +2314,7 @@ msgid "prefs.justify"
 msgstr "Tasoita:"
 
 msgid "menu.reopentab"
-msgstr "Avaa viimeiseksi suljettu välisivu"
+msgstr "Avaa viimeiseksi suljettu välilehti"
 
 msgid "menu.viewformat.plain"
 msgstr "Näytä lähdeteksti"
@@ -2476,3 +2357,334 @@ msgstr "Yksinkertainen merkistö:"
 
 msgid "prefs.evensplit"
 msgstr "Tasaleveä jaettu näkymä:"
+
+msgid "error.proxyexpired"
+msgstr "Vanhentunut välityspalvelinvarmenne"
+
+msgid "error.proxyverify"
+msgstr "Epäluotettava välityspalvelin"
+
+msgid "error.proxyexpired.msg"
+msgstr ""
+"Yhteys katkaistiin, koska välityspalvelimen TLS-varmenne on vanhentunut."
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"Yhteys katkaistiin, koska välityspalvelimen TLS-sertifikaatti ei ole "
+"luotettu.\n"
+"\n"
+"Sertifikaatti voidaan merkitä luotetuksi Sivun tiedon -paneelissa."
+
+msgid "menu.folder.opentab"
+msgstr "Avaa uusissa välilehdissä"
+
+msgid "bookmark.folder.delete"
+msgstr "Tuhoa kirjanmerkkikansio"
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "välilyönnein eroteltuja sanoja"
+
+msgid "dlg.bookmark.notes"
+msgstr "Muistiinpanot:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "vapaamuotoiset muistiinpanot"
+
+msgid "dlg.bookmark.identity"
+msgstr "Kiinnitetty identiteetti:"
+
+msgid "heading.prefs.user"
+msgstr "Käyttäjän tiedot"
+
+msgid "ident.unset"
+msgstr "Irrota"
+
+msgid "menu.email"
+msgstr "Ota yhteyttä sähköpostilla"
+
+msgid "menu.identity.newdomain"
+msgstr "Uusi identiteetti verkkotunnukselle…"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Tämä hakemisto"
+
+msgid "menu.movetab.left"
+msgstr "Siirrä välilehti vasemmalle"
+
+msgid "menu.movetab.right"
+msgstr "Siirrä välilehti oikealle"
+
+msgid "heading.prefs.appearance"
+msgstr "Ulkonäkö"
+
+msgid "heading.prefs.layout"
+msgstr "Sivun asettelu"
+
+msgid "heading.prefs.content"
+msgstr "Sisältö"
+
+msgid "prefs.swipe.edge"
+msgstr "Pyyhkäisy reunasta:"
+
+msgid "prefs.swipe.page"
+msgstr "Pyyhkäisy sivun päällä:"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Tunnista tyylit Gopher-valikoissa:"
+
+msgid "menu.tab.next"
+msgstr "Näytä seuraava välilehti"
+
+msgid "menu.tab.prev"
+msgstr "Näytä edellinen välilehti"
+
+msgid "menu.movetab.split"
+msgstr "Siirrä välilehti toiselle puolelle"
+
+msgid "menu.movetab.newwindow"
+msgstr "Siirrä välilehti uuteen ikkunaan"
+
+msgid "menu.title.window"
+msgstr "Ikkuna"
+
+msgid "menu.window.full"
+msgstr "Koko näytön tila"
+
+msgid "menu.window.min"
+msgstr "Pienennä ikkuna"
+
+msgid "menu.window.max"
+msgstr "Suurenna ikkuna"
+
+msgid "dlg.translate.pre"
+msgstr "Ohita esimuotoillut:"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Ruotsi"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Tunnista"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Azeri"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Katalaani"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Tšekki"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Tanska"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Hollanti"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Esperanto"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Suomi"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Kreikka"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Heprea"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Unkari"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Indonesia"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Iiri"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Korea"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Persia"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Puola"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Slovakki"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Turkki"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Ukraina"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Protokollan vaihto uudelleenohjattaessa:"
+
+msgid "prefs.editor.highlight"
+msgstr "Syntaksin korotus:"
+
+# A "snippet query" is where the user types (for instance) "!w orange" in the navbar URL field to look up the word "orange" with the previously configured snippet "!w" that might expand into a Wikipedia search URL.
+msgid "keys.bang"
+msgstr "Aloita kysely katkelman avulla"
+
+msgid "error.showutf8"
+msgstr "UTF-8 tunnistettu"
+
+msgid "error.showutf8.msg"
+msgstr ""
+"Tämän sivun mediatyyppiä ei tunnistettu, mutta se on UTF-8-koodattua tekstiä."
+
+msgid "sniped.new"
+msgstr "Uusi katkelma"
+
+msgid "sniped.help"
+msgstr ""
+"Katkelmia, joiden nimi alkaa huutomerkillä (esim. \"!w\"), voidaan käyttää "
+"URL-kentissä kyselyoikopulkuina."
+
+msgid "menu.snip.edit"
+msgstr "Muokkaa…"
+
+msgid "menu.snip.clipboard"
+msgstr "Kopioi leikepöydälle"
+
+msgid "menu.snip.delete"
+msgstr "Poista"
+
+msgid "menu.snip.prefs"
+msgstr "Asetukset…"
+
+msgid "snip.name"
+msgstr "Nimi:"
+
+msgid "snip.content"
+msgstr "Sisältö:"
+
+msgid "snip.accept"
+msgstr "Tallenna katkelma"
+
+msgid "menu.input.setprompt"
+msgstr "Oleta, että tämä URL vaatiii syötteen"
+
+msgid "menu.input.restore"
+msgstr "Palauta edellinen:"
+
+# Interpret as "Results from snippets..."
+msgid "heading.lookup.snippets"
+msgstr "KATKELMAT"
+
+msgid "heading.prefs.snip"
+msgstr "Katkelmat"
+
+# Operating system's UI accent color.
+msgid "prefs.accent.system"
+msgstr "Käyttöjärjestelmä"
+
+msgid "menu.unfoldall"
+msgstr "Avaa kaikki kansiot"
+
+msgid "menu.foldall"
+msgstr "Sulje kaikki kansiot"
+
+msgid "menu.userdata"
+msgstr "Käyttäjän tiedot"
+
+msgid "menu.paste.snippet"
+msgstr "Liitä katkelma"
+
+msgid "menu.search"
+msgstr "Etsi"
+
+msgid "menu.snippet.add"
+msgstr "Katkelma valinnasta…"
+
+msgid "menu.tools"
+msgstr "Työkalut"
+
+msgid "menu.page.visitlinks"
+msgstr "Merkitse linkit vierailluiksi"
+
+msgid "menu.bookmark.addtofolder"
+msgstr "Lisää kirjanmerkki kansioon:"
+
+msgid "menu.bookmark.movetofolder"
+msgstr "Siirrä kirjanmerkki kansioon:"
+
+msgid "menu.input.unsetprompt"
+msgstr "Älä oleta tämän URL:n vaativan syötettä"
+
+msgid "menu.input.clear"
+msgstr "Tyhjennä historia"
+
+msgid "dlg.import.intofolder"
+msgstr "Lisää kansioon:"
+
+msgid "dlg.import.headings"
+msgstr "Tee otsakkeista kansioita:"
+
+msgid "dlg.import.notfound"
+msgstr "Tällä sivulla ei ole linkkejä."
+
+msgid "link.searchurl"
+msgstr "Käytä kysely-URL:ina"
+
+msgid "link.snippet"
+msgstr "Katkelma linkistä…"
+
+msgid "import.userdata.snippets"
+msgstr "Katkelmat:"
+
+msgid "prefs.collapsepre"
+msgstr "Piilota esimuotoillut:"
+
+msgid "collapse.never"
+msgstr "Ei koskaan"
+
+msgid "collapse.notbydefault"
+msgstr "Manuaalisesti"
+
+msgid "collapse.bydefault"
+msgstr "Sivun ladattua"
+
+msgid "collapse.always"
+msgstr "Aina"
+
+msgid "prefs.feedinterval"
+msgstr "Syötteiden päivitysväli:"
+
+msgid "prefs.feedinterval.manual"
+msgstr "Manuaalinen"
+
+msgid "prefs.doctheme.name.vibrantlight"
+msgstr "Eloisa"
+
+msgid "heading.upload.dest"
+msgstr "Osoite"
+
+msgid "heading.snip.new"
+msgstr "Uusi katkelma"
+
+msgid "heading.snip.edit"
+msgstr "Muokkaa katkelmaa"

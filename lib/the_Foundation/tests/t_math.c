@@ -276,6 +276,6 @@ int main(int argc, char **argv) {
         print_("original RGB", color);
         print_("YUV", mulF3_Mat4(&matrix, color));
         print_("back to RGB", mulF3_Mat4(&inverse, mulF3_Mat4(&matrix, color)));
-        return 123;
     }
+    deinit_Foundation();
 }

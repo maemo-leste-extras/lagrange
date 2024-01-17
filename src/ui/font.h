@@ -62,8 +62,8 @@ enum iFontId {
     uiContent_FontId          = FONT_ID(default_FontId,   regular_FontStyle,  uiMedium_FontSize),
     uiContentBold_FontId      = FONT_ID(default_FontId,   bold_FontStyle,     uiMedium_FontSize),
     uiContentSymbols_FontId   = FONT_ID(auxiliary_FontId, regular_FontStyle,  uiMedium_FontSize),
-    
-    /* Document fonts: */     
+
+    /* Document fonts: */
     paragraph_FontId          = FONT_ID(documentBody_FontId,      regular_FontStyle,  contentRegular_FontSize),
     bold_FontId               = FONT_ID(documentBody_FontId,      semiBold_FontStyle, contentRegular_FontSize),
     firstParagraph_FontId     = FONT_ID(documentBody_FontId,      regular_FontStyle,  contentMedium_FontSize),
@@ -120,14 +120,14 @@ struct Impl_TextAttrib {
     int16_t fgColorId;
     int16_t bgColorId;
     struct {
-        uint16_t regular   : 1;
-        uint16_t bold      : 1;
-        uint16_t light     : 1;
-        uint16_t italic    : 1;
-        uint16_t monospace : 1;
-        uint16_t isBaseRTL : 1;
-        uint16_t isRTL     : 1;
-    }; 
+        uint16_t regular    : 1;
+        uint16_t bold       : 1;
+        uint16_t light      : 1;
+        uint16_t italic     : 1;
+        uint16_t monospace  : 1;
+        uint16_t isBaseRTL  : 1;
+        uint16_t isRTL      : 1;
+    };
 };
 
 enum iScript {
@@ -256,13 +256,10 @@ struct Impl_RunArgs {
     iInt2         pos;
     iWrapText *   wrap;
     int           layoutBound;
-    iBool         justify;    
+    iBool         justify;
     int           color;
     int           baseDir;
-    /* TODO: Cleanup using TextMetrics
-       Use TextMetrics output pointer instead of return value & cursorAdvance_out. */
-    iInt2 *       cursorAdvance_out;
-    int *         runAdvance_out;
+    iTextMetrics *metrics_out;
 };
 
-iRect   run_Font        (iBaseFont *d, const iRunArgs *args);
+void    run_Font        (iBaseFont *d, const iRunArgs *args);

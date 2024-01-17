@@ -45,6 +45,696 @@
     <update_contact>jaakko.keranen@iki.fi</update_contact>
 
     <releases>
+        <release version="1.17.6" date="2024-01-16">
+            <description>
+                <ul>
+                    <li>Fixed memory leak: fetched pages were not always released from memory (reference miscount).</li>
+                    <li>Fixed minor memory leak in list widgets.</li>
+                    <li>Gopher: Autodetect Gemtext files based on file extension.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.17.6</url>
+        </release>
+        <release version="1.17.5" date="2023-12-04">
+            <description>
+                <ul>
+                    <li>Fixed a few small memory leaks.</li>
+                    <li>Fixed unnecessary copying of data while waiting for an audio buffer to become playable.</li>
+                    <li>Gopher: Detect audio media type from file extension with the `s` item type (it's not always WAV).</li>
+                    <li>Content that uses `charset=utf-8` is checked for validity. If the encoding is invalid, the content is instead decoded as CP437 (if it has ANSI escapes; possibly it's ASCII art) or just Latin-1.</li>
+                    <li>Remove ANSI escapes from window titles.</li>
+                    <li>Modified rule for when 'text/plain' is assumed to actually be 'text/gemini' based on the file extension.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.17.5</url>
+        </release>
+        <release version="1.17.4" date="2023-11-19">
+            <description>
+                <ul>
+                    <li>Removed automatic horizontal scrolling of wide preformatted blocks. Instead, hold down the Shift key to scroll horizontally with the mouse wheel.</li>
+                    <li>Fixed an event processing issue where some events were not handled as expected, for instance when opening a link into split view the opened link was not highlighted.</li>
+                    <li>Fixed links not reacting to mouse hover after jumping to a heading from the Outline.</li>
+                    <li>Fixed input prompt behaving strangely after changing font size. (Lines are now forced to rewrap after changing the font.)</li>
+                    <li>Fixed mouse cursor not changing its shape in all open windows.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.17.4</url>
+        </release>
+        <release version="1.17.3" date="2023-11-04">
+            <description>
+                <ul>
+                    <li>Fixed activating a pinned identity when opening a bookmark via the Bookmarks menu.</li>
+                    <li>Fixed initial scope of a created identity when using the default selection.</li>
+                    <li>Fixed issues with dropdown menus when the menu appears as a popup window.</li>
+                    <li>Fixed clearing the pinned identity of a bookmark.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.17.3</url>
+        </release>
+        <release version="1.17.2" date="2023-10-25">
+            <description>
+                <ul>
+                    <li>Tabs opened in background are immediately added to the URL history.</li>
+                    <li>Mouse wheel direction switches back to vertical when a wide block has been scrolled all the way.</li>
+                    <li>Fixed current text selection extending during scrolling even after mouse button has been released.</li>
+                    <li>Fixed drag-to-select with the mouse being too sensitive to mouse movement.</li>
+                    <li>Fixed the numbered links key (default: Alt) while navigating to new pages. It is no longer necessary to release and press the key again on the new page.</li>
+                    <li>Fixed long bookmark titles making the Bookmarks menu too wide.</li>
+                    <li>ANSI Cursor Forward control sequence ("CSI n C") is converted to a series of spaces, but only in preformatted text.</li>
+                    <li>Fixed parsing of ANSI SGR sequences with many attributes concatenated (e.g., 0;1;40;30).</li>
+                    <li>Fixed inline image loading indicator overdrawing itself, becoming unreadable.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.17.2</url>
+        </release>
+        <release version="1.17.1" date="2023-10-21">
+            <description>
+                <ul>
+                    <li>Added "Vibrant Light" color theme.</li>
+                    <li>Improved readability of "Colorful Light" headings.</li>
+                    <li>Tuned autoscrolling when selecting text to avoid accidental scrolling.</li>
+                    <li>Preformatted blocks no longer switch to a smaller font to fit to the page.</li>
+                    <li>Mouse wheel scrolls a wide preformatted block when hovering over the block, instead of scrolling vertically. You can hold the Shift key to swap the scroll direction.</li>
+                    <li>Fixed horizontal scrolling issues with preformatted blocks: only scroll if needed, allow scrolling anywhere on the block and not just on non-empty text lines, and when scrolling disallow swipe navigation over the area.</li>
+                    <li>Fixed visual artifacts around and next to preformatted blocks (e.g., streaking).</li>
+                    <li>Fixed potential crash after (un)folding a preformatted block.</li>
+                    <li>Fixed links being non-clickable after searching text on a page has scrolled the view.</li>
+                    <li>Fixed scroll position being reset when reloading the page.</li>
+                    <li>Fixed initial size of the upload dialog when font size has been changed.</li>
+                    <li>Fixed "View as Plain Text" context menu item after reloading a page.</li>
+                    <li>Strip any null characters from the page source during whitespace normalization.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.17.1</url>
+        </release>
+        <release version="1.17" date="2023-10-06">
+            <description>
+                <ul>
+                    <li>The Bookmarks menu lists all of your bookmarks and folders.</li>
+                    <li>Snippets: A collection of short text segments that can be pasted into any input field via the context menu. For example, useful for your gemlog header/footer and other often-repeated parts.</li>
+                    <li>Snippets can be managed in Preferences > Snippets and created by right-clicking on links or selected text on a page.</li>
+                    <li>Custom search queries: Snippets whose name starts with a bang (e.g., "!w") can be invoked in the URL field to make customized queries. The snippet content should be a Gemini search URL, for example: "gemini://gemi.dev/cgi-bin/wp.cgi/search".</li>
+                    <li>Quick lookup shows matching snippets as a new type of search result.</li>
+                    <li>Keyboard shortcut Shift+1/⇧1 for conveniently making a snippet query.</li>
+                    <li>Input prompts, upload dialogs, and bookmark editors can be resized by dragging the left or right edge.</li>
+                    <li>Text zooming in the upload text editor.</li>
+                    <li>Gemtext syntax highlighting in the upload dialog.</li>
+                    <li>Recently submitted input prompt contents are saved persistently and can be restored via the Ellipsis utility menu in the prompt dialog.</li>
+                    <li>You can force the input prompt to appear before a certain URL is requested so you can enter a query string. This is useful for avoiding an extra request when it is known that a URL will require input (e.g., search engine, game input).</li>
+                    <li>When importing links as bookmarks, you can optionally create subfolders from headings. You can also choose a destination folder for the imported bookmarks.</li>
+                    <li>Quickly add/move a bookmark into a folder with the navbar bookmark button context menu (right-click on 🏷️).</li>
+                    <li>User-selectable feed refresh interval. Previously the interval been hardcoded to four hours. (Based on a patch by Michael Nordmeyer.)</li>
+                    <li>Setting to never/always collapse preformatted blocks, disabling the ability to toggle the folding.</li>
+                    <li>"Fold All" and "Unfold All" in Bookmarks sidebar context menu.</li>
+                    <li>"Search" context menu item on selected text to make a search query with it.</li>
+                    <li>"Use as Search URL" in link context menu.</li>
+                    <li>"Mark All Links as Visited" in the Tools submenu.</li>
+                    <li>Option `--capslock`: enable Caps Lock as a modifier in keybindings.</li>
+                    <li>Option `--theme` (`-t`): change UI color theme of open Lagrange windows. Can be used in scripts to switch the theme automatically (for example, see the `darkman` utility; thanks to Jason McBrayer for suggesting this).</li>
+                    <li>Support for the Nex protocol (nex://nightfall.city/nex/info/specification.txt).</li>
+                    <li>Keyboard shortcut for deleting bookmarks (Backspace). Useful when the Bookmarks list has input focus.</li>
+                    <li>Menus can have submenus. Several of the old menus were reorganized accordingly. For example, the page context menu has a Tools submenu for translation, Titan uploads, etc.</li>
+                    <li>Show unsupported media types as plain text if the content is valid UTF-8 encoded text.</li>
+                    <li>The page scrolls while selecting text near top/bottom.</li>
+                    <li>Display a logo graphic in empty windows/tabs as a placeholder.</li>
+                    <li>Visualize input focus in lists by drawing a focus rectangle around the current item.</li>
+                    <li>Menu separators are taller and more distinct for a clearer item separation.</li>
+                    <li>Adjusted colors of the Import Identity dialog.</li>
+                    <li>Auto-hide sidebars when resizing a window/split if the document area would become narrower than the sidebar.</li>
+                    <li>Tuned theme color palette and improved background colors of "Colorful Light".</li>
+                    <li>Newly created client certificates have a default expiration date in the year 9999, which means they won't expire. One can still also set a specific date as before.</li>
+                    <li>Periodically save UI state (including each tab's navigation history) to prevent data loss in case the app crashes. These runtime saves do not include any cached page content. The full cache is still saved as before when quitting the app.</li>
+                    <li>Potential crash at shutdown when a feed update is ongoing.</li>
+                    <li>Problems with window refresh when multiple windows are open. For example, the cursor not blinking in input fields.</li>
+                    <li>Incorrect name displayed in page banner when URL query string contains a tilde name.</li>
+                    <li>Fixed navbar spinner animation going too fast when both sides of a split view are being loaded.</li>
+                    <li>Glitches during swipe navigation (touch screens, macOS trackpad). Behavior is more robust at ends of history and when content is not immediately available in cache.</li>
+                    <li>Fixed opening of context menus via keyboard (incorrect click position).</li>
+                    <li>Fixed a text rendering issue where glyphs were incorrect when preceded by a Narrow No-Break Space.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.17.0</url>
+        </release>
+        <release version="1.16.7" date="2023-08-11">
+            <description>
+                <ul>
+                    <li>Workaround for window refresh potentially getting stuck while receiving a streaming response. (Limit update frequency.)</li>
+                    <li>Don't navigate back when stopping a streaming request.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.7</url>
+        </release>
+        <release version="1.16.6" date="2023-07-30">
+            <description>
+                <ul>
+                    <li>Fixed crash on gemini://sdf.org/ where the contents of a link line would fail to be recognized as valid characters.</li>
+                    <li>Fixed splitting a long wrapped line in input fields where part of the text would remain on the preceding line. (Mixup between byte and character index.)</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.6</url>
+        </release>
+        <release version="1.16.5" date="2023-06-23">
+            <description>
+                <ul>
+                    <li>"New Tab" (Ctrl+T/⌘T) and the tab bar [+] button append the tab to the right edge. Previously it was inserted next to the active tab.</li>
+                    <li>Fixed crash when opening Preferences.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.5</url>
+        </release>
+        <release version="1.16.4" date="2023-06-12">
+            <description>
+                <ul>
+                    <li>Context/button menus use a popup window if they would otherwise have to scroll (e.g., "Dark theme:" in Preferences and "Folder:" in the bookmark editor).</li>
+                    <li>Improved tab closing order: close all sibling tabs opened from an origin tab before switching back to the origin tab.</li>
+                    <li>Center a short title under the icon in the page margin.</li>
+                    <li>Fixed navbar URL text selection when opening new tabs (keep all selected).</li>
+                    <li>Fixed too much empty space in the input prompt layout.</li>
+                    <li>Fixed input field not being updated after cutting text.</li>
+                    <li>Fixed stuck mouse button when opening a context menu while performing a drag.</li>
+                    <li>Fixed incorrect mouse button state and other potential incorrect behavior after resizing the window.</li>
+                    <li>The x86_64 AppImage now uses SDL 2.26.5 built from source, fixing issues with window and popup behavior.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.4</url>
+        </release>
+        <release version="1.16.3" date="2023-06-04">
+            <description>
+                <ul>
+                    <li>Remove whitespace from ends of a URL pasted into an input field.</li>
+                    <li>Fixed links whose label is a single Emoji sometimes not appearing.</li>
+                    <li>Fixed zooming not affecting unfocused windows right away.</li>
+                    <li>Fixed current zoom level not being applied to newly created windows.</li>
+                    <li>Fixed updating of selected text range in navbar URL when changing tabs.</li>
+                    <li>Fixed mouse wheel scrolling not working in unfocused windows.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.3</url>
+        </release>
+        <release version="1.16.2" date="2023-05-29">
+            <description>
+                <ul>
+                    <li>Set input focus to navbar URL field when opening an empty window.</li>
+                    <li>The navbar URL field only omits the "gemini:" scheme when the text actually doesn't fit horizontally, and only when the field is inactive.</li>
+                    <li>Fixed problems with handling URLs in input fields. For example, copying the URL to the clipboard sometimes had unexpected or incorrect results.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.2</url>
+        </release>
+        <release version="1.16.1" date="2023-05-22">
+            <description>
+                <ul>
+                    <li>Fixed handling of the AltGr key during text input (again).</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.1</url>
+        </release>
+        <release version="1.16" date="2023-05-21">
+            <description>
+                <ul>
+                    <li>Input prompt font size can be changed with the Zoom In/Out/Reset keys.</li>
+                    <li>Preferences: Option for silently following scheme-changing redirects (Network tab; default: no).</li>
+                    <li>Tab creation and closing follows common browser conventions: new tabs are opened next to the most recently opened tab, so they retain the correct left-to-right order.</li>
+                    <li>Preferences: Moved cache/memory size settings to Content tab.</li>
+                    <li>Page title in margin omits prefix Emoji if it matches the bookmark icon.</li>
+                    <li>Adjusted word-wrapping to break at a period inside a word (e.g., domain names).</li>
+                    <li>If the page is missing a level 1 heading, use the first content line as the title.</li>
+                    <li>Fixed tab order getting reversed when restoring tabs at launch.</li>
+                    <li>Fixed order of opened tabs when using "Open in New Tabs" on a bookmark folder.</li>
+                    <li>Fixed input focus going to the wrong split when pressing Ctrl+L with an Upload dialog open.</li>
+                    <li>Fixed text fields becoming nonresponsive when multiple fields are active.</li>
+                    <li>Fixed input query dialogs not being hidden when the tab changes.</li>
+                    <li>Fixed incorrect parsing of "hostname:port" in URL field (without `//` or `gemini://`).</li>
+                    <li>Fixed potential crash when switching between cached pages while navigating in history.</li>
+                    <li>Fixed potential crash when closing split view during a scrolling animation.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.16.0</url>
+        </release>
+        <release version="1.15.9" date="2023-04-28">
+            <description>
+                <p>Changes in v1.15.9:</p>
+                <ul>
+                    <li>Added new UI translation: Basque (euskara).</li>
+                    <li>Improved opening and closing of tabs. New tabs now open to the right of the current tab.</li>
+                    <li>Allow scaling up small images up to 2x size.</li>
+                    <li>Fixed possible crash when closing tabs.</li>
+                    <li>Fixed crashes on Wayland due to use of X11-specific code.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.9</url>
+        </release>
+        <release version="1.15.8" date="2023-04-07">
+            <description>
+                <p>Changes in v1.15.8:</p>
+                <ul>
+                    <li>Fixed activation of a pinned identity in inline media requests.</li>
+                    <li>Fixed potential crash when changing split view mode during a UI animation.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.8</url>
+        </release>
+        <release version="1.15.7" date="2023-03-28">
+            <description>
+                <p>Changes in v1.15.7:</p>
+                <ul>
+                    <li>Fixed window contents getting frozen after Reset Zoom when zoom level is already at 100%.</li>
+                    <li>Fixed key modifiers not being recognized before a text field has been activated. (Affects some versions of SDL.)</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.7</url>
+        </release>
+        <release version="1.15.6" date="2023-03-22">
+            <description>
+                <p>Changes in v1.15.6:</p>
+                <ul>
+                    <li>The Outline tab in the sidebar now uses regular UI colors, like other sidebar tabs.</li>
+                    <li>Fixed handling of the AltGr key during text input.</li>
+                    <li>Fixed incorrect background colors for Preferences tab buttons with certain themes (e.g., Colorful Light).</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.6</url>
+        </release>
+        <release version="1.15.5" date="2023-03-16">
+            <description>
+                <p>Changes in v1.15.5:</p>
+                <ul>
+                    <li>Added several new translated languages: Azerbaijani, Catalan, Czech, Danish, Dutch, Esperanto, Finnish, Greek, Hebrew, Hungarian, Indonesian, Irish, Korean, Persian, Polish, Slovak, Swedish, Turkish, and Ukrainian. (LibreTranslate server was upgraded to v1.3.10.)</li>
+                    <li>Added "Auto-detect" as the default source language for translation.</li>
+                    <li>Added option to skip preformatted blocks when translating a page.</li>
+                    <li>Fixed translation of link lines. Only the link label is now translated.</li>
+                    <li>Fixed lines on translated pages sometimes shifting position and getting the wrong line types.</li>
+                    <li>Fixed handling of redirects when fetching subscribed feed pages.</li>
+                    <li>Fixed saving the "Split view pinning" setting so it doesn't reset when relaunching the app.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.5</url>
+        </release>
+        <release version="1.15.4" date="2023-03-09">
+            <description>
+                <p>Changes in v1.15.4:</p>
+                <ul>
+                    <li>Fixed crash when trying to open a tab, New Identity dialog, or the Identity menu when the Preferences window is focused.</li>
+                    <li>Fixed potential crash if switching focus to a widget being dismissed (e.g., popup going away).</li>
+                    <li>Fixed text input becoming unresponsive when focus switches from a popup being dismissed to a new popup.</li>
+                    <li>Fixed closing the Preferences window with Ctrl+W or ⌘W.</li>
+                    <li>Fixed unnecessary page layout update when closing Preferences.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.4</url>
+        </release>
+        <release version="1.15.3" date="2023-02-26">
+            <description>
+                <p>Changes in v1.15.3:</p>
+                <ul>
+                    <li>Fixed handling of redirects in the inline media player and file downloader.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.3</url>
+        </release>
+        <release version="1.15.2" date="2023-02-06">
+            <description>
+                <p>Changes in v1.15.2:</p>
+                <ul>
+                    <li>Fixed moving input focus to the next window when closing a window.</li>
+                    <li>Centered footer info text for better balance.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.2</url>
+        </release>
+        <release version="1.15.1" date="2023-01-25">
+            <description>
+                <p>Changes in v1.15.1:</p>
+                <ul>
+                    <li>Fixed opening multiple Preferences windows at the same time.</li>
+                    <li>Fixed the Preferences window missing a window icon.</li>
+                    <li>Footer information moved out of the margin area and under the page content.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.1</url>
+        </release>
+        <release version="1.15" date="2023-01-21">
+            <description>
+                <p>Changes in v1.15:</p>
+                <ul>
+                    <li>Preferences dialog opens as a separate window.</li>
+                    <li>Option `--prefs-sheet`: open Preferences as a sheet like in previous releases.</li>
+                    <li>Reordering tabs: tab buttons can be dragged with the mouse, and tabs can be moved left/right using tab context menu items or keyboard shortcuts.</li>
+                    <li>Move a tab to the other side of a split view (tab context menu).</li>
+                    <li>Move a tab to a new window (tab context menu).</li>
+                    <li>Added a "Window" menu to the menu bar that has actions for manipulating and switching the active window, and duplicating and switching tabs. (On macOS, this menu has already been available.)</li>
+                    <li>Gopher: Option to disable Gemini styling on Gopher menu pages. When disabled, whitespace is not normalized and all non-link lines are presented as regular paragraph text.</li>
+                    <li>Redesigned Preferences dialog with vertical tabs and a new organization of the settings. "Fonts" and "Colors" are removed, and there is a new "Content" tab.</li>
+                    <li>Mouse cursor turns into the I-beam only over selectable text.</li>
+                    <li>Indicate that tab autoreloading is enabled by changing the appearance of the navbar reload button.</li>
+                    <li>GTK: Request dark window theme if the app UI color theme is dark.</li>
+                    <li>Prevent high-resolution mice from flooding event processing with too many motion events and delaying UI refresh.</li>
+                    <li>Updated UI translations.</li>
+                    <li>New Japanese UI translation (13% complete).</li>
+                    <li>Changing the UI scaling factor will now affect all existing and newly created windows.</li>
+                    <li>Possible crash when duplicating a tab.</li>
+                    <li>Issues with event processing when multiple windows are open.</li>
+                    <li>Workaround for a hang when running many parallel requests with MIME filter hooks.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.15.0</url>
+        </release>
+        <release version="1.14.2" date="2023-01-11">
+            <description>
+                <p>Changes in v1.14.2:</p>
+                <ul>
+                    <li>Fixed a potential crash when using musl libc.</li>
+                    <li>Fixed a potential crash when closing tabs in split view mode.</li>
+                    <li>Fixed inconsistent spacing after level 1 headings.</li>
+                    <li>Fixed endless reload animation events if a split view is closed while loading a page.</li>
+                    <li>Fixed page load progress indicator that was being obscured by active split marker in split view.</li>
+                    <li>Fixed potential crash when trying to reuse a TLS session.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.14.2</url>
+        </release>
+        <release version="1.14.1" date="2022-11-26">
+            <description>
+                <p>Changes in v1.14.1:</p>
+                <ul>
+                    <li>Fixed possible crash when closing a tab with the outline sidebar visible.</li>
+                    <li>Fixed hang when setting a folder's parent to itself in the Edit Folder dialog.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.14.1</url>
+        </release>
+        <release version="1.14" date="2022-11-24">
+            <description>
+                <p>Changes in v1.14:</p>
+                <ul>
+                    <li>A bookmark folder can be opened in new tabs, in the same window or a new one, one tab per bookmark.</li>
+                    <li>Pinned bookmark identities. A simpler way to use identities. When the "Pinned identity" property is set on a bookmark, opening the bookmark causes the selected identity to be "pinned" to the tab: while you stay on the same site, the identity remains in use when opening links. However, when opening a link to another site, a new tab gets opened. (The old way of per-URL identities is still available, too.)</li>
+                    <li>New identities can be created for use in the current directory (as opposed to domain or page).</li>
+                    <li>Option `--dump` (`-d`) to print contents of URLs/paths to stdout. Metadata is printed to stderr.</li>
+                    <li>Option `--dump-identity` (`-I`) selects the identity to use with `--dump`.</li>
+                    <li>Option `--replace-tab URL` opens a URL, replacing contents of the active tab.</li>
+                    <li>Option `--user DIR` (`-U`) to set the directory where user data is stored.</li>
+                    <li>When creating new identities, make it clearer what the scope of usage will be. The UI actions explicitly say "New Identity for Domain" when the default usage will be the entire domain.</li>
+                    <li>URLs opened via system-level handlers always open a new tab, like URLs opened via the command line.</li>
+                    <li>MIME types of many new file extensions are recognized (courtesy of John Cowan).</li>
+                    <li>The regular expression library PCRE2 is preferred over PCRE, if available. The older library is in maintenance mode.</li>
+                    <li>Updated UI translations.</li>
+                    <li>Accidental backwards navigation when quickly refreshing the page twice.</li>
+                    <li>Page scroll position is kept when loading finishes, if the user already scrolled during loading.</li>
+                    <li>Schemeless relative URLs no longer assume "gemini" as the scheme, instead using the current page's scheme as default.</li>
+                    <li>Opening a feed entry in a background tab will mark is as read, like opening in the foreground does.</li>
+                    <li>ANSI escapes 39 and 49 (reset FG/BG color to default) were not working.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.14.0</url>
+        </release>
+        <release version="1.13.8" date="2022-11-03">
+            <description>
+                <p>Changes in v1.13.8:</p>
+                <ul>
+                    <li>Fixed issues with text selection and range visualization.</li>
+                    <li>TUI: Improved POSIX compliance in build-tui script.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.8</url>
+        </release>
+        <release version="1.13.7" date="2022-06-30">
+            <description>
+                <p>Changes in v1.13.7:</p>
+                <ul>
+                    <li>Fixed reporting of errors related to a proxy server certificate.</li>
+                    <li>An untrusted proxy server certificate can be trusted via Page Information.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.7</url>
+        </release>
+        <release version="1.13.6" date="2022-05-26">
+            <description>
+                <p>Changes in v1.13.6:</p>
+                <ul>
+                    <li>Added option to split tabs evenly, excluding sidebar widths (default: no).</li>
+                    <li>Fixed crash when switching view to plain text.</li>
+                    <li>Fixed manually entered image URLs inadvertently opening inline.</li>
+                    <li>Fixed mouse event handling in split view mode when a dialog is open on one side. The other side would not receive wheel events unless input focus was first switched over.</li>
+                    <li>Fixed issues with popup menu positioning.</li>
+                    <li>Fixed drawing of the widget scroll indicator when a widget doesn't fit vertically in the window.</li>
+                    <li>Possible workaround for an issue with mouse hover autoscrolling on an external displays.</li>
+                    <li>Don't open an endless number of bookmark creation/edit dialogs when holding down the keyboard shortcut (Ctrl+D/⌘D).</li>
+                    <li>Percent-encode backslashes in externally opened URLs, for improved compatibility.</li>
+                    <li>Custom link icons are allowed with unsupported/unrecognized protocols (i.e., Emoji at the start of link label).</li>
+                    <li>Use file name as the tab/window title if the content has no headings.</li>
+                    <li>Avoid redundancy in tab/window titles ("Cosmos — Cosmos" → "Cosmos").</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.6</url>
+        </release>
+        <release version="1.13.5" date="2022-05-19">
+            <description>
+                <p>Changes in v1.13.5:</p>
+                <ul>
+                    <li>Parent navigation assumes directory URL is equivalent to index page URL (e.g., "/path/" == "/path/index.gmi"): this now only applies to Gemini URLs, and checks for "index.gemini", too, as per Gemini Best Practices.</li>
+                    <li>Fixed crash when determining the name of a ZIP file from a URL.</li>
+                    <li>Fixed misparsing of URL to form the name of a downloaded file (`%23` decoded too early).</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.5</url>
+        </release>
+        <release version="1.13.4" date="2022-05-10">
+            <description>
+                <p>Changes in v1.13.4:</p>
+                <ul>
+                    <li>Spartan: Fixed opening URLs in other apps via operating system handlers.</li>
+                    <li>Updated language strings.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.4</url>
+        </release>
+        <release version="1.13.3" date="2022-05-06">
+            <description>
+                <p>Changes in v1.13.3:</p>
+                <ul>
+                    <li>Changed URL field bookmark indicator for better consistency.</li>
+                    <li>Show a proper error page if server closes the connection before a header is fully received.</li>
+                    <li>Spartan: Prefilled prompt input from URL query string is selected by default.</li>
+                    <li>Spartan: Fixed composing request content out of the query string.</li>
+                    <li>Spartan: Fixed handling of empty path in a request.</li>
+                    <li>Spartan: Allow opening URLs from command line.</li>
+                    <li>Spartan: .desktop file includes Spartan scheme handling.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.3</url>
+        </release>
+        <release version="1.13.2" date="2022-05-03">
+            <description>
+                <p>Changes in v1.13.2:</p>
+                <ul>
+                    <li>Fixed failure to restore the selected fonts at launch.</li>
+                    <li>Fixed window state being reset when quitting the app by closing the last window. (No such problem was occurring when quitting via menu or Ctrl+Q.)</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.2</url>
+        </release>
+        <release version="1.13.1" date="2022-05-03">
+            <description>
+                <p>Changes in v1.13.1:</p>
+                <ul>
+                    <li>Fixed crash when opening Preferences. The text renderer had problems with font lookup.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.1</url>
+        </release>
+        <release version="1.13" date="2022-05-03">
+            <description>
+                <p>Changes in v1.13:</p>
+                <ul>
+                    <li>Curses-based `clagrange` for running the app in the terminal. This is a complete TUI port of the original GUI version including, e.g., UI animations, smooth scrolling, and split view mode. `clagrange` has separate preferences, UI state, and key bindings but the rest of the runtime files are shared with the GUI version.</li>
+                    <li>Build option `ENABLE_TUI`: build a text mode version of the app so it can be run in the terminal. Enabling this produces an executable called `clagrange` that is not linked with SDL.</li>
+                    <li>URL field indicator 📌 that shows if there's a bookmark for the current page. Clicking on the indicator opens the Add/Edit Bookmark dialog.</li>
+                    <li>Checking server certificates using a bundled root CA file.</li>
+                    <li>Build option `CACERT_PEM_PATH`: path of a cacert.pem file that contains trusted root CA certificates. This file is included in resources.lgr.</li>
+                    <li>Support for the Spartan protocol. Prompt lines will open an input dialog for submitting text. This can be expanded to the full upload dialog using which a file can be uploaded, too.</li>
+                    <li>Reopening the last closed tab. The default binding is Shift+Ctrl+T (⇧⌘T).</li>
+                    <li>Page context menu item "View as Plain Text": show the page source as plain text.</li>
+                    <li>Option to view Markdown as source or as a Gemtext conversion (default: as source).</li>
+                    <li>Updated Noto Emoji font with support for Unicode 14. There should be no more missing Emoji glyphs.</li>
+                    <li>Improved UI keyboard navigation. The sidebar and all widgets in dialogs are accessible via Tab cycling, and new shortcuts have been added for opening menus. Menu items and lists are cursor-navigable. Opening the sidebar automatically gives it keyboard focus.</li>
+                    <li>When bookmarking a page, show the Edit Bookmark dialog if there's already a bookmark for the URL. The Edit Bookmark dialog has a new Duplicate button for actually making a duplicate bookmark.</li>
+                    <li>Markdown documents support horizontal rules.</li>
+                    <li>TUI: Zoom controls resize the open sidebar (left sidebar if both visible).</li>
+                    <li>Sidebar page outline not updated when the current tab changes.</li>
+                    <li>The Escape key closes the bookmark editor dialog as intended.</li>
+                    <li>Preferences: "Justify" option must be hidden if HarfBuzz is not used.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.13.0</url>
+        </release>
+        <release version="1.12.2" date="2022-04-22">
+            <description>
+                <p>Changes in v1.12.2:</p>
+                <ul>
+                    <li>Fixed positioning of the language translation dialog's progress animation.</li>
+                    <li>Fixed hovering on links via the keyboard (default binding: H).</li>
+                    <li>Tab buttons use theme background color with light Oceanic to avoid a color clash.</li>
+                    <li>Feed refresh indicator uses the accent color.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.12.2</url>
+        </release>
+        <release version="1.12.1" date="2022-04-06">
+            <description>
+                <p>Changes in v1.12.1:</p>
+                <ul>
+                    <li>Updated Help: export/import, user data archives, paragraph justification.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.12.1</url>
+        </release>
+        <release version="1.12" date="2022-04-04">
+            <description>
+                <p>Changes in v1.12:</p>
+                <ul>
+                    <li>Export and import user data as a ZIP archive, including identities, bookmarks, site-specific settings, trusted certificate fingerprints, and browsing history.</li>
+                    <li>UI layout options: the navigation/tab bars can be moved to the bottom of the window, and one can have a traditional menu bar instead of the hamburger menu. On macOS, the normal menu bar is used as before.</li>
+                    <li>Added style option to justify paragraphs that are at least three lines long.</li>
+                    <li>Added new content theme "Oceanic" with support for both dark and light modes.</li>
+                    <li>Added new UI accent colors: Red, Green, Blue, Gray.</li>
+                    <li>Feeds: Added "Mark Below as Read" context menu item.</li>
+                    <li>Site-specific setting for TLS session resumption (enabled by default).</li>
+                    <li>Roboto is the new default content/UI font, except on Windows where Segoe UI is the default font.</li>
+                    <li>Toggles use symbols instead of YES/NO.</li>
+                    <li>UI uses only one accent color at a time.</li>
+                    <li>Theme palette tuning: adjusted generated palettes of Colorful Dark/Light, improved the Sepia theme, and added a dark mode Sepia variant.</li>
+                    <li>Certain pages like Help open in a new tab. If the page is already open in a tab, that tab is activated instead of opening a new one.</li>
+                    <li>Improved word wrapping with more breaking punctuation.</li>
+                    <li>Text renderer uses additional subpixel offsets with lower-density displays.</li>
+                    <li>Text rendering optimizations: avoid repeated shaping of the same text.</li>
+                    <li>UI rendering optimizations.</li>
+                    <li>Fixed a possible crash when clicking on the first link of a page with the monospace body text option enabled.</li>
+                    <li>Fixed occasional small gaps between glyph backgrounds.</li>
+                    <li>Fixed problems with marking feed entries as read/unread.</li>
+                    <li>The bookmark dialog doesn't show irrelevant fields when editing a bookmark folder.</li>
+                    <li>Spurious spaces are removed from ends of bookmark titles.</li>
+                    <li>Pasting text into an input field should not decode reserved URL characters.</li>
+                    <li>Percent-encoded spaces (%20) in a file name were not decoded when saving a file.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.12.0</url>
+        </release>
+        <release version="1.11.2" date="2022-03-18">
+            <description>
+                <p>Changes in v1.11.2:</p>
+                <ul>
+                    <li>Added a keybinding for focusing the URL field.</li>
+                    <li>Sidebar items (bookmarks, feed entries, history) can be middle-clicked to open in a new tab. Holding Shift will open the tab in the foreground.</li>
+                    <li>Flags can be used as link icons. Note that additional fonts and HarfBuzz are required for all the flag symbols to be visible.</li>
+                    <li>Updated UI translations.</li>
+                </ul>
+                <p>The full release notes can be viewed inside the app by opening
+                    the "about:version" page.</p>
+            </description>
+            <url>https://github.com/skyjake/lagrange/releases/tag/v1.11.2</url>
+        </release>
         <release version="1.11.1" date="2022-03-02">
             <description>
                 <p>Changes in v1.11:</p>

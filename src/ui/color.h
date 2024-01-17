@@ -40,6 +40,7 @@ enum iColorAccent {
     green_ColorAccent,
     blue_ColorAccent,
     gray_ColorAccent,
+    system_ColorAccent,
     max_ColorAccent
 };
 
@@ -68,6 +69,8 @@ enum iColorId {
     green_ColorId,
     indigo_ColorId,
     blue_ColorId,
+    systemHigh_ColorId, /* supported on macOS 10.14+ */
+    systemLow_ColorId,  /* supported on macOS 10.14+ */
 
     /* user interface colors for semantic use */
     uiFirst_ColorId,
@@ -107,6 +110,7 @@ enum iColorId {
     uiInputCursor_ColorId,
     uiInputCursorText_ColorId,
     uiHeading_ColorId,
+    uiTextDim_ColorId,
     uiAnnotation_ColorId,
     uiIcon_ColorId,
     uiIconHover_ColorId,
@@ -115,12 +119,11 @@ enum iColorId {
     uiMatching_ColorId,
     uiBackgroundUnfocusedSelection_ColorId,
     uiBackgroundFolder_ColorId,
-    uiTextDim_ColorId,
     uiSubheading_ColorId,
     uiTextAppTitle_ColorId,
     uiBackgroundSidebar_ColorId,
     uiBackgroundMenu_ColorId,
-    
+
     /* content theme colors */
     tmFirst_ColorId,
     tmBackground_ColorId = tmFirst_ColorId,
@@ -164,7 +167,7 @@ enum iColorId {
     tmGopherLinkTextHover_ColorId,
     tmGopherLinkDomain_ColorId_OBSOLETE,
     tmGopherLinkLastVisitDate_ColorId_OBSOLETE,
-    
+
     tmBannerItemBackground_ColorId,
     tmBannerItemFrame_ColorId,
     tmBannerItemTitle_ColorId,
@@ -216,17 +219,23 @@ iLocalDef iBool isRegularText_ColorId(enum iColorId d) {
 #define green_ColorEscape           "\v-"
 #define indigo_ColorEscape          "\v."
 #define blue_ColorEscape            "\v/"
-#define uiText_ColorEscape          "\v5"
-#define uiTextAction_ColorEscape    "\v="
-#define uiTextCaution_ColorEscape   "\v>"
-#define uiTextStrong_ColorEscape    "\v;"
-#define uiHeading_ColorEscape       "\vS"
+#define uiText_ColorEscape          "\v7"
+#define uiTextAction_ColorEscape    "\v?"
+#define uiTextCaution_ColorEscape   "\v@"
+#define uiTextStrong_ColorEscape    "\v="
+#define uiHeading_ColorEscape       "\vU"
+#define uiTextDim_ColorEscape       "\vV"
 
 iDeclareType(Color)
+iDeclareType(Colorf)
 iDeclareType(HSLColor)
 
 struct Impl_Color {
     uint8_t r, g, b, a;
+};
+
+struct Impl_Colorf {
+    float r, g, b, a;
 };
 
 iLocalDef iBool equal_Color(const iColor a, const iColor b) {
@@ -240,8 +249,14 @@ struct Impl_HSLColor {
 #define minSat_HSLColor 0.013f   /* Conversion to 8-bit RGB may result in saturation dropping to zero. */
 
 iHSLColor       hsl_Color       (iColor);
+iHSLColor       hsl_Colorf      (iColorf color);
+iColor          uint8_Colorf    (iColorf);
+iColorf         float_Color     (iColor);
 iColor          rgb_HSLColor    (iHSLColor);
+iColorf         rgbf_HSLColor   (iHSLColor);
 float           luma_Color      (iColor);
+float           luma_Colorf     (iColorf);
+float           luma_HSLColor   (iHSLColor);
 
 iHSLColor       setSat_HSLColor     (iHSLColor, float sat);
 iHSLColor       setLum_HSLColor     (iHSLColor, float lum);
@@ -254,6 +269,7 @@ void            set_Color       (int color, iColor rgba);
 iColor          mix_Color       (iColor c1, iColor c2, float t);
 iColor          getMixed_Color  (int color1, int color2, float t);
 int             delta_Color     (iColor c1, iColor c2);
+iColor          default_Color   (int color); /* affected by dark/light mode */
 
 iLocalDef iHSLColor get_HSLColor(int color) {
     return hsl_Color(get_Color(color));
@@ -266,9 +282,12 @@ iBool           loadPalette_Color       (const char *path);
 void            setThemePalette_Color   (enum iColorTheme theme);
 
 void            ansiColors_Color        (iRangecc escapeSequence, int fgDefault, int bgDefault,
-                                         iColor *fg_out, iColor *bg_out); /* can be NULL */
+                                         iBool isHighIntensity, iColor *fg_out, iColor *bg_out,
+                                         const char **endPos_out); /* out args can be NULL */
 const char *    escape_Color            (int color);
 enum iColorId   parseEscape_Color       (const char *cstr, const char **endp);
 
 int             accent_Color            (iBool isBright);
 iColor          systemAccent_Color      (void); /* platform-specific impl */
+
+int             color_ColorAccent       (enum iColorAccent, iBool isBright);

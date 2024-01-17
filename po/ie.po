@@ -1,7 +1,9 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"PO-Revision-Date: 2022-04-17 05:51+0000\n"
+"POT-Creation-Date: 2023-01-29 07:54+0000\n"
+"PO-Revision-Date: 2023-11-10 22:14+0000\n"
 "Last-Translator: Olga Smirnova <mistresssilvara@hotmail.com>\n"
 "Language-Team: Occidental <http://weblate.skyjake.fi/projects/lagrange/ui/ie/"
 ">\n"
@@ -21,20 +23,11 @@ msgstr "Un bel cliente por Gemini"
 msgid "cancel"
 msgstr "Anullar"
 
-msgid "dismiss"
-msgstr "Demisser"
-
 msgid "dlg.message.ok"
 msgstr "Continuar"
 
 msgid "dlg.default"
 msgstr " OK "
-
-msgid "toggle.yes"
-msgstr "YES"
-
-msgid "toggle.no"
-msgstr "NO"
 
 msgid "menu.page.subscribe"
 msgstr "Abonnar li págine…"
@@ -115,7 +108,7 @@ msgid "prefs.ostheme"
 msgstr "Usar li tema del sistema:"
 
 msgid "prefs.theme"
-msgstr "Tema:"
+msgstr "Tema de IdU:"
 
 msgid "prefs.theme.black"
 msgstr "Nigri"
@@ -142,10 +135,10 @@ msgid "prefs.uilang"
 msgstr "Lingue:"
 
 msgid "prefs.retainwindow"
-msgstr "Retener li plazzament:"
+msgstr "Retener li plazzament del fenestre:"
 
 msgid "prefs.sideicon"
-msgstr "Icone de capsul:"
+msgstr "Icone de capsul a levul:"
 
 msgid "prefs.doctheme.dark"
 msgstr "Tema obscur:"
@@ -441,9 +434,6 @@ msgstr "%d %B %Y"
 msgid "feeds.today"
 msgstr "Hodie"
 
-msgid "feeds.entry.newtab"
-msgstr "Aperter in un nov carte"
-
 msgid "feeds.entry.markunread"
 msgstr "Marcar quam ínleet"
 
@@ -586,8 +576,8 @@ msgstr "Li recivet certificat es expirat E por un íncorrect dominia."
 
 msgid "dlg.certimport.help"
 msgstr ""
-"Colla un PEM-codificat certificat e/o un clave privat,\n"
-"o fa cader un file .crt o .key al fenestre."
+"Colla un PEM-codificat certificat e/o un clave privat, o fa cader un file ."
+"crt o .key al fenestre."
 
 msgid "dlg.certimport.notfound"
 msgstr "Null certificat o clave privat esset trovat."
@@ -596,7 +586,7 @@ msgid "dlg.certimport.notfound.page"
 msgstr "Null certificat o clave esset trovat in li actual págine."
 
 msgid "heading.certimport.dropped"
-msgstr "CADET FILE"
+msgstr "Cadet file"
 
 msgid "dlg.certimport.import"
 msgstr "Importar"
@@ -655,7 +645,7 @@ msgstr "Rulament"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Stil"
+msgstr "Stil de págine"
 
 # tab button
 msgid "heading.prefs.userinterface"
@@ -738,14 +728,8 @@ msgstr "Arabic"
 msgid "lang.zh"
 msgstr "Chinesi"
 
-msgid "lang.zh.hans"
-msgstr "Chinesi (simplificat)"
-
 msgid "lang.en"
 msgstr "Anglesi"
-
-msgid "lang.fi"
-msgstr "Finlandesi"
 
 msgid "lang.fr"
 msgstr "Francesi"
@@ -772,7 +756,7 @@ msgid "lang.es"
 msgstr "Hispan"
 
 msgid "heading.newident"
-msgstr "NOV IDENTITÁ"
+msgstr "Nov identitá"
 
 msgid "dlg.newident.rsa.selfsign"
 msgstr "Creante un self-signat certificat RSA de 2048 bits."
@@ -811,9 +795,6 @@ msgstr "Paragraf"
 msgid "prefs.saturation"
 msgstr "Saturation:"
 
-msgid "prefs.headingfont"
-msgstr "Fonde de rubricas:"
-
 msgid "prefs.font"
 msgstr "Fonde de textu:"
 
@@ -850,9 +831,6 @@ msgstr "Dessine ASCII: li parol «Lagrange» in un grand fonde"
 
 msgid "about.powered"
 msgstr "Functiona med SDL 2, OpenSSL e ☕️"
-
-msgid "menu.copy.source"
-msgstr "Copiar li textu del fonte"
 
 msgid "menu.bookmarks.list"
 msgstr "Monstrar omni marca-págines"
@@ -922,7 +900,7 @@ msgstr "Verificat de CA"
 
 #, c-format
 msgid "dlg.input.prompt"
-msgstr "Ples provider li intrada por %s:"
+msgstr "Provide li intrada por %s:"
 
 msgid "heading.save"
 msgstr "File sta gardat"
@@ -946,13 +924,13 @@ msgid "link.bookmark"
 msgstr "Adjunter al marca-págines…"
 
 msgid "heading.openlink"
-msgstr "APERTER LI LIGAMENT"
+msgstr "Aperter li ligament"
 
 msgid "heading.certimport.pasted"
-msgstr "COLLAT EX LI PAPERIERE"
+msgstr "Collat ex li Paperiere"
 
 msgid "heading.translate"
-msgstr "TRADUCTER LI PÁGINE"
+msgstr "Traducter li págine"
 
 msgid "error.unsupported.media"
 msgstr "Ínsuportat tip de contenete"
@@ -1007,9 +985,6 @@ msgstr "Cessar usar por ti págine"
 msgid "ident.stopuse.all"
 msgstr "Cessar usar partú"
 
-msgid "ident.showuse"
-msgstr "Monstrar li usage"
-
 msgid "heading.ident.use"
 msgstr "Usage del identitá"
 
@@ -1044,9 +1019,6 @@ msgstr ""
 msgid "pageinfo.cert.ca.unverified"
 msgstr "Ne verificat de CA"
 
-msgid "heading.certwarn"
-msgstr "ÍNFIDET CERTIFICATE"
-
 msgid "dlg.certwarn.different"
 msgstr "Li recivet certificate es valid ma ne es li quel es fidet."
 
@@ -1059,28 +1031,28 @@ msgid "dlg.newident.notsaved"
 msgstr "ne gardat sur li disco"
 
 msgid "heading.feedcfg"
-msgstr "PARAMETRES DEL FEED"
+msgstr "Parametres del feed"
 
 msgid "heading.subscribe"
-msgstr "ABONNAR LI PÁGINE"
+msgstr "Abonnar li págine"
 
 msgid "heading.bookmark.add"
-msgstr "ADJUNTER UN MARCA-PÁGINE"
+msgstr "Adjunter un marca-págine"
 
 msgid "heading.bookmark.edit"
-msgstr "REDACTER LI MARCA-PÁGINE"
+msgstr "Redacter li márca-pagine"
 
 msgid "dlg.bookmark.save"
 msgstr "Gardar li marca-págines"
 
 msgid "heading.prefs.pagecontent"
-msgstr "COLORES DE PÁGINE"
+msgstr "Colores de págine"
 
 msgid "heading.prefs.sizing"
 msgstr "Dimension"
 
 msgid "heading.prefs.widelayout"
-msgstr "LARG ARANGEMENT"
+msgstr "Larg arangeament"
 
 msgid "prefs.hoverlink"
 msgstr "Monstrar li URL sub li apuntator:"
@@ -1095,7 +1067,7 @@ msgid "prefs.customframe"
 msgstr "Special borde de fenestre:"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Rupter lineas de simplic textu:"
+msgstr "Rupter long lineas de simplic textu:"
 
 msgid "prefs.decodeurls"
 msgstr "Decodificar URLs:"
@@ -1130,7 +1102,7 @@ msgstr "Monstrar li URL sub li apuntator"
 msgid "error.badstatus.msg"
 msgstr ""
 "Li servitor respondet de un code de statu quel manca del specification del "
-"protocol Gemini. Fórsan li servitor es tro nov o simplicmen malfunctiona."
+"protocol Gemini. Fórsan li servitor malfunctiona."
 
 msgid "error.openfile.msg"
 msgstr ""
@@ -1269,7 +1241,7 @@ msgid "heading.lookup.pagecontent"
 msgstr "CONTENETE DE PÁGINE"
 
 msgid "prefs.imageloadscroll"
-msgstr "Cargar images:"
+msgstr "Cargar li sequent image vice de rulament:"
 
 msgid "prefs.mono"
 msgstr "Textu monospacial:"
@@ -1301,16 +1273,10 @@ msgstr "Refriscar lontan marca-págines"
 msgid "bookmarks.reload"
 msgstr "Refriscar lontan fontes"
 
-msgid "lang.zh.hant"
-msgstr "Chinesi (traditional)"
-
 msgid "error.proxyrefusal.msg"
 msgstr ""
 "Li demanda esset por un ressurse quel ne existe sur li servitor e li "
 "servitor ne accepte demandes de proxy."
-
-msgid "prefs.collapsepreonload"
-msgstr "Contraher formatat textu:"
 
 msgid "keys.link.homerow.next"
 msgstr "Li sequent portion de ligamentes por li claves"
@@ -1331,12 +1297,6 @@ msgstr "Aperter un ligament per tastes in li hem-range"
 
 msgid "doc.pre.nocaption"
 msgstr "Un formatat textu sin un rubrica"
-
-msgid "lang.ie"
-msgstr "Interlingue"
-
-msgid "lang.sr"
-msgstr "Serbian"
 
 #, c-format
 msgid "feeds.list.counts"
@@ -1458,7 +1418,7 @@ msgid "menu.split.merge"
 msgstr "Reunir"
 
 msgid "menu.view.split"
-msgstr "Fender li vise…"
+msgstr "Fender li vise"
 
 msgid "dlg.newident.date.example"
 msgstr ""
@@ -1469,13 +1429,10 @@ msgstr ""
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Aperter li index de archive:"
-
-msgid "lang.ia"
-msgstr "Interlingua"
+msgstr "Aperter index.gmi in archives ZIP:"
 
 msgid "heading.newident.missing"
-msgstr "MANCANT INFORMATION"
+msgstr "Mancant information"
 
 msgid "dlg.newindent.missing.commonname"
 msgstr "Li «comun nómine» deve esser providet."
@@ -1562,9 +1519,6 @@ msgstr "Vider li contenete del archive"
 msgid "bookmark.tag.linksplit"
 msgstr "Ligamentes apertet láteralmen"
 
-msgid "lang.tok"
-msgstr "Toki Pona"
-
 msgid "prefs.pinsplit.none"
 msgstr "Null"
 
@@ -1586,12 +1540,6 @@ msgstr "Cluder li altri cartes"
 msgid "keys.split.menu"
 msgstr "Selecter li mode de fension"
 
-msgid "lang.pl"
-msgstr "Polonesi"
-
-msgid "keys.split.menu.horiz21"
-msgstr "Fendet vise: horizontalmen 2:1"
-
 msgid "close"
 msgstr "Cluder"
 
@@ -1610,9 +1558,6 @@ msgstr "Usar sur:"
 msgid "dlg.newident.more"
 msgstr "Plu…"
 
-msgid "prefs.userfont"
-msgstr "Fonde simbolic:"
-
 msgid "dlg.newident.scope.domain"
 msgstr "Li actual dominia"
 
@@ -1621,24 +1566,6 @@ msgstr "Li actual págine"
 
 msgid "dlg.newident.scope.none"
 msgstr "Ne usat"
-
-msgid "keys.split.menu.vert"
-msgstr "Fendet vise: verticalmen"
-
-msgid "keys.split.menu.vert12"
-msgstr "Fendet vise: verticalmen 1:2"
-
-msgid "keys.split.menu.vert21"
-msgstr "Fendet vise: verticalmen 2:1"
-
-msgid "keys.split.menu.merge"
-msgstr "Fendet vise: unir cartes"
-
-msgid "keys.split.menu.horiz"
-msgstr "Fendet vise: horizontalmen"
-
-msgid "keys.split.menu.horiz12"
-msgstr "Fendet vise: horizontalmen 1:2"
 
 msgid "prefs.animate"
 msgstr "Animationes:"
@@ -1662,7 +1589,7 @@ msgid "link.file.delete"
 msgstr "Remover li file"
 
 msgid "heading.file.delete"
-msgstr "REMOVER LI FILE"
+msgstr "Remover li file"
 
 msgid "dlg.file.delete.confirm"
 msgstr "Esque vu vole remover ti-ci file?"
@@ -1678,9 +1605,6 @@ msgstr "Rapiditá del tastatura:"
 
 msgid "prefs.scrollspeed.mouse"
 msgstr "Velocitá del mus:"
-
-msgid "hint.prefs.userfont"
-msgstr "rute de un fonde TrueType"
 
 msgid "prefs.linespacing"
 msgstr "Interspacie:"
@@ -1701,7 +1625,7 @@ msgid "upload.port"
 msgstr "Portu…"
 
 msgid "heading.uploadport"
-msgstr "PORTU DE CARGA DE TITAN"
+msgstr "Portu de carga de Titan"
 
 msgid "dlg.uploadport.set"
 msgstr "Assignar li portu"
@@ -1790,7 +1714,7 @@ msgid "bookmark.export.format.linklines"
 msgstr "Chascun ligament representa un marca-págine."
 
 msgid "dlg.upload.id.default"
-msgstr "Predefinit"
+msgstr "Identité predefinit"
 
 msgid "bookmark.export.title.tag"
 msgstr "Etiquettes de marca-págines"
@@ -1813,21 +1737,6 @@ msgstr "Selecter un file"
 msgid "bookmark.export.format.tags"
 msgstr "Etiquettes es format per rubricas de nivelle 2."
 
-msgid "lang.gl"
-msgstr "Galician"
-
-msgid "lang.eo"
-msgstr "Esperanto"
-
-msgid "lang.es.mx"
-msgstr "Hispan (Mexico)"
-
-msgid "lang.sk"
-msgstr "Slovac"
-
-msgid "lang.isv"
-msgstr "Interslavic"
-
 msgid "bookmark.export.format.folders"
 msgstr "Li structura de fólderes es providet per rubricas de nivelle 2 e 3."
 
@@ -1835,10 +1744,10 @@ msgid "dlg.upload.id.none"
 msgstr "Null"
 
 msgid "heading.bookmark.tags"
-msgstr "SPECIAL ETIQUETTES"
+msgstr "Conduida"
 
 msgid "heading.addfolder"
-msgstr "ADJUNTER UN FÓLDER"
+msgstr "Adjunter un fólder"
 
 msgid "dlg.addfolder.defaulttitle"
 msgstr "Nov fólder"
@@ -1921,19 +1830,11 @@ msgstr "Ignorar ligamentes HTTP(s):"
 msgid "truetype.help.installed"
 msgstr "Ti-ci fonde es installat in li fólder de personal fondes."
 
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"Li fondes quel esser includet in li app es nu disponibil quam un separat "
-"discarga. Esque vu vole descargar li «classic» collection ho-témpor?"
-
-msgid "lang.hu"
-msgstr "Hungarian"
-
 msgid "prefs.bookmarks.addbottom"
 msgstr "Adjunter marca-págines a bass:"
 
 msgid "prefs.font.ui"
-msgstr "IdU:"
+msgstr "Fonde de IdU:"
 
 msgid "prefs.font.heading"
 msgstr "Rubricas:"
@@ -1948,7 +1849,7 @@ msgid "prefs.boldlink.visited"
 msgstr "Visitat"
 
 msgid "prefs.gemtext.ansi"
-msgstr "Codes escape de ANSI:"
+msgstr "Codes escape de ANSI por Gemtext:"
 
 msgid "prefs.gemtext.ansi.fg"
 msgstr "Avanplan"
@@ -1957,7 +1858,7 @@ msgid "prefs.gemtext.ansi.fontstyle"
 msgstr "Stil de fonde"
 
 msgid "prefs.font.warnmissing"
-msgstr "Avise de glifes:"
+msgstr "Avise de glifes de fonde:"
 
 msgid "num.files"
 msgid_plural "num.files.n"
@@ -1968,9 +1869,6 @@ msgid "num.fonts"
 msgid_plural "num.fonts.n"
 msgstr[0] "%u fonde"
 msgstr[1] "%u fondes"
-
-msgid "heading.fontpack.classic"
-msgstr "DESCARGAR UN FONDPAC"
 
 msgid "error.ansi"
 msgstr "Emulation del terminal"
@@ -2035,14 +1933,8 @@ msgstr "Aperter li fólder de personal fondes"
 msgid "fontpack.open.aboutfonts"
 msgstr "Monstrar installat fondes"
 
-msgid "dlg.fontpack.classic"
-msgstr "Descargar li fondpac (25 Mo)"
-
-msgid "lang.uk"
-msgstr "Ukrainan"
-
 msgid "heading.fontpack.delete"
-msgstr "REMOVER LI FONDPAC"
+msgstr "Remover li Fondpac"
 
 #, c-format
 msgid "dlg.fontpack.delete.confirm"
@@ -2061,11 +1953,8 @@ msgstr "Website del projecte…"
 msgid "fontpack.enable"
 msgstr "Activar «%s»"
 
-msgid "lang.cs"
-msgstr "Tchec"
-
 msgid "prefs.font.smooth"
-msgstr "Glattar:"
+msgstr "Glattar fondes:"
 
 msgid "bookmark.export.taginfo"
 msgstr ""
@@ -2112,7 +2001,7 @@ msgid "dlg.bookmark.folder"
 msgstr "Fólder:"
 
 msgid "prefs.time.24h"
-msgstr "Usar 24 hores"
+msgstr "Usar 24 hores:"
 
 msgid "menu.update"
 msgstr "Controlar actualisamentes…"
@@ -2279,10 +2168,10 @@ msgid "prefs.tabwidth"
 msgstr "Largore del tabulator:"
 
 msgid "menu.export"
-msgstr "Exportar li data de usator"
+msgstr "Exportar"
 
 msgid "menu.import"
-msgstr "Importar li data de usator…"
+msgstr "Importar…"
 
 msgid "menu.paste.go"
 msgstr "Collar e ear"
@@ -2346,3 +2235,454 @@ msgstr "Supporte"
 
 msgid "sitespec.tlscache"
 msgstr "Reprender li session TLS:"
+
+msgid "prefs.bottomnavbar"
+msgstr "Navigation ad-infra"
+
+msgid "prefs.justify"
+msgstr "Alignament:"
+
+msgid "prefs.urlsize"
+msgstr "Max longore de adresse:"
+
+msgid "keys.sitespec"
+msgstr "Monstrar parametres del site"
+
+msgid "dlg.glyphfinder.search"
+msgstr "Serchar li biblioteca de fondes"
+
+msgid "error.proxyverify"
+msgstr "Ínfidet proxy"
+
+msgid "error.proxyexpired"
+msgstr "Li certificate del proxy ha expirat"
+
+msgid "menu.folder.opentab"
+msgstr "Aperter in nov cartes"
+
+msgid "bookmark.folder.delete"
+msgstr "Remover li fólder de marca-págines"
+
+msgid "keys.identmenu"
+msgstr "Aperter li menú de identitás"
+
+msgid "keys.contextmenu"
+msgstr "Aperter li menú contextual"
+
+msgid "keys.menubar.focus"
+msgstr "Ear al menú"
+
+msgid "import.userdata.sitespec"
+msgstr "Parametres del site:"
+
+msgid "dlg.spartan.upload"
+msgstr "Aperter li redactor…"
+
+msgid "heading.upload.spartan"
+msgstr "Cargar med Spartan"
+
+msgid "spartan.input"
+msgstr "Textu a inviar:"
+
+msgid "glyphfinder.results.empty"
+msgstr "Null correspondent Fondpacs esset trovat."
+
+msgid "glyphfinder.results"
+msgstr "Li sequent Fondpacs provide adminim ún mancant glif:"
+
+msgid "dlg.bookmark.notes"
+msgstr "Notes:"
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "separat con spacie"
+
+msgid "dlg.bookmark.identity"
+msgstr "Fixat identitá:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "particulari notes"
+
+msgid "prefs.markdown.viewsource"
+msgstr "Viser Markdown quam li fonte:"
+
+msgid "prefs.tui.simple"
+msgstr "Simplic caracteres:"
+
+msgid "feeds.entry.markbelowread"
+msgstr "Marcar elementes ad-infra quam leet"
+
+msgid "userdata.help"
+msgstr ""
+"Archives del data de usator contene li diarium de navigation, identitás, "
+"marca-págines, fragmentes, parametres de sites e fingre-printes de fidet "
+"certificates. On posse usar les por preservation e por transferter data "
+"inter aparates."
+
+msgid "menu.viewformat.gemini"
+msgstr "Viser quam Gemtext"
+
+msgid "menu.reopentab"
+msgstr "Re-aperter li ultim carte cludet"
+
+msgid "menu.viewformat.plain"
+msgstr "Viser quam simplic textu"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Actual fólder"
+
+msgid "dlg.glyphfinder.help.empty"
+msgstr "Ples recargar li págine por controlar mancant glifes denov."
+
+msgid "heading.prefs.user"
+msgstr "Data del usator"
+
+msgid "error.incompleteheader"
+msgstr "Íncomplet cap-linea"
+
+msgid "menu.identity.newdomain"
+msgstr "Nov identitá por un dominia…"
+
+msgid "ident.unset"
+msgstr "Defixar"
+
+msgid "menu.email"
+msgstr "Contacter per e-post"
+
+msgid "heading.sitespec"
+msgstr "Parametres del site"
+
+msgid "menu.movetab.left"
+msgstr "Mover a levul"
+
+msgid "menu.movetab.right"
+msgstr "Mover a dextri"
+
+msgid "heading.prefs.appearance"
+msgstr "Aspecte"
+
+msgid "heading.prefs.layout"
+msgstr "Formate de págine"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Detecter li stil de menús Gopher:"
+
+msgid "prefs.evensplit"
+msgstr "Divider cartes egalmen:"
+
+msgid "menu.tab.next"
+msgstr "Sequent carte"
+
+msgid "menu.tab.prev"
+msgstr "Precedent carte"
+
+msgid "menu.movetab.split"
+msgstr "Mover al altri látere"
+
+msgid "menu.movetab.newwindow"
+msgstr "Mover a un nov fenestre"
+
+msgid "heading.prefs.content"
+msgstr "Contenete"
+
+msgid "menu.title.window"
+msgstr "Fenestre"
+
+msgid "menu.window.min"
+msgstr "Minimisar"
+
+msgid "menu.window.max"
+msgstr "Maximisar"
+
+msgid "menu.window.full"
+msgstr "Mode plen-ecran"
+
+msgid "dlg.glyphfinder.help"
+msgstr ""
+"Vu posse serchar fondes quel provide glifes por ti caracteres in li "
+"Biblioteca de fondes de skyjake.fi, o installar nov fondes TrueType "
+"manualmen."
+
+msgid "error.certverify.msg"
+msgstr ""
+"Li conexion esset interuptet pro que li certificate TLS del servitor ne "
+"coresponde a ti a quel noi fide. Ples controlar que li servitor ha avisat un "
+"cambie de su certificate. Si ne, hay un possibilitá que un malevolent 3-im "
+"partise imita li servitor a quel vu vole conexer.\n"
+"\n"
+"On posse marcar li certificate quam fidet in li Information pri li págine."
+
+msgid "bookmark.export.format.otherlines"
+msgstr ""
+"Marcat listes e citationes es reservat por additional information pri li "
+"precedent marca-págine. Lineas de simplic o formatat textu es comentas e "
+"deve esser ignorat."
+
+msgid "dlg.glyphfinder.disable"
+msgstr "Depermisser avises"
+
+msgid "error.proxyexpired.msg"
+msgstr ""
+"Li conexion esset interuptet pro que li certificate TLS del servitor proxy "
+"ha expirat."
+
+msgid "keys.feeds.showall"
+msgstr "Panel lateral: Omni elementes de feed"
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"Li conexion esset interuptet pro que li certificate TLS del servitor proxy "
+"ne coresponde a ti a quel noi fide.\n"
+"\n"
+"On posse marcar li certificate del servitor proxy quam fidet in li "
+"Information pri li págine."
+
+msgid "dlg.dismiss.warning"
+msgstr "Depermisser li avise"
+
+msgid "sitespec.ansi"
+msgstr "Avises de escapes ANSI:"
+
+msgid "keys.feeds.showunread"
+msgstr "Panel lateral: Ínleet elementes de feed"
+
+msgid "error.incompleteheader.msg"
+msgstr ""
+"Li response del servitor ne contene un complet cap-linea. Fórsan li servitor "
+"malfunctiona o ne es un servitor Gemini."
+
+msgid "error.ansi.msg"
+msgstr ""
+"Ti págine posse esser monstrat íncorectmen. It usa sequenties escape ANSI "
+"por formatar li textu, e ili es suportat solmen partialmen. On posse usar un "
+"emulator de terminal por vider it."
+
+msgid "heading.dismiss.warning"
+msgstr "Depermisser li avise?"
+
+msgid "hint.upload.token.long"
+msgstr "secret code — vi li instructiones del servitor"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Catalan"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Azerbaijanian"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Danese"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Hollandese"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Esperanto"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Automaticmen"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Finn"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Grec"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Hebreic"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Tchec"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Hungarian"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Indonesian"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Irlandese"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Korean"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Persian"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Polonese"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Slovac"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Svedese"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Turcese"
+
+msgid "dlg.translate.pre"
+msgstr "Omisser formatat textu:"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Ucrainan"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Redirectiones quel cambia li schema:"
+
+msgid "menu.bookmark.addtofolder"
+msgstr "Adjunter un marca-págine a un fólder:"
+
+msgid "dlg.import.intofolder"
+msgstr "Adjunter a un fólder:"
+
+msgid "heading.upload.dest"
+msgstr "Adresse"
+
+msgid "dlg.import.notfound"
+msgstr "Null ligamentes trovat sur ti págine."
+
+msgid "prefs.doctheme.name.vibrantlight"
+msgstr "Vibrant lucid"
+
+msgid "menu.snip.prefs"
+msgstr "Configurar…"
+
+msgid "heading.snip.new"
+msgstr "Nov fragment"
+
+msgid "heading.snip.edit"
+msgstr "Modificar li fragment"
+
+msgid "menu.foldall"
+msgstr "Contraher omni"
+
+msgid "menu.unfoldall"
+msgstr "Expander omni"
+
+msgid "menu.userdata"
+msgstr "Data de usator"
+
+msgid "menu.paste.snippet"
+msgstr "Collar li fragment"
+
+msgid "menu.search"
+msgstr "Serchar"
+
+msgid "menu.snippet.add"
+msgstr "Fragment ex li selection…"
+
+msgid "menu.tools"
+msgstr "Instrumentarium"
+
+msgid "menu.page.visitlinks"
+msgstr "Marcar omni ligamentes quam visitat"
+
+msgid "menu.bookmark.movetofolder"
+msgstr "Mover li marca-págine al fólder:"
+
+msgid "menu.input.clear"
+msgstr "Vacuar li diarium"
+
+msgid "link.searchurl"
+msgstr "Usar quam li adresse de sercha"
+
+msgid "dlg.import.headings"
+msgstr "Subfólderes secun li rubricas:"
+
+msgid "link.snippet"
+msgstr "Fragment ex un ligament…"
+
+msgid "import.userdata.snippets"
+msgstr "Fragmentes:"
+
+# Interpret as "Results from snippets..."
+msgid "heading.lookup.snippets"
+msgstr "FRAGMENTES"
+
+msgid "heading.prefs.snip"
+msgstr "Fragmentes"
+
+msgid "collapse.never"
+msgstr "Nequande"
+
+msgid "collapse.notbydefault"
+msgstr "Manualmen"
+
+msgid "collapse.bydefault"
+msgstr "Pos carga"
+
+msgid "prefs.collapsepre"
+msgstr "Contraher formatat textu:"
+
+# Operating system's UI accent color.
+msgid "prefs.accent.system"
+msgstr "Del sistema"
+
+msgid "prefs.feedinterval"
+msgstr "Actualisar feedes chascun:"
+
+msgid "prefs.feedinterval.manual"
+msgstr "Manualmen"
+
+# A "snippet query" is where the user types (for instance) "!w orange" in the navbar URL field to look up the word "orange" with the previously configured snippet "!w" that might expand into a Wikipedia search URL.
+msgid "keys.bang"
+msgstr "Usar un abbreviat adresse"
+
+msgid "error.showutf8"
+msgstr "UTF-8 detectet automaticmen"
+
+msgid "error.showutf8.msg"
+msgstr ""
+"Li tip de medie de ti págine ne esset reconosset ma it es un valid textu in "
+"codification UTF-8."
+
+msgid "sniped.new"
+msgstr "Nov fragment"
+
+msgid "sniped.help"
+msgstr ""
+"Fragmentes, nómines de quel comensa per ! (p.ex «!w»), posse esser usat quam "
+"abbreviat adresses."
+
+msgid "menu.snip.edit"
+msgstr "Modificar…"
+
+msgid "menu.snip.clipboard"
+msgstr "Copiar al paperiere"
+
+msgid "menu.snip.delete"
+msgstr "Remover"
+
+msgid "snip.content"
+msgstr "Contenete:"
+
+msgid "snip.accept"
+msgstr "Gardar li fragment"
+
+msgid "collapse.always"
+msgstr "Sempre"
+
+msgid "prefs.editor.highlight"
+msgstr "Coloration de sintaxe:"
+
+msgid "snip.name"
+msgstr "Nómine:"

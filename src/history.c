@@ -38,12 +38,14 @@ void init_RecentUrl(iRecentUrl *d) {
     d->cachedResponse = NULL;
     d->cachedDoc      = NULL;
     d->flags          = 0;
+    init_Block(&d->setIdentity, 0);
 }
 
 void deinit_RecentUrl(iRecentUrl *d) {
     iRelease(d->cachedDoc);
     deinit_String(&d->url);
     delete_GmResponse(d->cachedResponse);
+    deinit_Block(&d->setIdentity);
 }
 
 iDefineTypeConstruction(RecentUrl)
@@ -55,6 +57,7 @@ iRecentUrl *copy_RecentUrl(const iRecentUrl *d) {
     copy->cachedResponse = d->cachedResponse ? copy_GmResponse(d->cachedResponse) : NULL;
     copy->cachedDoc      = ref_Object(d->cachedDoc);
     copy->flags          = d->flags;
+    set_Block(&copy->setIdentity, &d->setIdentity);
     return copy;
 }
 
@@ -64,7 +67,7 @@ size_t cacheSize_RecentUrl(const iRecentUrl *d) {
         size += size_String(&d->cachedResponse->meta);
         size += size_Block(&d->cachedResponse->body);
     }
-    return size;    
+    return size;
 }
 
 size_t memorySize_RecentUrl(const iRecentUrl *d) {
@@ -174,6 +177,10 @@ iString *debugInfo_History(const iHistory *d) {
 }
 
 void serialize_History(const iHistory *d, iStream *outs) {
+    serializeWithContent_History(d, outs, iTrue);
+}
+
+void serializeWithContent_History(const iHistory *d, iStream *outs, iBool withContent) {
     lock_Mutex(d->mtx);
     writeU16_Stream(outs, d->recentPos);
     writeU16_Stream(outs, size_Array(&d->recent));
@@ -182,13 +189,14 @@ void serialize_History(const iHistory *d, iStream *outs) {
         serialize_String(&item->url, outs);
         write32_Stream(outs, item->normScrollY * 1.0e6f);
         writeU16_Stream(outs, item->flags);
-        if (item->cachedResponse) {
+        if (withContent && item->cachedResponse) {
             write8_Stream(outs, 1);
             serialize_GmResponse(item->cachedResponse, outs);
         }
         else {
             write8_Stream(outs, 0);
         }
+        serialize_Block(&item->setIdentity, outs);
     }
     unlock_Mutex(d->mtx);
 }
@@ -210,6 +218,9 @@ void deserialize_History(iHistory *d, iStream *ins) {
         if (read8_Stream(ins)) {
             item.cachedResponse = new_GmResponse();
             deserialize_GmResponse(item.cachedResponse, ins);
+        }
+        if (version_Stream(ins) >= recentUrlSetIdentity_FileVersion) {
+            deserialize_Block(&item.setIdentity, ins);
         }
         pushBack_Array(&d->recent, &item);
     }
@@ -316,7 +327,7 @@ void undo_History(iHistory *d) {
         deinit_RecentUrl(back_Array(&d->recent));
         popBack_Array(&d->recent);
     }
-    unlock_Mutex(d->mtx);    
+    unlock_Mutex(d->mtx);
 }
 
 iRecentUrl *precedingLocked_History(iHistory *d) {
@@ -373,10 +384,11 @@ iBool goForward_History(iHistory *d) {
     lock_Mutex(d->mtx);
     if (d->recentPos > 0) {
         d->recentPos--;
+        const iRecentUrl *recent = constMostRecentUrl_History(d);
         postCommandf_Root(get_Root(),
                           "open history:1 scroll:%f url:%s",
-                          mostRecentUrl_History(d)->normScrollY,
-                          cstr_String(url_History(d, d->recentPos)));
+                          recent->normScrollY,
+                          cstr_String(&recent->url));
         unlock_Mutex(d->mtx);
         return iTrue;
     }
@@ -402,6 +414,20 @@ const iGmResponse *cachedResponse_History(const iHistory *d) {
     return item ? item->cachedResponse : NULL;
 }
 
+void setIdentity_History(iHistory *d, const iBlock *identityFingerprint) {
+    lock_Mutex(d->mtx);
+    iRecentUrl *item = mostRecentUrl_History(d);
+    if (item) {
+        if (!isEmpty_Block(identityFingerprint)) {
+            set_Block(&item->setIdentity, identityFingerprint);
+        }
+        else {
+            clear_Block(&item->setIdentity);
+        }
+    }
+    unlock_Mutex(d->mtx);
+}
+
 void setCachedResponse_History(iHistory *d, const iGmResponse *response) {
     lock_Mutex(d->mtx);
     iRecentUrl *item = mostRecentUrl_History(d);
@@ -416,9 +442,11 @@ void setCachedResponse_History(iHistory *d, const iGmResponse *response) {
 }
 
 void setCachedDocument_History(iHistory *d, iGmDocument *doc) {
+    if (size_GmDocument(doc).x == 0) {
+        return;
+    }
     lock_Mutex(d->mtx);
     iRecentUrl *item = mostRecentUrl_History(d);
-    iAssert(size_GmDocument(doc).x > 0);
     if (item) {
 #if !defined (NDEBUG)
         if (!equal_String(url_GmDocument(doc), &item->url)) {

@@ -498,7 +498,7 @@ int main(int argc, char *argv[]) {
         printf("MD5 hash of \"%s\": ", cstr_String(&test));
         printBytes(md5, 16);
     }
-#if defined (iHavePcre)
+#if defined (iHaveRegExp)
     /* Test regular expressions. */ {
         iString *s = newCStr_String("Hello world Äöäö, there is a \U0001f698 out there.");
         iRegExp *rx = new_RegExp("\\b(THERE|WORLD|äöäö)\\b", caseInsensitive_RegExpOption);
@@ -538,5 +538,6 @@ int main(int argc, char *argv[]) {
         iString *dec = collect_String(punyDecode_Rangecc(range_String(puny)));
         printf("%s => %s => %s\n", cstrLocal_String(&domain), cstr_String(puny), cstrLocal_String(dec));
     }
+    deinit_Foundation();
     return 0;
 }

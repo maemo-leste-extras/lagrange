@@ -21,6 +21,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #include "gopher.h"
+#include "prefs.h"
+#include "app.h"
 
 #include <ctype.h>
 
@@ -47,6 +49,9 @@ static iBool isPreformatted_(iRangecc text) {
     int  numSpace  = 0;
     int  numRepeat = 0;
     char chPrev    = 0;
+    if (!prefs_App()->geminiStyledGopher) {
+        return iFalse; /* just regular text */
+    }
     for (const char *ch = text.start; ch != text.end; ch++) {
         if (*ch < 0) {
             iChar uc;
@@ -230,10 +235,19 @@ void open_Gopher(iGopher *d, const iString *url) {
         return;
     }
     /* MIME type determined by the item type. */
+    const iString *reqPath =
+        collect_String(urlDecodeExclude_String(collectNewRange_String(parts.path), "\t"));
     switch (d->type) {
-        case '0':
-            setCStr_String(d->meta, "text/plain");
+        case '0': {
+            const char *detected = mediaTypeFromFileExtension_String(reqPath);
+            if (startsWith_CStr(detected, "text/")) {
+                setCStr_String(d->meta, detected);
+            }
+            else {
+                setCStr_String(d->meta, "text/plain");
+            }
             break;
+        }
         case '1':
         case '7':
             setCStr_String(d->meta, "text/gemini");
@@ -256,17 +270,22 @@ void open_Gopher(iGopher *d, const iString *url) {
         case 'I':
             setCStr_String(d->meta, "image/generic");
             break;
-        case 's':
-            setCStr_String(d->meta, "audio/wave");
+        case 's': {
+            const char *detected = mediaTypeFromFileExtension_String(reqPath);
+            if (startsWith_CStr(detected, "audio/")) {
+                setCStr_String(d->meta, detected); /* could be .mp3, for example */
+            }
+            else {
+                setCStr_String(d->meta,  "audio/wave");
+            }
             break;
+        }
         default:
             setCStr_String(d->meta, "application/octet-stream");
             break;
     }
     d->isPre = iFalse;
     open_Socket(d->socket);
-    const iString *reqPath =
-        collect_String(urlDecodeExclude_String(collectNewRange_String(parts.path), "\t"));
     writeData_Socket(d->socket, cstr_String(reqPath), size_String(reqPath));
     if (!isEmpty_Range(&parts.query)) {
         iAssert(*parts.query.start == '?');
@@ -307,5 +326,5 @@ void setUrlItemType_Gopher(iString *url, char itemType) {
         if (parts.path.start && size_Range(&parts.path) >= 2) {
             ((char *) parts.path.start)[1] = itemType;
         }
-    }   
+    }
 }

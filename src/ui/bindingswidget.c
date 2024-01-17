@@ -101,6 +101,7 @@ static void updateItems_BindingsWidget_(iBindingsWidget *d) {
         translate_Lang(&item->label);
         toString_Sym(bind->key, bind->mods, &item->key);
         addItem_ListWidget(d->list, item);
+        iRelease(item);
     }
     sort_ListWidget(d->list, cmpId_BindingItem_);
     updateVisible_ListWidget(d->list);
@@ -188,9 +189,9 @@ static iBool processEvent_BindingsWidget_(iBindingsWidget *d, const SDL_Event *e
         /* Force the scrollbar to unfade. The list is created hidden so the scrollbar is not
            shown by default.*/
         updateVisible_ListWidget(d->list);
-        if (isTerminal_Platform()) {
+        //if (isTerminal_Platform()) {
             setFocus_Widget(as_Widget(d->list));
-        }
+        //}
         return iFalse;
     }
     else if (equal_Command(cmd, "lang.changed")) {

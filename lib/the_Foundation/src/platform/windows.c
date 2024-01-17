@@ -1,6 +1,6 @@
-/** @file platform_windows.c  Windows platform specific routines.
+/** @file platform/windows.c  Windows platform specific routines.
 
-@authors Copyright (c) 2017 Jaakko Keränen <jaakko.keranen@iki.fi>
+@authors Copyright (c) 2017-2023 Jaakko Keränen <jaakko.keranen@iki.fi>
 
 @par License
 
@@ -31,6 +31,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#if defined (iPlatformWindows) 
+#  include <winsock2.h>
+#  include "win32/wide.h"
+#endif
+
 void setLocaleCharSet_String(const char *);
 
 int idealConcurrentCount_Thread(void) {
@@ -48,5 +53,24 @@ void init_Locale(void) {
     char cpName[16];
     sprintf(cpName, "CP%d", GetOEMCP());
     setLocaleCharSet_String(cpName);
+}
+#endif
+
+#if defined (iPlatformWindows)
+void init_Windows_(void) {
+    /* Initialize Windows Sockets. */
+    WSADATA wsInfo;
+    int result = WSAStartup(MAKEWORD(2, 2), &wsInfo);
+    if (result) {
+        MessageBoxA(NULL,
+                    errorMessage_Windows_(result),
+                    "the_Foundation " iFoundationLibraryVersionCStr,
+                    MB_ICONERROR);
+        exit(1);
+    }
+}
+
+void deinit_Windows_(void) {
+    WSACleanup();
 }
 #endif

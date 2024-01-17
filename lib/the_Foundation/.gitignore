@@ -2,9 +2,9 @@
 .vsbuild
 *.user
 *.user.*
+.cache/
 doc
 build
 build-*
 .DS_Store
 *~
-

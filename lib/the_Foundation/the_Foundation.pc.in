@@ -8,3 +8,4 @@ Description: @CMAKE_PROJECT_DESCRIPTION@
 Version: @PROJECT_VERSION@
 Cflags: -I${includedir}
 Libs: -L${libdir} -l_Foundation
+Libs.private: @OPENSSL_PC_LDFLAGS@

@@ -53,6 +53,7 @@ struct Impl_ScrollWidget {
     iRangei range;
     int thumb;
     int thumbSize;
+    int thumbColor;
     iClick click;
     int startThumb;
     iAnim opacity;
@@ -87,6 +88,7 @@ void init_ScrollWidget(iScrollWidget *d) {
     init_Anim(&d->opacity, minOpacity_());
     d->willCheckFade = iFalse;
     d->fadeEnabled = iTrue;
+    d->thumbColor = uiBackgroundPressed_ColorId;
 }
 
 void deinit_ScrollWidget(iScrollWidget *d) {
@@ -152,10 +154,19 @@ static void checkVisible_ScrollWidget_(iScrollWidget *d) {
     }
 }
 
+static void rootChanged_ScrollWidget_(iScrollWidget *d) {
+    removeTicker_App(animateOpacity_ScrollWidget_, d);
+    setValue_Anim(&d->opacity, 0.0f, 0);
+}
+
 void setRange_ScrollWidget(iScrollWidget *d, iRangei range) {
     range.end = iMax(range.start, range.end);
     d->range  = range;
     checkVisible_ScrollWidget_(d);
+}
+
+void setThumbColor_ScrollWidget(iScrollWidget *d, int thumbColor) {
+    d->thumbColor = thumbColor;
 }
 
 void setThumb_ScrollWidget(iScrollWidget *d, int thumb, int thumbSize) {
@@ -248,6 +259,9 @@ static void draw_ScrollWidget_(const iScrollWidget *d) {
         init_Paint(&p);
         /* Blend if opacity is not at maximum. */
         p.alpha = 255 * value_Anim(&d->opacity);
+#if defined (iPlatformMobile)
+        p.alpha /= 2;
+#endif
         if (p.alpha > 0) {
             SDL_Renderer *render = renderer_Window(get_Window());
             if (p.alpha < 255) {
@@ -255,7 +269,7 @@ static void draw_ScrollWidget_(const iScrollWidget *d) {
             }
             const iRect thumbRect = shrunk_Rect(
                 thumbRect_ScrollWidget_(d), init_I2(isPressed ? gap_UI : (gap_UI * 4 / 3), gap_UI / 2));
-            fillRect_Paint(&p, thumbRect, isPressed ? uiBackgroundPressed_ColorId : tmQuote_ColorId);
+            fillRect_Paint(&p, thumbRect, isPressed ? uiBackgroundPressed_ColorId : d->thumbColor);
             if (p.alpha < 255) {
                 SDL_SetRenderDrawBlendMode(render, SDL_BLENDMODE_NONE);
             }
@@ -266,4 +280,5 @@ static void draw_ScrollWidget_(const iScrollWidget *d) {
 iBeginDefineSubclass(ScrollWidget, Widget)
     .processEvent = (iAny *) processEvent_ScrollWidget_,
     .draw         = (iAny *) draw_ScrollWidget_,
+    .rootChanged  = (iAny *) rootChanged_ScrollWidget_,
 iEndDefineSubclass(ScrollWidget)

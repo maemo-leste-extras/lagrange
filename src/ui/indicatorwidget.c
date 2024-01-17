@@ -44,11 +44,17 @@ static void animate_IndicatorWidget_(void *ptr) {
     if (!isFinished_Anim(&d->pos)) {
         addTickerRoot_App(animate_IndicatorWidget_, d->widget.root, ptr);
     }
-    postRefresh_App();
+    refresh_Widget(d);
 }
 
 static void setActive_IndicatorWidget_(iIndicatorWidget *d, iBool set) {
     setFlags_Widget(as_Widget(d), selected_WidgetFlag, set);
+    setValue_Anim(&d->pos, 0.0f, 0);
+}
+
+static void rootChanged_IndicatorWidget_(iIndicatorWidget *d) {
+    removeTicker_App(animate_IndicatorWidget_, d);
+    setActive_IndicatorWidget_(d, iFalse);
 }
 
 void init_IndicatorWidget(iIndicatorWidget *d) {
@@ -77,9 +83,14 @@ void draw_IndicatorWidget_(const iIndicatorWidget *d) {
         if (isLight_ColorTheme(colorTheme_App())) {
             colors[0] = black_ColorId;
         }
-        fillRect_Paint(&p,
-                       (iRect){ topLeft_Rect(rect), init_I2(pos * width_Rect(rect), gap_UI / 3)},
-                       colors[isCompleted_IndicatorWidget_(d) ? 1 : 0]);
+        fillRect_Paint(
+            &p,
+            (iRect){ addY_I2(topLeft_Rect(rect),
+                             /* Active root indicator is also a line at the top,
+                                so need a little offset if in split view. */
+                             numRoots_Window(window_Widget(d)) > 1 ? gap_UI / 2 : (gap_UI / 4)),
+                     init_I2(pos * width_Rect(rect), gap_UI / 3) },
+            colors[isCompleted_IndicatorWidget_(d) ? 1 : 0]);
     }
 }
 
@@ -122,4 +133,5 @@ iBool processEvent_IndicatorWidget_(iIndicatorWidget *d, const SDL_Event *ev) {
 iBeginDefineSubclass(IndicatorWidget, Widget)
     .draw         = (iAny *) draw_IndicatorWidget_,
     .processEvent = (iAny *) processEvent_IndicatorWidget_,
+    .rootChanged  = (iAny *) rootChanged_IndicatorWidget_,
 iEndDefineSubclass(IndicatorWidget)

@@ -373,7 +373,7 @@ iString *decodedContent_XmlElement(const iXmlElement *d) {
                     digits[idx] = *pos++;
                 }
                 pos++;
-                const iChar codepoint = strtoul(digits, NULL, isHex ? 16 : 10);
+                const iChar codepoint = (iChar) strtoul(digits, NULL, isHex ? 16 : 10);
                 if (codepoint) {
                     appendChar_String(str, codepoint);
                 }

@@ -89,7 +89,7 @@ iBool open_File(iFile *d, int modeFlags) {
     if (d->flags & read_FileMode) {
         desiredAccess |= GENERIC_READ;
     }
-    d->file = CreateFileW(toWide_CStr_(cstr_String(d->path)),
+    d->file = CreateFileW(toWide_CStr(cstr_String(d->path)),
                           desiredAccess,
                           shareMode,
                           NULL,

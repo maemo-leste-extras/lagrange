@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
-"POT-Creation-Date: 2021-03-23 19:02+0000\n"
-"PO-Revision-Date: 2022-05-24 04:21+0000\n"
+"POT-Creation-Date: 2023-01-22 13:09+0000\n"
+"PO-Revision-Date: 2023-10-24 20:14+0000\n"
 "Last-Translator: Alyssa Liddell <e-liss@tuta.io>\n"
 "Language-Team: Russian <http://weblate.skyjake.fi/projects/lagrange/ui/ru/>\n"
 "Language: ru\n"
@@ -29,20 +29,11 @@ msgstr "На базе SDL 2, OpenSSL, и ☕️"
 msgid "cancel"
 msgstr "Отмена"
 
-msgid "dismiss"
-msgstr "Закрыть"
-
 msgid "dlg.message.ok"
 msgstr "Продолжить"
 
 msgid "dlg.default"
 msgstr " OK "
-
-msgid "toggle.yes"
-msgstr "Да"
-
-msgid "toggle.no"
-msgstr "Нет"
 
 msgid "menu.title.file"
 msgstr "Файл"
@@ -94,9 +85,6 @@ msgstr "Сохранить в файл"
 
 msgid "menu.save.downloads"
 msgstr "Сохранить в папку загрузки"
-
-msgid "menu.copy.source"
-msgstr "Скопировать исходный текст"
 
 msgid "menu.sidebar"
 msgstr "Показать/скрыть боковую панель"
@@ -281,9 +269,6 @@ msgstr "МБ"
 msgid "kb"
 msgstr "КБ"
 
-msgid "bytes"
-msgstr "байт"
-
 msgid "page.timestamp"
 msgstr ""
 "Получено в %H:%M\n"
@@ -297,9 +282,6 @@ msgstr "%b %d, %Y"
 
 msgid "feeds.today"
 msgstr "Сегодня"
-
-msgid "feeds.entry.newtab"
-msgstr "Открыть статью в новой вкладке"
 
 msgid "feeds.entry.markread"
 msgstr "Отметить как прочитанное"
@@ -408,9 +390,6 @@ msgstr "Прекратить использование на этой стран
 
 msgid "ident.stopuse.all"
 msgstr "Прекратить использование везде"
-
-msgid "ident.showuse"
-msgstr "Показать использование"
 
 msgid "heading.ident.use"
 msgstr "Использование клиентского сертификата"
@@ -578,9 +557,6 @@ msgstr ""
 
 msgid "dlg.openlink"
 msgstr "Открыть ссылку"
-
-msgid "heading.certwarn"
-msgstr "НЕДОВЕРЕННЫЙ СЕРТИФИКАТ"
 
 msgid "dlg.certwarn.mayberenewed"
 msgid_plural "dlg.certwarn.mayberenewed.n"
@@ -805,7 +781,7 @@ msgid "heading.prefs.widelayout"
 msgstr "Широкий макет"
 
 msgid "heading.prefs.style"
-msgstr "Стиль"
+msgstr "Стиль страницы"
 
 msgid "heading.prefs.userinterface"
 msgstr "Пользовательский интерфейс"
@@ -826,7 +802,7 @@ msgid "prefs.smoothscroll"
 msgstr "Плавная прокрутка:"
 
 msgid "prefs.imageloadscroll"
-msgstr "Загрузка изображений при прокрутке:"
+msgstr "Загружать следующее изображение при прокрутке:"
 
 msgid "prefs.hidetoolbarscroll"
 msgstr "Скрыть панель инструментов при прокрутке:"
@@ -835,7 +811,7 @@ msgid "prefs.ostheme"
 msgstr "Использовать системную тему:"
 
 msgid "prefs.theme"
-msgstr "Тема:"
+msgstr "Тема пользовательского интерфейса:"
 
 msgid "prefs.theme.black"
 msgstr "Чёрная"
@@ -865,10 +841,10 @@ msgid "prefs.customframe"
 msgstr "Пользовательские рамки окна:"
 
 msgid "prefs.retainwindow"
-msgstr "Сохранять местоположение:"
+msgstr "Сохранять местоположение окна:"
 
 msgid "prefs.sideicon"
-msgstr "Иконка капсулы:"
+msgstr "Иконка капсулы слева:"
 
 msgid "prefs.doctheme.dark"
 msgstr "Тёмная тема:"
@@ -899,9 +875,6 @@ msgstr "Высокий контраст"
 
 msgid "prefs.saturation"
 msgstr "Насыщенность:"
-
-msgid "prefs.headingfont"
-msgstr "Шрифт заголовков:"
 
 msgid "prefs.font"
 msgstr "Шрифт основного текста:"
@@ -937,7 +910,7 @@ msgid "prefs.biglede"
 msgstr "Большой 1-й абзац:"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Переносить обычный текст:"
+msgstr "Переносить длинные строки обычного текста:"
 
 msgid "prefs.decodeurls"
 msgstr "Декодировать URL:"
@@ -1071,9 +1044,6 @@ msgstr "описание"
 msgid "dlg.certimport.nocert"
 msgstr "Нет сертификата"
 
-msgid "lang.fi"
-msgstr "Финский"
-
 msgid "heading.certimport.pasted"
 msgstr "Вставлено из буфера обмена"
 
@@ -1088,8 +1058,8 @@ msgstr "На текущей странице не найден сертифик�
 
 msgid "dlg.certimport.help"
 msgstr ""
-"Вставьте PEM-закодированный сертификат и/или закрытый ключ,\n"
-"или перетащите в окно файл .crt/.key."
+"Вставьте PEM-закодированный сертификат и/или закрытый ключ, или перетащите в "
+"окно файл .crt/.key."
 
 msgid "error.openfile"
 msgstr "Не удалось открыть файл"
@@ -1126,7 +1096,7 @@ msgstr "Слишком много перенаправлений"
 msgid "error.badstatus.msg"
 msgstr ""
 "Сервер ответил кодом состояния, которого нет в спецификации протокола "
-"Gemini. Может сервер из будущего? Или просто неисправен."
+"Gemini. Сервер может быть неисправен."
 
 msgid "error.badstatus"
 msgstr "Неизвестный код состояния"
@@ -1264,9 +1234,6 @@ msgstr ""
 "Запрос к ресурсу в домене, не обслуживаемом сервером, и сервер не принимает "
 "запросы прокси."
 
-msgid "lang.zh.hans"
-msgstr "Китайский (упрощённый)"
-
 # Interpret as "Results from bookmarks..."
 msgid "heading.lookup.bookmarks"
 msgstr "ЗАКЛАДКИ"
@@ -1319,18 +1286,6 @@ msgstr[2] "%d часов"
 
 msgid "doc.pre.nocaption"
 msgstr "Преформатированый текст без описания"
-
-msgid "prefs.collapsepreonload"
-msgstr "Сворачивать преформатированый текст:"
-
-msgid "lang.zh.hant"
-msgstr "Китайский (традиционный)"
-
-msgid "lang.ie"
-msgstr "Интерлингве"
-
-msgid "lang.sr"
-msgstr "Сербский (кир.)"
 
 #, c-format
 msgid "minutes.ago"
@@ -1453,12 +1408,9 @@ msgstr "Импорт…"
 msgid "menu.downloads"
 msgstr "Показать все загрузки"
 
-msgid "lang.ia"
-msgstr "Интерлингва"
-
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Открывать архивы:"
+msgstr "Открывать index.gmi в ZIP архивах:"
 
 msgid "gempub.meta.revdate"
 msgstr "Дата последней ревизии"
@@ -1480,7 +1432,7 @@ msgid "menu.split.horizontal"
 msgstr "По горизонтали"
 
 msgid "menu.view.split"
-msgstr "Разделить окно…"
+msgstr "Разделить окно"
 
 msgid "menu.split.vertical"
 msgstr "По вертикали"
@@ -1555,9 +1507,6 @@ msgstr "%s является сжатым архивом."
 msgid "bookmark.tag.linksplit"
 msgstr "Открытые в отделённом окне ссылки"
 
-msgid "lang.tok"
-msgstr "Токипона"
-
 msgid "prefs.pinsplit.left"
 msgstr "В окне слева"
 
@@ -1593,9 +1542,6 @@ msgstr[2] "Каталог содержит %u элементов."
 msgid "keys.tab.close.other"
 msgstr "Закрыть другие владки"
 
-msgid "lang.pl"
-msgstr "Польский"
-
 msgid "ident.export"
 msgstr "Экспорт"
 
@@ -1616,9 +1562,6 @@ msgstr "Анимации:"
 
 msgid "keys.split.item"
 msgstr "Меню действий с окном:"
-
-msgid "prefs.userfont"
-msgstr "Шрифт TrueType:"
 
 msgid "dlg.newident.scope"
 msgstr "Область использования:"
@@ -1664,9 +1607,6 @@ msgstr "Скорость клавиатуры:"
 
 msgid "prefs.scrollspeed.mouse"
 msgstr "Скорость мыши:"
-
-msgid "hint.prefs.userfont"
-msgstr "путь к файлу шрифта TrueType"
 
 msgid "prefs.linespacing"
 msgstr "Интерлиньяж:"
@@ -1829,23 +1769,8 @@ msgstr[0] "Удалить %u закладку"
 msgstr[1] "Удалить %u закладки"
 msgstr[2] "Удалить %u закладок"
 
-msgid "lang.gl"
-msgstr "Галисийский"
-
-msgid "lang.eo"
-msgstr "Эсперанто"
-
-msgid "lang.es.mx"
-msgstr "Испанский (Мексика)"
-
-msgid "lang.sk"
-msgstr "Словацкий"
-
-msgid "lang.isv"
-msgstr "Междуславянский"
-
 msgid "heading.bookmark.tags"
-msgstr "Особые теги"
+msgstr "Поведение"
 
 msgid "heading.addfolder"
 msgstr "Добавить папку"
@@ -1908,7 +1833,7 @@ msgid "dlg.upload.id.none"
 msgstr "Нет"
 
 msgid "dlg.upload.id.default"
-msgstr "По умолчанию"
+msgstr "Клиентский сертификат по умолчанию"
 
 # used on mobile
 msgid "dlg.upload.text"
@@ -1925,9 +1850,6 @@ msgstr "Выбрать файл"
 msgid "upload.id"
 msgstr "Клиентский сертификат:"
 
-msgid "dlg.fontpack.classic"
-msgstr "Загрузить пакет шрифтов (25 МБ)"
-
 msgid "num.files"
 msgid_plural "num.files.n"
 msgstr[0] "%u файл"
@@ -1939,14 +1861,6 @@ msgid_plural "num.fonts.n"
 msgstr[0] "%u шрифт"
 msgstr[1] "%u шрифта"
 msgstr[2] "%u шрифтов"
-
-msgid "heading.fontpack.classic"
-msgstr "Загрузить пакет шрифтов"
-
-msgid "dlg.fontpack.classic.msg"
-msgstr ""
-"Шрифты, ранее поставляемые вместе с приложением, теперь распространяются "
-"отдельно. Хотите ли вы скачать пакет шрифтов \"Классический\" сейчас?"
 
 msgid "fontpack.help"
 msgstr ""
@@ -1966,7 +1880,7 @@ msgid "dlg.feed.ignoreweb"
 msgstr "Игнорировать HTTP(S)-ссылки:"
 
 msgid "prefs.font.ui"
-msgstr "Интерфейс:"
+msgstr "Шрифт пользовательского интерфейса:"
 
 msgid "prefs.font.heading"
 msgstr "Заголовки:"
@@ -2017,10 +1931,10 @@ msgid "prefs.boldlink.visited"
 msgstr "Посещённые адреса"
 
 msgid "prefs.gemtext.ansi"
-msgstr "Последовательности ANSI:"
+msgstr "Последовательности ANSI в Gemtext:"
 
 msgid "prefs.font.smooth"
-msgstr "Сглаживание:"
+msgstr "Сглаживание шрифта:"
 
 msgid "prefs.gemtext.ansi.fg"
 msgstr "Цвет текста"
@@ -2029,7 +1943,7 @@ msgid "prefs.gemtext.ansi.fontstyle"
 msgstr "Начертание шрифта"
 
 msgid "prefs.font.warnmissing"
-msgstr "Предупреждения о символах:"
+msgstr "Предупреждать об отсутствующих символах:"
 
 msgid "fontpack.install.ttf"
 msgstr "Установить шрифт TrueType"
@@ -2114,15 +2028,6 @@ msgstr "Скрыть предупреждение"
 msgid "dlg.dismiss.ansi"
 msgstr "Навсегда скрыть предупреждение об эмуляции терминала на %s?"
 
-msgid "lang.uk"
-msgstr "Украинский"
-
-msgid "lang.hu"
-msgstr "Венгерский"
-
-msgid "lang.cs"
-msgstr "Чешский"
-
 msgid "menu.update"
 msgstr "Проверить наличие обновлений…"
 
@@ -2137,7 +2042,7 @@ msgid "prefs.gemtext.ansi.bg"
 msgstr "Цвет фона"
 
 msgid "prefs.time.24h"
-msgstr "24-часовой формат времени"
+msgstr "24-часовой формат времени:"
 
 # This label should be fairly short so it fits in a button in the sidebar.
 msgid "sidebar.action.feeds.markallread"
@@ -2329,10 +2234,10 @@ msgid "heading.archive.userdata"
 msgstr "Архив пользовательских данных"
 
 msgid "menu.export"
-msgstr "Экспорт данных пользователя"
+msgstr "Экспорт"
 
 msgid "menu.import"
-msgstr "Импорт данных пользователя…"
+msgstr "Импорт…"
 
 # Used in the desktop Help menu.
 msgid "menu.aboutapp"
@@ -2416,9 +2321,9 @@ msgstr "%s не является допустимым архивом польз�
 msgid "userdata.help"
 msgstr ""
 "Архивы пользовательских данных содержат историю, настройки сайтов, закладки, "
-"клиентские сертификаты и отпечатки доверенных серверных сертификатов. Их "
-"можно хранить в качестве резервных копий и использовать для переноса данных "
-"с устройства на устройство."
+"фрагменты текста, клиентские сертификаты и отпечатки доверенных серверных "
+"сертификатов. Их можно хранить в качестве резервных копий и использовать для "
+"переноса данных с устройства на устройство."
 
 msgid "prefs.uilayout"
 msgstr "Раскладка:"
@@ -2478,3 +2383,335 @@ msgstr "Простые символы:"
 
 msgid "prefs.evensplit"
 msgstr "Разделять окно равномерно:"
+
+msgid "error.proxyexpired"
+msgstr "Истёкший сертификат прокси"
+
+msgid "error.proxyverify"
+msgstr "Недоверенный прокси"
+
+msgid "error.proxyverify.msg"
+msgstr ""
+"Соединение было отменено, т.к. TLS сертификат прокси сервера не совпадает с "
+"доверенным.\n"
+"\n"
+"Сертификат прокси сервера можно сделать доверенным в Информации о странице."
+
+msgid "error.proxyexpired.msg"
+msgstr ""
+"Соединение было отменено, поскольку TLS сертификат прокси сервера просрочен."
+
+msgid "menu.folder.opentab"
+msgstr "Открыть в новых вкладках"
+
+msgid "bookmark.folder.delete"
+msgstr "Удалить папку закладок"
+
+msgid "hint.dlg.bookmark.tags"
+msgstr "теги разделяются пробелами"
+
+msgid "dlg.bookmark.notes"
+msgstr "Примечания:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "личные примечания"
+
+msgid "dlg.bookmark.identity"
+msgstr "Привязанный сертификат:"
+
+msgid "menu.email"
+msgstr "Связаться по почте"
+
+msgid "menu.identity.newdomain"
+msgstr "Новый сертификат для домена…"
+
+msgid "heading.prefs.user"
+msgstr "Данные пользователя"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Текущий каталог"
+
+msgid "ident.unset"
+msgstr "Убрать привязку"
+
+msgid "menu.title.window"
+msgstr "Окно"
+
+msgid "menu.window.min"
+msgstr "Свернуть окно"
+
+msgid "menu.window.max"
+msgstr "Развернуть окно"
+
+msgid "menu.window.full"
+msgstr "Полноэкранный режим"
+
+msgid "prefs.swipe.edge"
+msgstr "Свайп от края:"
+
+msgid "prefs.gopher.gemstyle"
+msgstr "Автоопределение стилей меню Gopher:"
+
+msgid "menu.tab.next"
+msgstr "Показать следующую вкладку"
+
+msgid "menu.tab.prev"
+msgstr "Показать предыдущую вкладку"
+
+msgid "menu.movetab.split"
+msgstr "Переместить вкладку на другую сторону"
+
+msgid "menu.movetab.newwindow"
+msgstr "Переместить вкладку в новое окно"
+
+msgid "heading.prefs.appearance"
+msgstr "Внешний вид"
+
+msgid "heading.prefs.layout"
+msgstr "Макет страницы"
+
+msgid "heading.prefs.content"
+msgstr "Содержание"
+
+msgid "menu.movetab.left"
+msgstr "Передвинуть вкладку влево"
+
+msgid "menu.movetab.right"
+msgstr "Передвинуть вкладку вправо"
+
+msgid "prefs.swipe.page"
+msgstr "Свайп на странице:"
+
+# A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Словацкий"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Шведский"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Азербайджанский"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Каталанский"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Чешский"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Датский"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Нидерландский"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Эсперанто"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Финский"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Греческий"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Иврит"
+
+# A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Венгерский"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Индонезийский"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Ирландский"
+
+# A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Корейский"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Персидский"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Польский"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Турецкий"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Украинский"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Автоматически"
+
+msgid "dlg.translate.pre"
+msgstr "Пропустить преформатирование:"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Перенаправления, изменяющие схему:"
+
+msgid "collapse.never"
+msgstr "Никогда"
+
+msgid "collapse.notbydefault"
+msgstr "Вручную"
+
+msgid "collapse.bydefault"
+msgstr "При загрузке страницы"
+
+msgid "collapse.always"
+msgstr "Всегда"
+
+msgid "menu.page.visitlinks"
+msgstr "Отметить все ссылки как посещенные"
+
+msgid "menu.input.setprompt"
+msgstr "Предполагать, что этот URL требует ввода"
+
+msgid "dlg.import.notfound"
+msgstr "На этой странице нет ссылок."
+
+msgid "prefs.collapsepre"
+msgstr "Сворачивать преформатирование:"
+
+msgid "sniped.help"
+msgstr ""
+"Фрагменты, название которых начинается с восклицательного знака (например, \""
+"!w\") можно использовать в качестве ярлыка запроса в полях URL."
+
+# A "snippet query" is where the user types (for instance) "!w orange" in the navbar URL field to look up the word "orange" with the previously configured snippet "!w" that might expand into a Wikipedia search URL.
+msgid "keys.bang"
+msgstr "Введите запрос расширения фрагмента"
+
+# Operating system's UI accent color.
+msgid "prefs.accent.system"
+msgstr "Системный"
+
+msgid "prefs.feedinterval"
+msgstr "Частота обновления ленты:"
+
+msgid "prefs.feedinterval.manual"
+msgstr "Вручную"
+
+msgid "prefs.doctheme.name.vibrantlight"
+msgstr "Яркая светлая"
+
+msgid "prefs.editor.highlight"
+msgstr "Подсветка синтаксиса:"
+
+msgid "heading.prefs.snip"
+msgstr "Фрагменты"
+
+msgid "error.showutf8.msg"
+msgstr ""
+"Тип содержимого данной страницы не распознан, но является правильным текстом "
+"в кодировке UTF-8."
+
+msgid "sniped.new"
+msgstr "Новый фрагмент"
+
+msgid "menu.snip.edit"
+msgstr "Редактировать…"
+
+msgid "menu.snip.clipboard"
+msgstr "Скопировать в буфер обмена"
+
+msgid "menu.snip.delete"
+msgstr "Удалить"
+
+msgid "menu.snip.prefs"
+msgstr "Настройка…"
+
+msgid "heading.snip.new"
+msgstr "Новый фрагмент"
+
+msgid "heading.snip.edit"
+msgstr "Редактировать фрагмент"
+
+msgid "snip.name"
+msgstr "Название:"
+
+msgid "snip.content"
+msgstr "Содержимое:"
+
+msgid "snip.accept"
+msgstr "Сохранить фрагмент"
+
+msgid "menu.foldall"
+msgstr "Сложить все"
+
+msgid "menu.unfoldall"
+msgstr "Раскрыть все"
+
+msgid "menu.userdata"
+msgstr "Данные пользователя"
+
+msgid "menu.paste.snippet"
+msgstr "Вставить фрагмент"
+
+msgid "menu.search"
+msgstr "Поиск"
+
+msgid "menu.snippet.add"
+msgstr "Фрагмент из выделения…"
+
+msgid "menu.tools"
+msgstr "Инструменты"
+
+msgid "menu.bookmark.addtofolder"
+msgstr "Добавить закладку в папку:"
+
+msgid "menu.bookmark.movetofolder"
+msgstr "Переместить закладку в папку:"
+
+msgid "menu.input.unsetprompt"
+msgstr "Не предполагать, что этот URL требует ввода"
+
+msgid "menu.input.clear"
+msgstr "Очистить историю"
+
+msgid "dlg.import.intofolder"
+msgstr "Добавить в папку:"
+
+msgid "dlg.import.headings"
+msgstr "Подпапки из заголовков:"
+
+msgid "link.searchurl"
+msgstr "Использовать в качестве поисковой URL"
+
+msgid "link.snippet"
+msgstr "Фрагмент из ссылки…"
+
+msgid "import.userdata.snippets"
+msgstr "Фрагменты:"
+
+# Interpret as "Results from snippets..."
+msgid "heading.lookup.snippets"
+msgstr "ФРАГМЕНТЫ"
+
+msgid "menu.input.restore"
+msgstr "Восстановить предыдущее:"
+
+msgid "heading.upload.dest"
+msgstr "Адрес"
+
+msgid "error.showutf8"
+msgstr "Автоматически определен UTF-8"

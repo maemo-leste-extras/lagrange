@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include "bookmarks.h"
 #include "gmcerts.h"
 #include "sitespec.h"
+#include "snippets.h"
 #include "visited.h"
 
 #include <the_Foundation/buffer.h>
@@ -53,6 +54,10 @@ void deinit_Export(iExport *d) {
 }
 
 void generate_Export(iExport *d) {
+    generatePartial_Export(d, everything_ExportFlag);
+}
+
+void generatePartial_Export(iExport *d, int dataFlags) {
     openWritable_Archive(d->arch);
     iBuffer *buf  = new_Buffer();
     iString *meta = new_String();
@@ -66,13 +71,15 @@ void generate_Export(iExport *d) {
                   "timestamp = %llu\n",
                   cstrCollect_String(format_Date(&today, "%Y-%m-%d %H:%M")),
                   (unsigned long long) integralSeconds_Time(&now));
-    /* Bookmarks. */ {
+    /* Bookmarks. */
+    if (dataFlags & bookmarks_ExportFlag) {
         openEmpty_Buffer(buf);
         serialize_Bookmarks(bookmarks_App(), stream_Buffer(buf));
         setDataCStr_Archive(d->arch, "bookmarks.ini", data_Buffer(buf));
         close_Buffer(buf);
     }
-    /* Identities. */ {
+    /* Identities. */
+    if (dataFlags & identitiesAndTrust_ExportFlag) {
         iBuffer *buf2 = new_Buffer();
         openEmpty_Buffer(buf2);
         openEmpty_Buffer(buf);
@@ -98,16 +105,25 @@ void generate_Export(iExport *d) {
         }
         close_Buffer(buf);
     }
-    /* Site-specific settings. */ {
+    /* Site-specific settings. */
+    if (dataFlags & siteSpec_ExportFlag) {
         openEmpty_Buffer(buf);
         serialize_SiteSpec(stream_Buffer(buf));
         setDataCStr_Archive(d->arch, "sitespec.ini", data_Buffer(buf));
         close_Buffer(buf);
     }
-    /* History of visited URLs. */ {
+    /* History of visited URLs. */
+    if (dataFlags & visited_ExportFlag) {
         openEmpty_Buffer(buf);
         serialize_Visited(visited_App(), stream_Buffer(buf));
         setDataCStr_Archive(d->arch, "visited.txt", data_Buffer(buf));
+        close_Buffer(buf);
+    }
+    /* Snippets. */
+    if (dataFlags & snippets_ExportFlag) {
+        openEmpty_Buffer(buf);
+        serialize_Snippets(stream_Buffer(buf));
+        setDataCStr_Archive(d->arch, "snippets.ini", data_Buffer(buf));
         close_Buffer(buf);
     }
     /* Export metadata. */
@@ -137,7 +153,7 @@ iBuffer *openEntryBuffer_Export_(const iExport *d, const char *entryPath) {
 
 void import_Export(const iExport *d, enum iImportMethod bookmarks, enum iImportMethod identities,
                    enum iImportMethod trusted, enum iImportMethod visited,
-                   enum iImportMethod siteSpec) {
+                   enum iImportMethod siteSpec, enum iImportMethod snippets) {
     if (bookmarks) {
         iBuffer *buf = openEntryBuffer_Export_(d, "bookmarks.ini");
         if (buf) {
@@ -191,6 +207,13 @@ void import_Export(const iExport *d, enum iImportMethod bookmarks, enum iImportM
         iBuffer *buf = openEntryBuffer_Export_(d, "sitespec.ini");
         if (buf) {
             deserialize_SiteSpec(stream_Buffer(buf), siteSpec);
+            iRelease(buf);
+        }
+    }
+    if (snippets) {
+        iBuffer *buf = openEntryBuffer_Export_(d, "snippets.ini");
+        if (buf) {
+            deserialize_Snippets(stream_Buffer(buf), snippets);
             iRelease(buf);
         }
     }

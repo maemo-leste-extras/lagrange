@@ -226,12 +226,13 @@ static iBool processEvent_CertListWidget_(iCertListWidget *d, const SDL_Event *e
             if (ident) {
                 iString *pem = collect_String(pem_TlsCertificate(ident->cert));
                 append_String(pem, collect_String(privateKeyPem_TlsCertificate(ident->cert)));
-                iDocumentWidget *expTab = newTab_App(NULL, iTrue);
+                iDocumentWidget *expTab = newTab_App(NULL, switchTo_NewTabFlag);
                 setUrlAndSource_DocumentWidget(
                     expTab,
                     collectNewFormat_String("file:%s.pem", cstr_String(name_GmIdentity(ident))),
                     collectNewCStr_String("text/plain"),
-                    utf8_String(pem));
+                    utf8_String(pem),
+                    0);
             }
             return iTrue;
         }

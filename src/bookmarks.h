@@ -32,7 +32,7 @@ iDeclareType(GmRequest)
 
 iDeclareType(Bookmark)
 iDeclareTypeConstruction(Bookmark)
-    
+
 /* These values are not serialized as-is in bookmarks.ini. Instead, they are included in `tags`
    with a dot prefix. This helps retain backwards and forwards compatibility. */
 enum iBookmarkFlags {
@@ -51,6 +51,9 @@ struct Impl_Bookmark {
     iString   url;
     iString   title;
     iString   tags;
+    iString   notes;    /* free-form comments */
+    iString   identity; /* if not empty, the identity (fingerprint) to activate when
+                           opening the bookmark */
     uint32_t  flags;
     iChar     icon;
     iTime     when;
@@ -63,24 +66,6 @@ iLocalDef iBool     isFolder_Bookmark   (const iBookmark *d) { return isEmpty_St
 
 iBool   hasParent_Bookmark  (const iBookmark *, uint32_t parentId);
 int     depth_Bookmark      (const iBookmark *);
-
-//iBool   hasTag_Bookmark     (const iBookmark *, const char *tag);
-//void    addTag_Bookmark     (iBookmark *, const char *tag);
-//void    removeTag_Bookmark  (iBookmark *, const char *tag);
-
-//iLocalDef void addTagIfMissing_Bookmark(iBookmark *d, const char *tag) {
-//    if (!hasTag_Bookmark(d, tag)) {
-//        addTag_Bookmark(d, tag);
-//    }
-//}
-//iLocalDef void addOrRemoveTag_Bookmark(iBookmark *d, const char *tag, iBool add) {
-//    if (add) {
-//        addTagIfMissing_Bookmark(d, tag);
-//    }
-//    else {
-//        removeTag_Bookmark(d, tag);
-//    }
-//}
 
 int     cmpTitleAscending_Bookmark      (const iBookmark **, const iBookmark **);
 int     cmpTree_Bookmark                (const iBookmark **, const iBookmark **);
@@ -103,6 +88,8 @@ void        deserialize_Bookmarks       (iBookmarks *, iStream *ins, enum iImpor
 
 uint32_t    add_Bookmarks               (iBookmarks *, const iString *url, const iString *title,
                                          const iString *tags, iChar icon);
+uint32_t    addToFolder_Bookmarks       (iBookmarks *, const iString *url, const iString *title,
+                                         const iString *tags, iChar icon, uint32_t folderId);
 iBool       remove_Bookmarks            (iBookmarks *, uint32_t id);
 iBookmark * get_Bookmarks               (iBookmarks *, uint32_t id);
 void        reorder_Bookmarks           (iBookmarks *, uint32_t id, int newOrder);
@@ -114,6 +101,7 @@ void        requestFinished_Bookmarks   (iBookmarks *, iGmRequest *req);
 
 iChar       siteIcon_Bookmarks          (const iBookmarks *, const iString *url);
 uint32_t    findUrl_Bookmarks           (const iBookmarks *, const iString *url); /* O(n) */
+uint32_t    findUrlIdent_Bookmarks      (const iBookmarks *, const iString *url, const iString *identFp); /* O(n) */
 uint32_t    recentFolder_Bookmarks      (const iBookmarks *);
 
 //iBool   filterTagsRegExp_Bookmarks      (void *regExp, const iBookmark *);

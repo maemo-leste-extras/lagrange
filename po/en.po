@@ -1,3 +1,11 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: lagrange dev\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
+
 msgid "doc.pre.nocaption"
 msgstr "Preformatted text without a caption"
 
@@ -13,7 +21,7 @@ msgid "heading.archive.userdata"
 msgstr "User Data Archive"
 
 msgid "userdata.help"
-msgstr "User data archives contain exported browsing history, identities, bookmarks, site-specific settings, and fingerprints of trusted server certificates. They can be stored as backups and used for transferring data between devices."
+msgstr "User data archives contain exported browsing history, identities, bookmarks, text snippets, site-specific settings, and fingerprints of trusted server certificates. They can be stored as backups and used for transferring data between devices."
 
 msgid "doc.archive.view"
 msgstr "View archive contents"
@@ -115,6 +123,8 @@ msgstr "A Beautiful Gemini Client"
 msgid "about.version"
 msgstr "Version"
 
+# The words "SDL 2" and "OpenSSL" in this string will be changed at runtime
+# if the build config uses different libraries (e.g., ncurses, LibreSSL).
 msgid "about.powered"
 msgstr "Powered by SDL 2, OpenSSL, and ☕️"
 
@@ -145,6 +155,9 @@ msgstr "Bookmarks"
 msgid "menu.title.identity"
 msgstr "Identity"
 
+msgid "menu.title.window"
+msgstr "Window"
+
 msgid "menu.title.help"
 msgstr "Help"
 
@@ -172,6 +185,33 @@ msgstr "Close Tabs To Right"
 msgid "menu.duptab"
 msgstr "Duplicate Tab"
 
+msgid "menu.tab.next"
+msgstr "Show Next Tab"
+
+msgid "menu.tab.prev"
+msgstr "Show Previous Tab"
+
+msgid "menu.movetab.left"
+msgstr "Move Tab Left"
+
+msgid "menu.movetab.right"
+msgstr "Move Tab Right"
+
+msgid "menu.movetab.split"
+msgstr "Move Tab to Other Side"
+
+msgid "menu.movetab.newwindow"
+msgstr "Move Tab to New Window"
+
+msgid "menu.window.min"
+msgstr "Minimize"
+
+msgid "menu.window.max"
+msgstr "Maximize"
+
+msgid "menu.window.full"
+msgstr "Toggle Full Screen"
+
 msgid "menu.split.merge"
 msgstr "Unsplit"
 
@@ -191,10 +231,10 @@ msgid "menu.downloads"
 msgstr "Show Downloads"
 
 msgid "menu.export"
-msgstr "Export User Data"
+msgstr "Export"
 
 msgid "menu.import"
-msgstr "Import User Data…"
+msgstr "Import…"
 
 msgid "menu.pageinfo"
 msgstr "Show Page Information"
@@ -241,7 +281,7 @@ msgid "menu.zoom.reset"
 msgstr "Reset Zoom"
 
 msgid "menu.view.split"
-msgstr "Split View…"
+msgstr "Split View"
 
 msgid "menu.newfolder"
 msgstr "New Folder…"
@@ -249,11 +289,20 @@ msgstr "New Folder…"
 msgid "menu.sort.alpha"
 msgstr "Sort Alphabetically"
 
+msgid "menu.foldall"
+msgstr "Fold All"
+
+msgid "menu.unfoldall"
+msgstr "Unfold All"
+
 msgid "menu.bookmarks.list"
 msgstr "List All Bookmarks"
 
 msgid "macos.menu.bookmarks.list"
 msgstr "List All"
+
+msgid "menu.userdata"
+msgstr "User Data"
 
 msgid "menu.bookmarks.bytag"
 msgstr "List Bookmarks by Tag"
@@ -289,6 +338,9 @@ msgstr "Release Notes"
 msgid "menu.website"
 msgstr "Project Website…"
 
+msgid "menu.email"
+msgstr "Contact via Email"
+
 msgid "menu.quit"
 msgstr "Quit Lagrange"
 
@@ -303,6 +355,15 @@ msgstr "Paste"
 
 msgid "menu.paste.go"
 msgstr "Paste and Go"
+
+msgid "menu.paste.snippet"
+msgstr "Paste Snippet"
+
+msgid "menu.search"
+msgstr "Search"
+
+msgid "menu.snippet.add"
+msgstr "Snippet from Selection…"
 
 # keep this short (3x1 horiz layout)
 msgid "menu.selectall"
@@ -394,11 +455,17 @@ msgstr "Back"
 msgid "menu.debug"
 msgstr "Debug Information"
 
+msgid "menu.tools"
+msgstr "Tools"
+
 msgid "menu.import.links"
 msgstr "Import All Links on Page…"
 
 msgid "menu.page.import"
 msgstr "Import Links as Bookmarks…"
+
+msgid "menu.page.visitlinks"
+msgstr "Mark All Links as Visited"
 
 msgid "menu.page.translate"
 msgstr "Translate…"
@@ -424,6 +491,9 @@ msgstr "Refresh Feeds"
 msgid "menu.identity.new"
 msgstr "New Identity…"
 
+msgid "menu.identity.newdomain"
+msgstr "New Identity for Domain…"
+
 msgid "menu.identity.import"
 msgstr "Import…"
 
@@ -436,6 +506,12 @@ msgstr "No Active Identity"
 # Menu heading shown when customizing navbar button actions.
 msgid "menu.toolbar.setaction"
 msgstr "Set Action:"
+
+msgid "menu.bookmark.addtofolder"
+msgstr "Add Bookmark to Folder:"
+
+msgid "menu.bookmark.movetofolder"
+msgstr "Move Bookmark to Folder:"
 
 msgid "sidebar.close"
 msgstr "Done"
@@ -587,6 +663,9 @@ msgstr "Open in Background Tab"
 msgid "menu.openwindow"
 msgstr "Open in New Window"
 
+msgid "menu.folder.opentab"
+msgstr "Open in New Tabs"
+
 msgid "menu.openfile"
 msgstr "Open File…"
 
@@ -653,6 +732,9 @@ msgstr "Remove Bookmark Source"
 msgid "bookmark.delete"
 msgstr "Delete Bookmark"
 
+msgid "bookmark.folder.delete"
+msgstr "Delete Bookmark Folder"
+
 msgid "bookmarks.reload"
 msgstr "Refresh Remote Sources"
 
@@ -683,6 +765,9 @@ msgstr "Stop Using on This Page"
 
 msgid "ident.stopuse.all"
 msgstr "Stop Using Everywhere"
+
+msgid "ident.unset"
+msgstr "Unpin"
 
 msgid "ident.export"
 msgstr "Export"
@@ -824,13 +909,25 @@ msgstr "Open context menu"
 
 #, c-format
 msgid "dlg.input.prompt"
-msgstr "Please enter input for %s:"
+msgstr "Enter input for %s:"
 
 msgid "dlg.input.linebreak"
 msgstr "Line break"
 
 msgid "dlg.input.send"
 msgstr "Send"
+
+msgid "menu.input.setprompt"
+msgstr "Assume This URL Requires Input"
+
+msgid "menu.input.unsetprompt"
+msgstr "Don't Assume This URL Requires Input"
+
+msgid "menu.input.clear"
+msgstr "Clear History"
+
+msgid "menu.input.restore"
+msgstr "Restore Previous:"
 
 # Paste the line preceding the clicked link into the input prompt.
 msgid "menu.input.precedingline"
@@ -860,6 +957,12 @@ msgstr "Error Saving File"
 msgid "heading.import.bookmarks"
 msgstr "Import Bookmarks"
 
+msgid "dlg.import.intofolder"
+msgstr "Add to Folder:"
+
+msgid "dlg.import.headings"
+msgstr "Subfolders from Headings:"
+
 #, c-format
 msgid "dlg.import.found"
 msgid_plural "dlg.import.found.n"
@@ -874,6 +977,9 @@ msgstr[1] "%sAdd %d Bookmarks"
 
 msgid "dlg.import.notnew"
 msgstr "All links on this page are already bookmarked."
+
+msgid "dlg.import.notfound"
+msgstr "There are no links on this page."
 
 msgid "heading.autoreload"
 msgstr "Auto-Reload"
@@ -923,8 +1029,14 @@ msgstr "Open without Proxy"
 msgid "link.copy"
 msgstr "Copy Link"
 
+msgid "link.searchurl"
+msgstr "Use as Search URL"
+
 msgid "link.bookmark"
 msgstr "Bookmark Link…"
+
+msgid "link.snippet"
+msgstr "Snippet from Link…"
 
 msgid "link.download"
 msgstr "Download Linked File"
@@ -988,7 +1100,7 @@ msgid "heading.certimport"
 msgstr "Import Identity"
 
 msgid "dlg.certimport.help"
-msgstr "Paste a PEM-encoded certificate and/or private key,\nor drop a .crt/.key file on the window."
+msgstr "Paste a PEM-encoded certificate and/or private key, or drop a .crt/.key file on the window."
 
 msgid "dlg.certimport.notfound"
 msgstr "No certificate or private key was found."
@@ -1038,6 +1150,9 @@ msgstr "Import Failed"
 
 msgid "import.userdata.bookmarks"
 msgstr "Bookmarks:"
+
+msgid "import.userdata.snippets"
+msgstr "Snippets:"
 
 msgid "import.userdata.idents"
 msgstr "Identities:"
@@ -1118,6 +1233,10 @@ msgstr "BOOKMARKS"
 msgid "heading.lookup.feeds"
 msgstr "FEEDS"
 
+# Interpret as "Results from snippets..."
+msgid "heading.lookup.snippets"
+msgstr "SNIPPETS"
+
 # Interpret as "Results from history..."
 msgid "heading.lookup.history"
 msgstr "HISTORY"
@@ -1162,7 +1281,10 @@ msgid "dlg.upload.id.none"
 msgstr "None"
 
 msgid "dlg.upload.id.default"
-msgstr "Default"
+msgstr "Default Identity"
+
+msgid "heading.upload.dest"
+msgstr "Address"
 
 msgid "heading.upload.text"
 msgstr "Text"
@@ -1259,9 +1381,52 @@ msgstr "From:"
 msgid "dlg.translate.to"
 msgstr "To:"
 
+msgid "dlg.translate.pre"
+msgstr "Skip preformatted:"
+
+# A language choice in the Translation dialog.
+msgid "lang.auto"
+msgstr "Auto-detect"
+
 # A language choice in the Translation dialog.
 msgid "lang.ar"
 msgstr "Arabic"
+
+# A language choice in the Translation dialog.
+msgid "lang.az"
+msgstr "Azerbaijani"
+
+# A language choice in the Translation dialog.
+msgid "lang.ca"
+msgstr "Catalan"
+
+# A language choice in the Translation dialog.
+msgid "lang.cs"
+msgstr "Czech"
+
+# A language choice in the Translation dialog.
+msgid "lang.da"
+msgstr "Danish"
+
+# A language choice in the Translation dialog.
+msgid "lang.nl"
+msgstr "Dutch"
+
+# A language choice in the Translation dialog.
+msgid "lang.eo"
+msgstr "Esperanto"
+
+# A language choice in the Translation dialog.
+msgid "lang.fi"
+msgstr "Finnish"
+
+# A language choice in the Translation dialog.
+msgid "lang.el"
+msgstr "Greek"
+
+# A language choice in the Translation dialog.
+msgid "lang.he"
+msgstr "Hebrew"
 
 # A language choice in the Translation dialog.
 msgid "lang.zh"
@@ -1284,6 +1449,18 @@ msgid "lang.hi"
 msgstr "Hindi"
 
 # A language choice in the Translation dialog.
+msgid "lang.hu"
+msgstr "Hungarian"
+
+# A language choice in the Translation dialog.
+msgid "lang.id"
+msgstr "Indonesian"
+
+# A language choice in the Translation dialog.
+msgid "lang.ga"
+msgstr "Irish"
+
+# A language choice in the Translation dialog.
 msgid "lang.it"
 msgstr "Italian"
 
@@ -1292,12 +1469,40 @@ msgid "lang.ja"
 msgstr "Japanese"
 
 # A language choice in the Translation dialog.
+msgid "lang.ko"
+msgstr "Korean"
+
+# A language choice in the Translation dialog.
+msgid "lang.fa"
+msgstr "Persian"
+
+# A language choice in the Translation dialog.
+msgid "lang.pl"
+msgstr "Polish"
+
+# A language choice in the Translation dialog.
 msgid "lang.pt"
 msgstr "Portuguese"
 
 # A language choice in the Translation dialog.
+msgid "lang.sk"
+msgstr "Slovak"
+
+# A language choice in the Translation dialog.
 msgid "lang.ru"
 msgstr "Russian"
+
+# A language choice in the Translation dialog.
+msgid "lang.sv"
+msgstr "Swedish"
+
+# A language choice in the Translation dialog.
+msgid "lang.tr"
+msgstr "Turkish"
+
+# A language choice in the Translation dialog.
+msgid "lang.uk"
+msgstr "Ukrainian"
 
 # A language choice in the Translation dialog.
 msgid "lang.es"
@@ -1359,6 +1564,9 @@ msgstr "Use on:"
 
 msgid "dlg.newident.scope.domain"
 msgstr "Current Domain"
+
+msgid "dlg.newident.scope.dir"
+msgstr "Current Directory"
 
 msgid "dlg.newident.scope.page"
 msgstr "Current Page"
@@ -1456,11 +1664,23 @@ msgstr "Parent folder:"
 msgid "dlg.bookmark.tags"
 msgstr "Tags:"
 
+msgid "hint.dlg.bookmark.tags"
+msgstr "space-separated terms"
+
+msgid "dlg.bookmark.notes"
+msgstr "Notes:"
+
+msgid "hint.dlg.bookmark.notes"
+msgstr "free-form private notes"
+
+msgid "dlg.bookmark.identity"
+msgstr "Pinned identity:"
+
 msgid "dlg.bookmark.icon"
 msgstr "Icon:"
 
 msgid "heading.bookmark.tags"
-msgstr "Special Tags"
+msgstr "Behavior"
 
 msgid "heading.addfolder"
 msgstr "Add Folder"
@@ -1487,6 +1707,9 @@ msgstr "Certificates"
 msgid "heading.prefs.support"
 msgstr "Support"
 
+msgid "heading.prefs.user"
+msgstr "User Data"
+
 # tab button
 msgid "heading.prefs.colors"
 msgstr "Colors"
@@ -1498,6 +1721,9 @@ msgstr "Fonts"
 msgid "heading.prefs.general"
 msgstr "General"
 
+msgid "heading.prefs.appearance"
+msgstr "Appearance"
+
 # tab button
 msgid "heading.prefs.interface"
 msgstr "UI"
@@ -1505,6 +1731,12 @@ msgstr "UI"
 # tab button
 msgid "heading.prefs.keys"
 msgstr "Keys"
+
+msgid "heading.prefs.layout"
+msgstr "Page Layout"
+
+msgid "heading.prefs.content"
+msgstr "Content"
 
 # tab button
 msgid "heading.prefs.network"
@@ -1533,11 +1765,14 @@ msgstr "Wide Layout"
 
 # tab button
 msgid "heading.prefs.style"
-msgstr "Style"
+msgstr "Page Style"
 
 # tab button
 msgid "heading.prefs.userinterface"
 msgstr "User Interface"
+
+msgid "heading.prefs.snip"
+msgstr "Snippets"
 
 msgid "prefs.downloads"
 msgstr "Downloads folder:"
@@ -1551,11 +1786,23 @@ msgstr "Show URL on hover:"
 msgid "prefs.centershort"
 msgstr "Vertical centering:"
 
-msgid "prefs.collapsepreonload"
+msgid "prefs.collapsepre"
 msgstr "Collapse preformatted:"
 
 msgid "prefs.bookmarks.addbottom"
 msgstr "Add bookmarks to bottom:"
+
+msgid "collapse.never"
+msgstr "Never"
+
+msgid "collapse.notbydefault"
+msgstr "Manually"
+
+msgid "collapse.bydefault"
+msgstr "At Page Load"
+
+msgid "collapse.always"
+msgstr "Always"
 
 # User preference that controls whether image data embedded in Data URLs gets automatically displayed when a page is loaded.
 msgid "prefs.dataurl.openimages"
@@ -1563,7 +1810,7 @@ msgstr "Open images in Data URLs:"
 
 # User preference that controls whether index.gmi pages get automatically opened when browsing the contents of a directory inside a compressed archive.
 msgid "prefs.archive.openindex"
-msgstr "Open archive indices:"
+msgstr "Open index.gmi in ZIP archives:"
 
 msgid "prefs.markdown.viewsource"
 msgstr "View Markdown as source:"
@@ -1590,7 +1837,7 @@ msgid "prefs.scrollspeed.mouse"
 msgstr "Mouse speed:"
 
 msgid "prefs.imageloadscroll"
-msgstr "Load image on scroll:"
+msgstr "Load next image on scroll key:"
 
 msgid "prefs.uilayout"
 msgstr "Layout:"
@@ -1606,6 +1853,12 @@ msgstr "Menu Bar"
 
 msgid "prefs.evensplit"
 msgstr "Split tabs evenly:"
+
+msgid "prefs.swipe.edge"
+msgstr "Swiping from edge:"
+
+msgid "prefs.swipe.page"
+msgstr "Swiping on page:"
 
 msgid "prefs.hidetoolbarscroll"
 msgstr "Hide toolbar on scroll:"
@@ -1623,7 +1876,7 @@ msgid "prefs.ostheme"
 msgstr "Use system theme:"
 
 msgid "prefs.theme"
-msgstr "Theme:"
+msgstr "UI theme:"
 
 msgid "prefs.theme.black"
 msgstr "Black"
@@ -1639,6 +1892,10 @@ msgstr "White"
 
 msgid "prefs.accent"
 msgstr "Accent color:"
+
+# Operating system's UI accent color.
+msgid "prefs.accent.system"
+msgstr "System"
 
 msgid "prefs.accent.teal"
 msgstr "Teal"
@@ -1658,11 +1915,17 @@ msgstr "Blue"
 msgid "prefs.accent.gray"
 msgstr "Gray"
 
+msgid "prefs.feedinterval"
+msgstr "Feed refresh interval:"
+
+msgid "prefs.feedinterval.manual"
+msgstr "Manual"
+
 msgid "prefs.uilang"
 msgstr "Language:"
 
 msgid "prefs.time.24h"
-msgstr "24-Hour Time"
+msgstr "24-hour time:"
 
 msgid "prefs.retaintabs"
 msgstr "Restore tabs at launch:"
@@ -1689,10 +1952,10 @@ msgid "prefs.animate"
 msgstr "Animations:"
 
 msgid "prefs.retainwindow"
-msgstr "Retain placement:"
+msgstr "Save window placement:"
 
 msgid "prefs.sideicon"
-msgstr "Capsule icon:"
+msgstr "Capsule icon on left side:"
 
 msgid "prefs.doctheme.dark"
 msgstr "Dark theme:"
@@ -1705,6 +1968,9 @@ msgstr "Colorful Dark"
 
 msgid "prefs.doctheme.name.colorfullight"
 msgstr "Colorful Light"
+
+msgid "prefs.doctheme.name.vibrantlight"
+msgstr "Vibrant Light"
 
 msgid "prefs.doctheme.name.black"
 msgstr "Black"
@@ -1750,7 +2016,7 @@ msgid "prefs.tui.simple"
 msgstr "Simple characters:"
 
 msgid "prefs.font.ui"
-msgstr "UI:"
+msgstr "UI font:"
 
 msgid "prefs.font.heading"
 msgstr "Headings:"
@@ -1777,6 +2043,9 @@ msgstr "Gemini"
 msgid "prefs.mono.gopher"
 msgstr "Gopher"
 
+msgid "prefs.gopher.gemstyle"
+msgstr "Autodetect Gopher menu styling:"
+
 msgid "prefs.boldlink"
 msgstr "Bold links:"
 
@@ -1792,7 +2061,7 @@ msgid "prefs.boldlink.light"
 msgstr "On Light"
 
 msgid "prefs.gemtext.ansi"
-msgstr "ANSI escapes:"
+msgstr "Gemtext ANSI escapes:"
 
 # Color of the text foreground, i.e., the characters.
 msgid "prefs.gemtext.ansi.fg"
@@ -1806,10 +2075,13 @@ msgid "prefs.gemtext.ansi.fontstyle"
 msgstr "Font Style"
 
 msgid "prefs.font.warnmissing"
-msgstr "Glyph warnings:"
+msgstr "Font glyph warnings:"
 
 msgid "prefs.font.smooth"
-msgstr "Smoothing:"
+msgstr "Font smoothing:"
+
+msgid "prefs.editor.highlight"
+msgstr "Syntax highlighting:"
 
 msgid "prefs.linewidth"
 msgstr "Line width:"
@@ -1842,7 +2114,10 @@ msgid "prefs.justify"
 msgstr "Justify:"
 
 msgid "prefs.plaintext.wrap"
-msgstr "Wrap plain text:"
+msgstr "Wrap long plaintext lines:"
+
+msgid "prefs.redirect.allowscheme"
+msgstr "Scheme-changing redirects:"
 
 msgid "prefs.decodeurls"
 msgstr "Decode URLs:"
@@ -1896,10 +2171,10 @@ msgstr[0] "This directory contains %u item."
 msgstr[1] "This directory contains %u items."
 
 msgid "keys.top"
-msgstr "Jump to top"
+msgstr "Jump to Top"
 
 msgid "keys.bottom"
-msgstr "Jump to bottom"
+msgstr "Jump to Bottom"
 
 msgid "keys.scroll.up"
 msgstr "Scroll up"
@@ -1933,6 +2208,10 @@ msgstr "Go to capsule root"
 
 msgid "keys.reload"
 msgstr "Reload page"
+
+# A "snippet query" is where the user types (for instance) "!w orange" in the navbar URL field to look up the word "orange" with the previously configured snippet "!w" that might expand into a Wikipedia search URL.
+msgid "keys.bang"
+msgstr "Enter a snippet query"
 
 msgid "keys.link.modkey"
 msgstr "Open link via modifier key"
@@ -2016,7 +2295,7 @@ msgid "error.badstatus"
 msgstr "Unknown Status Code"
 
 msgid "error.badstatus.msg"
-msgstr "The server responded with a status code that is not in the Gemini protocol specification. Maybe the server is from the future? Or just malfunctioning."
+msgstr "The server responded with a status code that is not in the Gemini protocol specification. Maybe the server is malfunctioning."
 
 msgid "error.openfile"
 msgstr "Failed to Open File"
@@ -2084,11 +2363,23 @@ msgstr "Expired Certificate"
 msgid "error.certexpired.msg"
 msgstr "Connection to the server was cancelled because its TLS certificate has expired."
 
+msgid "error.proxyexpired"
+msgstr "Expired Proxy Certificate"
+
+msgid "error.proxyexpired.msg"
+msgstr "The connection was cancelled because the proxy server's TLS certificate has expired."
+
 msgid "error.certverify"
 msgstr "Untrusted Server"
 
 msgid "error.certverify.msg"
 msgstr "Connection to the server was cancelled because its TLS certificate does not match the one we trust. Please check if the server has announced a certificate change. If not, it is possible that a malicious third party is masquerading as the server you tried to reach.\n\nThe certificate can be marked as trusted in Page Information."
+
+msgid "error.proxyverify"
+msgstr "Untrusted Proxy"
+
+msgid "error.proxyverify.msg"
+msgstr "Connection was cancelled because the proxy server's TLS certificate does not match the one we trust.\n\nThe proxy server's certificate can be marked as trusted in Page Information."
 
 msgid "error.temporary"
 msgstr "Temporary Failure"
@@ -2179,6 +2470,12 @@ msgstr "Missing Glyphs"
 
 msgid "error.glyphs.msg"
 msgstr "This page could not displayed in full because some characters are missing. You can install additional fonts to fix this."
+
+msgid "error.showutf8"
+msgstr "Autodetected UTF-8"
+
+msgid "error.showutf8.msg"
+msgstr "The media type of this page was not recognized but it is valid UTF-8 encoded text."
 
 msgid "gempub.cover.viewlocal"
 msgstr "This Gempub book can be viewed after it has been saved locally."
@@ -2302,3 +2599,38 @@ msgstr "Permanently dismiss warning about terminal emulation on %s?"
 
 msgid "dlg.dismiss.warning"
 msgstr "Dismiss Warning"
+
+msgid "sniped.new"
+msgstr "New Snippet"
+
+msgid "sniped.help"
+msgstr "Snippets whose name begins with a bang (e.g., \"!w\") can be used in URL fields as a query shortcut."
+
+msgid "menu.snip.edit"
+msgstr "Edit…"
+
+msgid "menu.snip.clipboard"
+msgstr "Copy to Clipboard"
+
+msgid "menu.snip.delete"
+msgstr "Delete"
+
+msgid "menu.snip.prefs"
+msgstr "Configure…"
+
+msgid "heading.snip.new"
+msgstr "New Snippet"
+
+msgid "heading.snip.edit"
+msgstr "Edit Snippet"
+
+msgid "snip.name"
+msgstr "Name:"
+
+msgid "snip.content"
+msgstr "Content:"
+
+msgid "snip.accept"
+msgstr "Save Snippet"
+
+

@@ -24,6 +24,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #include "mobile.h"
 
+#include <the_Foundation/array.h>
 #include <the_Foundation/string.h>
 #include <the_Foundation/rect.h>
 #include <the_Foundation/vec2.h>
@@ -34,6 +35,7 @@ iDeclareType(Click)
 iDeclareType(Widget)
 iDeclareType(LabelWidget)
 iDeclareType(InputWidget)
+iDeclareType(Window)
 
 iBool           isCommand_SDLEvent  (const SDL_Event *d);
 iBool           isCommand_UserEvent (const SDL_Event *, const char *cmd);
@@ -87,18 +89,21 @@ iInt2   coord_MouseWheelEvent   (const SDL_MouseWheelEvent *);
 #if defined (iPlatformTerminal)
 #   define KMOD_PRIMARY     KMOD_CTRL
 #   define KMOD_SECONDARY   KMOD_ALT
+#   define KMOD_TERTIARY    KMOD_CTRL | KMOD_ALT  /* TODO: does this work? */
 #   define KMOD_ACCEPT      KMOD_ALT
 #   define KMOD_UNDO        KMOD_ALT
 #   define KMOD_ZOOM        0
 #elif defined (iPlatformApple)
 #   define KMOD_PRIMARY     KMOD_GUI
 #   define KMOD_SECONDARY   KMOD_GUI | KMOD_SHIFT
+#   define KMOD_TERTIARY    KMOD_GUI | KMOD_SHIFT | KMOD_ALT
 #   define KMOD_ACCEPT      KMOD_PRIMARY
 #   define KMOD_UNDO        KMOD_PRIMARY
 #   define KMOD_ZOOM        KMOD_PRIMARY
 #else
 #   define KMOD_PRIMARY     KMOD_CTRL
 #   define KMOD_SECONDARY   KMOD_CTRL | KMOD_SHIFT
+#   define KMOD_TERTIARY    KMOD_CTRL | KMOD_SHIFT | KMOD_ALT
 #   define KMOD_ACCEPT      KMOD_PRIMARY
 #   define KMOD_UNDO        KMOD_PRIMARY
 #   define KMOD_ZOOM        KMOD_PRIMARY
@@ -107,6 +112,7 @@ iInt2   coord_MouseWheelEvent   (const SDL_MouseWheelEvent *);
 enum iOpenTabFlag {
     new_OpenTabFlag           = iBit(1),
     newBackground_OpenTabFlag = iBit(2),
+    newTabMask_OpenTabFlag    = new_OpenTabFlag | newBackground_OpenTabFlag,
     otherRoot_OpenTabFlag     = iBit(3),
 };
 
@@ -124,6 +130,9 @@ iLocalDef iBool equal_Rangei(iRangei a, iRangei b) {
 }
 iLocalDef iBool isEmpty_Rangei(iRangei d) {
     return size_Range(&d) == 0;
+}
+iLocalDef iBool contains_Rangei(iRangei a, int b) {
+    return b >= a.start && b < a.end;
 }
 iLocalDef iBool isOverlapping_Rangei(iRangei a, iRangei b) {
     return !isEmpty_Rangei(intersect_Rangei(a, b));
@@ -193,9 +202,11 @@ struct Impl_Click {
     int      buttons; /* all recognized buttons */
     int      clickButton; /* currently active click */
     iBool    isActive;
+    iBool    isDragging;
     int      count;
     iWidget *bounds;
     int      minHeight;
+    int      minDrag;
     iInt2    startPos;
     iInt2    pos;
 };
@@ -277,22 +288,31 @@ enum iMenuOpenFlags {
     postCommands_MenuOpenFlags = iBit(1),
     center_MenuOpenFlags       = iBit(2),
     setFocus_MenuOpenFlags     = iBit(3),
+    submenu_MenuOpenFlags      = iBit(4),
+    forcePopup_MenuOpenFlags   = iBit(5),
+    fromMenuBar_MenuOpenFlags  = iBit(6), /* must not overlap the menubar */
 };
 
 iWidget *       makeMenu_Widget                 (iWidget *parent, const iMenuItem *items, size_t n); /* returns no ref */
+iWidget *       makeMenuFlags_Widget            (iWidget *parent, const iMenuItem *items, size_t n, iBool allowNative);
 void            makeMenuItems_Widget            (iWidget *menu, const iMenuItem *items, size_t n);
 void            openMenu_Widget                 (iWidget *, iInt2 windowCoord);
 void            openMenuFlags_Widget            (iWidget *, iInt2 windowCoord, int flags);
+void            openMenuAnchorFlags_Widget      (iWidget *, iRect windowAnchorRect, int menuOpenFlags);
 void            closeMenu_Widget                (iWidget *);
 iBool           handleMenuCommand_Widget        (iWidget *menu, const char *cmd); /* used as the command handler */
 void            releaseNativeMenu_Widget        (iWidget *);
+void            setMenuUpdateItemsFunc_Widget   (iWidget *menu, const iArray *(*func)(iWidget *));
 
 size_t          count_MenuItem                  (const iMenuItem *itemsNullTerminated);
 size_t          findWidestLabel_MenuItem        (const iMenuItem *items, size_t num);
 size_t          findCommand_MenuItem            (const iMenuItem *items, size_t num, const char *command);
 void            setSelected_NativeMenuItem      (iMenuItem *item, iBool isSelected);
+void            appendIdentities_MenuItem       (iArray *menuItems, const char *command);
+const iArray *  makeBookmarkFolderActions_MenuItem(const char *command, iBool withNullTerminator, uint32_t omitFolderId);
 
 iChar           removeIconPrefix_String         (iString *);
+enum iColorId   removeColorEscapes_String       (iString *);
 
 iLabelWidget *  findMenuItem_Widget             (iWidget *menu, const char *command);
 iMenuItem *     findNativeMenuItem_Widget       (iWidget *menu, const char *commandSuffix);
@@ -302,7 +322,7 @@ void            setMenuItemLabel_Widget         (iWidget *menu, const char *comm
 void            setMenuItemLabelByIndex_Widget  (iWidget *menu, size_t index, const char *newLabel);
 void            setNativeMenuItems_Widget       (iWidget *menu, const iMenuItem *items, size_t n);
 iWidget *       findUserData_Widget             (iWidget *, void *userData);
-iWidget *       parentMenu_Widget               (iWidget *menuItem);
+iWidget *       parentMenu_Widget               (const iWidget *menuItem);
 
 int             checkContextMenu_Widget         (iWidget *, const SDL_Event *ev); /* see macro below */
 void            animateToRootVisibleTop_Widget  (iWidget *, uint32_t span);
@@ -316,27 +336,33 @@ void            animateToRootVisibleTop_Widget  (iWidget *, uint32_t span);
 iLabelWidget *  makeMenuButton_LabelWidget          (const char *label, const iMenuItem *items, size_t n);
 void            updateDropdownSelection_LabelWidget (iLabelWidget *dropButton, const char *selectedCommand);
 const char *    selectedDropdownCommand_LabelWidget (const iLabelWidget *dropButton);
-
+iLabelWidget *  makeIdentityDropdown_LabelWidget    (iWidget *headings, iWidget *values,
+                                                     const iArray *identItems, const char *label,
+                                                     const char *id);
 /*-----------------------------------------------------------------------------------------------*/
 
-iWidget *       makeMenuBar_Widget      (const iMenuItem *topLevelMenus, size_t num);
+iWidget *       makeMenuBar_Widget                  (const iMenuItem *topLevelMenus, size_t num);
+iBool           handleTopLevelMenuBarCommand_Widget (iWidget *menuButton, const char *cmd);
 
 /*-----------------------------------------------------------------------------------------------*/
 
 iWidget *       makeTabs_Widget         (iWidget *parent);
 void            setTabBarPosition_Widget(iWidget *tabs, iBool atBottom);
+void            setVerticalTabBar_Widget(iWidget *tabs);
 void            appendTabPage_Widget    (iWidget *tabs, iWidget *page, const char *label, int key, int kmods);
-void            appendFramelessTabPage_Widget(iWidget *tabs, iWidget *page, const char *title, int shortcut, int kmods);
-iWidget *       appendTwoColumnTabPage_Widget(iWidget *tabs, const char *title, int shortcut, iWidget **headings,
-                                              iWidget **values);
+void            appendFramelessTabPage_Widget(iWidget *tabs, iWidget *page, const char *title, int iconColor, int shortcut, int kmods);
+iWidget *       appendTwoColumnTabPage_Widget(iWidget *tabs, const char *title, int iconColor, int shortcut,
+                                              iWidget **headings, iWidget **values);
 void            prependTabPage_Widget   (iWidget *tabs, iWidget *page, const char *label, int key, int kmods);
 iWidget *       removeTabPage_Widget    (iWidget *tabs, size_t index); /* returns the page */
+void            moveTabPage_Widget      (iWidget *tabs, size_t index, size_t newIndex);
 void            resizeToLargestPage_Widget  (iWidget *tabs);
 void            showTabPage_Widget      (iWidget *tabs, const iAnyObject *page);
 void            addTabCloseButton_Widget(iWidget *tabs, const iWidget *page, const char *command);
 void            setTabPageLabel_Widget  (iWidget *tabs, const iAnyObject *page, const iString *label);
 iWidget *       tabPage_Widget          (iWidget *tabs, size_t index);
 iLabelWidget *  tabPageButton_Widget    (iWidget *tabs, const iAnyObject *page);
+iBool           isVerticalTabBar_Widget (const iWidget *tabs);
 iBool           isTabButton_Widget      (const iWidget *);
 void            moveTabButtonToEnd_Widget(iWidget *tabButton);
 size_t          tabPageIndex_Widget     (const iWidget *tabs, const iAnyObject *page);
@@ -347,12 +373,16 @@ size_t          tabCount_Widget         (const iWidget *tabs);
 
 iWidget *   makeSheet_Widget            (const char *id);
 void        useSheetStyle_Widget        (iWidget *);
+void        enableResizing_Widget       (iWidget *, int minWidth, const char *resizeId);
+void        restoreWidth_Widget         (iWidget *);
+void        updateBookmarkEditorFieldWidths_Widget(iWidget *);
 iWidget *   makeDialogButtons_Widget    (const iMenuItem *actions, size_t numActions);
 iWidget *   makeTwoColumns_Widget       (iWidget **headings, iWidget **values);
 
 iLabelWidget *dialogAcceptButton_Widget (const iWidget *);
 int           dialogTransitionDir_Widget(const iWidget *);
 iLabelWidget *addDialogTitle_Widget     (iWidget *, const char *text, const char *idOrNull);
+iLabelWidget *addWrappedLabel_Widget    (iWidget *, const char *text, const char *idOrNull);
 iInputWidget *addTwoColumnDialogInputField_Widget(iWidget *headings, iWidget *values,
                                                   const char *labelText, const char *inputId,
                                                   iInputWidget *input);
@@ -375,25 +405,31 @@ iWidget *   makeQuestion_Widget     (const char *title, const char *msg,
 iWidget *   makePreferences_Widget          (void);
 void        updatePreferencesLayout_Widget  (iWidget *prefs);
 
-iWidget *   makeBookmarkEditor_Widget       (iBool isFolder, iBool withDup);
+iWidget *   makeBookmarkEditor_Widget       (uint32_t folderId, iBool withDup);
 void        setBookmarkEditorParentFolder_Widget(iWidget *editor, uint32_t folderId);
 iWidget *   makeBookmarkCreation_Widget     (const iString *url, const iString *title, iChar icon);
 iWidget *   makeIdentityCreation_Widget     (void);
 iWidget *   makeFeedSettings_Widget         (uint32_t bookmarkId);
 iWidget *   makeSiteSpecificSettings_Widget (const iString *url);
+iWidget *   makeSnippetCreation_Widget      (void);
 iWidget *   makeTranslation_Widget          (iWidget *parent);
 iWidget *   makeGlyphFinder_Widget          (void);
-iWidget *   makeUserDataImporter_Dialog     (const iString *archivePath);
+iWidget *   makeUserDataImporter_Widget     (const iString *archivePath);
+iWidget *   makeLinkImporter_Widget         (size_t count);
 
 const char *    languageId_String   (const iString *menuItemLabel);
 int             languageIndex_CStr  (const char *langId);
 
+iWindow *   promoteDialogToWindow_Widget    (iWidget *);
+iBool       isPromoted_Widget               (iWidget *);
+void        destroyDialog_Widget            (iWidget *);
+
 /*-----------------------------------------------------------------------------------------------*/
 
 iDeclareType(PerfTimer)
-    
+
 struct Impl_PerfTimer {
-    uint64_t ticks;    
+    uint64_t ticks;
 };
 
 void        init_PerfTimer                  (iPerfTimer *);

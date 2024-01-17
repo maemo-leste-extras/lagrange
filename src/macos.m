@@ -208,12 +208,15 @@ static void ignoreImmediateKeyDownEvents_(void) {
 
 @end
 
+static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, int atIndex,
+                                  iBool isBookmarksMenu, const iMenuItem *items, size_t n);
+
 /*----------------------------------------------------------------------------------------------*/
 
 @interface MyDelegate : NSResponder<NSApplicationDelegate, NSTouchBarDelegate
 #if defined (LAGRANGE_ENABLE_SPARKLE)
         , SUUpdaterDelegate
-#endif                                    
+#endif
         > {
     enum iTouchBarVariant touchBarVariant;
     NSString *currentAppearanceName;
@@ -416,7 +419,7 @@ static void appearanceChanged_MacOS_(NSString *name) {
         return [[CommandButton alloc] initWithIdentifier:identifier
                                                    image:[NSImage imageNamed:NSImageNameTouchBarAddTemplate]
                                                   widget:nil
-                                                 command:@"tabs.new"];
+                                                 command:@"tabs.new append:1"];
     }
     return nil;
 }
@@ -439,7 +442,7 @@ void enableMomentumScroll_MacOS(void) {
     NSString *url = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
     iString *str = newCStr_String([url cStringUsingEncoding:NSUTF8StringEncoding]);
     str = urlDecodeExclude_String(collect_String(str), "/#?:");
-    postCommandf_App("~open url:%s", cstr_String(str));
+    postCommandf_App("~open newtab:1 url:%s", cstr_String(str));
     delete_String(str);
 }
 @end
@@ -454,29 +457,14 @@ void registerURLHandler_MacOS(void) {
     [handler release];
 }
 
-#if 0
-static iBool isTracking_;
-
-static void trackSwipe_(NSEvent *event) {
-    if (isTracking_) {
-        return;
+static iBool processKeyDownEvent_(NSEvent *event) {
+    if ((event.modifierFlags & NSEventModifierFlagFunction) && (event.keyCode == 0xe)) {
+        /* Globe-E shows the sysetm Character Viewer in recent versions of macOS. */
+        postCommand_App("emojipicker");
+        return iTrue;
     }
-    isTracking_ = iTrue;
-    [event trackSwipeEventWithOptions:NSEventSwipeTrackingLockDirection
-             dampenAmountThresholdMin:-1.0
-                                  max:1.0
-                         usingHandler:^(CGFloat gestureAmount, NSEventPhase phase,
-                                        BOOL isComplete, BOOL *stop) {
-                        printf("TRACK: amount:%f phase:%lu complete:%d\n",
-                               gestureAmount, (unsigned long) phase, isComplete);
-                        fflush(stdout);
-                        if (isComplete) {
-                            isTracking_ = iFalse;
-                        }
-                      }
-    ];
+    return iFalse;
 }
-#endif
 
 static int swipeDir_ = 0;
 static int preventTapGlitch_ = 0;
@@ -486,13 +474,13 @@ static iBool processScrollWheelEvent_(NSEvent *event) {
     const iBool isInertia  = (event.momentumPhase & (NSEventPhaseBegan | NSEventPhaseChanged)) != 0;
     const iBool isEnded    = event.scrollingDeltaX == 0.0f && event.scrollingDeltaY == 0.0f && !isInertia;
     const iWindow *win     = NULL; //&get_MainWindow()->base;
-    /* If this event belongs to one of the MainWindows, handle it and mark it for that window. 
+    /* If this event belongs to one of the MainWindows, handle it and mark it for that window.
        If it's for an auxiliary window, let the system handle it. */
-    iConstForEach(PtrArray, i, mainWindows_App()) {
+    iConstForEach(PtrArray, i, regularWindows_App()) {
         if (event.window == nsWindow_(as_Window(i.ptr)->win)) {
             win = i.ptr;
             break;
-        }            
+        }
     }
     if (!win) { //event.window != nsWindow_(win->win)) {
         /* Not a main window. */
@@ -540,10 +528,10 @@ static iBool processScrollWheelEvent_(NSEvent *event) {
         e.which = 1; /* Distinction between trackpad and regular mouse. */
         /* Disregard any wheel acceleration. */
         e.x = event.scrollingDeltaX > 0 ? 1 : event.scrollingDeltaX < 0 ? -1 : 0;
-        e.y = event.scrollingDeltaY > 0 ? 1 : event.scrollingDeltaY < 0 ? -1 : 0;        
+        e.y = event.scrollingDeltaY > 0 ? 1 : event.scrollingDeltaY < 0 ? -1 : 0;
         SDL_PushEvent((SDL_Event *) &e);
         return iTrue;
-    }                
+    }
     /* Post corresponding MOUSEWHEEL events. */
     SDL_MouseWheelEvent e = { .type = SDL_MOUSEWHEEL };
     e.timestamp = SDL_GetTicks();
@@ -554,7 +542,7 @@ static iBool processScrollWheelEvent_(NSEvent *event) {
         setInertia_MouseWheelEvent(&e, isInertia);
         setScrollFinished_MouseWheelEvent(&e, isEnded);
         e.x = event.scrollingDeltaX * win->pixelRatio;
-        e.y = event.scrollingDeltaY * win->pixelRatio;        
+        e.y = event.scrollingDeltaY * win->pixelRatio;
         /* Only scroll on one axis at a time. */
         if (swipeDir_ == 0) {
             swipeDir_ = iAbs(e.x) > iAbs(e.y) ? 1 : 2;
@@ -574,10 +562,11 @@ static iBool processScrollWheelEvent_(NSEvent *event) {
         e.x = -event.scrollingDeltaX;
         e.y = iSign(event.scrollingDeltaY);
     }
-    // printf("#### [%d] dx:%d dy:%d phase:%ld inertia:%d end:%d\n", preventTapGlitch_, e.x, e.y, (long) event.momentumPhase,
-    //        isInertia, isEnded); fflush(stdout);
+//    printf("#### Window %d [%d] dx:%d dy:%d phase:%ld inertia:%d end:%d\n", e.windowID,
+//           preventTapGlitch_, e.x, e.y, (long) event.momentumPhase,
+//           isInertia, isEnded); fflush(stdout);
     SDL_PushEvent((SDL_Event *) &e);
-    return iTrue;        
+    return iTrue;
 }
 
 void setupApplication_MacOS(void) {
@@ -594,7 +583,7 @@ void setupApplication_MacOS(void) {
              context:myDel];
     app.delegate = myDel;
     NSMenu *appMenu = [[[NSApp mainMenu] itemAtIndex:0] submenu];
-    NSMenuItem *prefsItem = [appMenu itemWithTitle:@"Preferences…"];
+    NSMenuItem *prefsItem = [appMenu itemAtIndex:2];
     NSMenuItem *quitItem = [appMenu itemAtIndex:[appMenu numberOfItems] - 1];
     prefsItem.target = myDel;
     prefsItem.action = @selector(showPreferences);
@@ -605,14 +594,33 @@ void setupApplication_MacOS(void) {
     NSMenuItem *windowCloseItem = [windowMenu itemWithTitle:@"Close"];
     windowCloseItem.target = myDel;
     windowCloseItem.action = @selector(closeTab);
-    
+
+    /* TODO: translate these on lang.changed */
+    static const iMenuItem macWindowMenuItems_[] = {
+        { "---" },
+        { "${menu.tab.next}", 0, 0, "tabs.next" },
+        { "${menu.tab.prev}", 0, 0, "tabs.prev" },
+        { "${menu.duptab}", 0, 0, "tabs.new duplicate:1" },
+        { "---" },
+    };
+    makeMenuItems_(windowMenu, [myDel menuCommands], 4, iFalse,
+                   macWindowMenuItems_, iElemCount(macWindowMenuItems_));
+
     [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskScrollWheel
                                           handler:^NSEvent*(NSEvent *event){
                                             if (event.type == NSEventTypeScrollWheel &&
                                                 processScrollWheelEvent_(event)) {
-                                                return nil; /* was eaten */                                                
+                                                return nil; /* was eaten */
                                             }
                                             return event;
+                                          }];
+    [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown
+                                          handler:^NSEvent*(NSEvent *event){
+                                              if (event.type == NSEventTypeKeyDown &&
+                                                  processKeyDownEvent_(event)) {
+                                                  return nil; /* was eaten */
+                                              }
+                                              return event;
                                           }];
 #if defined (LAGRANGE_ENABLE_SPARKLE)
     [[SUUpdater sharedUpdater] setDelegate:myDel];
@@ -637,7 +645,7 @@ void enableMenuIndex_MacOS(int index, iBool enable) {
     NSApplication *app = [NSApplication sharedApplication];
     NSMenu *appMenu = [app mainMenu];
     NSMenuItem *menuItem = [appMenu itemAtIndex:index];
-    [menuItem setEnabled:enable];        
+    [menuItem setEnabled:enable];
 }
 
 void enableMenuItem_MacOS(const char *menuItemCommand, iBool enable) {
@@ -769,18 +777,12 @@ void removeMenu_MacOS(int atIndex) {
     [appMenu removeItemAtIndex:atIndex];
 }
 
-enum iColorId removeColorEscapes_String(iString *d) {
-    enum iColorId color = none_ColorId;
-    for (;;) {
-        const char *esc = strchr(cstr_String(d), '\v');
-        if (esc) {
-            const char *endp;
-            color = parseEscape_Color(esc, &endp);
-            remove_Block(&d->chars, esc - cstr_String(d), endp - esc);
-        }
-        else break;
+void removeMenuItems_MacOS(int atIndex, int firstItem, int numItems) {
+    NSApplication *app = [NSApplication sharedApplication];
+    NSMenu *menu = [[app mainMenu] itemAtIndex:atIndex].menu;
+    for (int i = 0; i < numItems; i++) {
+        [menu removeItemAtIndex:firstItem];
     }
-    return color;
 }
 
 static NSString *cleanString_(const iString *ansiEscapedText) {
@@ -789,7 +791,7 @@ static NSString *cleanString_(const iString *ansiEscapedText) {
     iRegExp *ansi = makeAnsiEscapePattern_Text(iTrue /* with ESC */);
     replaceRegExp_String(&mod, ansi, "", NULL, NULL);
     iRelease(ansi);
-    NSString *clean = [NSString stringWithUTF8String:cstr_String(&mod)];    
+    NSString *clean = [NSString stringWithUTF8String:cstr_String(&mod)];
     deinit_String(&mod);
     return clean;
 }
@@ -800,19 +802,25 @@ static NSAttributedString *makeAttributedString_(const iString *ansiEscapedText)
     initCopy_String(&mod, ansiEscapedText);
     NSData *data = [NSData dataWithBytesNoCopy:data_Block(&mod.chars) length:size_String(&mod)];
     NSAttributedString *as = [[NSAttributedString alloc] initWithHTML:data
-                                                   documentAttributes:nil];    
+                                                   documentAttributes:nil];
     deinit_String(&mod);
     return as;
 }
 #endif
 
 /* returns the selected item, if any */
-static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, const iMenuItem *items, size_t n) {
+static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, int atIndex,
+                                  const iBool isBookmarksMenu,
+                                  const iMenuItem *items, size_t n) {
+    if (atIndex == 0) {
+        atIndex = menu.numberOfItems;
+    }
+    atIndex = iMin(atIndex, menu.numberOfItems);
     NSMenuItem *selectedItem = nil;
     for (size_t i = 0; i < n && items[i].label; ++i) {
         const char *label = translateCStr_Lang(items[i].label);
         if (equal_CStr(label, "---")) {
-            [menu addItem:[NSMenuItem separatorItem]];
+            [menu insertItem:[NSMenuItem separatorItem] atIndex:atIndex++];
         }
         else {
             const iBool hasCommand = (items[i].command && items[i].command[0]);
@@ -828,7 +836,7 @@ static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, const iM
             }
             iString itemTitle;
             initCStr_String(&itemTitle, label);
-            removeIconPrefix_String(&itemTitle);
+            iChar itemIcon = removeIconPrefix_String(&itemTitle);
             if (removeColorEscapes_String(&itemTitle) == uiTextCaution_ColorId) {
 //                prependCStr_String(&itemTitle, "\u26a0\ufe0f ");
             }
@@ -837,8 +845,50 @@ static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, const iM
             NSAttributedString *title = [[NSAttributedString alloc] initWithString:cleanString_(&itemTitle)];
             item.attributedTitle = title;
             [title release];
-            item.action = (hasCommand ? @selector(postMenuItemCommand:) : nil);
-            [menu addItem:item];
+            if (hasCommand && startsWith_CStr(items[i].command, "submenu id:")) {
+                NSMenu *sub = [[NSMenu alloc] init];
+                sub.autoenablesItems = YES;
+                const char *submenuId = cstr_String(string_Command(items[i].command, "id"));
+                iWidget *subwidget = findChild_Widget(submenuRoot_MacOS()->widget, submenuId);
+                if (!subwidget) {
+                    subwidget = findWidget_Root(submenuId);
+                }
+                if (subwidget) {
+                    const iArray *items = userData_Object(subwidget);
+                    iAssert(items);
+                    makeMenuItems_(sub, commands, 0, isBookmarksMenu, constData_Array(items),
+                                   size_Array(items));
+                    [item setSubmenu:sub];
+#if defined (__MAC_11_0)
+                    if (isBookmarksMenu) {
+                        if (@available(macOS 11.0, *)) {
+                            /* TODO: Is there an equivalent symbol for older macOS? */
+                            [item setImage:[NSImage imageWithSystemSymbolName:@"folder"
+                                                     accessibilityDescription:nil]];
+                        }
+                    }
+#endif
+                }
+                else {
+                    [sub release];
+                    [item release];
+                    continue;
+                }
+                [sub release];
+            }
+            else {
+                item.action = (hasCommand ? @selector(postMenuItemCommand:) : nil);
+#if defined (__MAC_11_0)
+                if (@available(macOS 11.0, *)) {
+                    if (isBookmarksMenu && hasCommand && startsWith_CStr(items[i].command, "!open ")) {
+                        /* TODO: Is there an equivalent symbol for older macOS? */
+                        [item setImage:[NSImage imageWithSystemSymbolName:@"bookmark.fill"
+                                                 accessibilityDescription:nil]];
+                    }
+                }
+#endif
+            }
+            [menu insertItem:item atIndex:atIndex++];
             deinit_String(&itemTitle);
             [item setTarget:commands];
             if (isChecked) {
@@ -855,33 +905,55 @@ static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, const iM
             if (hasCommand) {
                 [commands setCommand:[NSString stringWithUTF8String:items[i].command]
                          forMenuItem:item];
-                /* Bindings may have a different key. */
+                /* Bindings may have a different key. -1 disables the shortcut. */
                 const iBinding *bind = findCommand_Keys(items[i].command);
                 if (bind && bind->id < builtIn_BindingId) {
                     key   = bind->key;
                     kmods = bind->mods;
                 }
             }
-            setShortcut_NSMenuItem_(item, key, kmods);
+            if (items[i].key >= 0) {
+                setShortcut_NSMenuItem_(item, key, kmods);
+            }
+            [item release];
         }
     }
     return selectedItem;
 }
 
-void insertMenuItems_MacOS(const char *menuLabel, int atIndex, const iMenuItem *items, size_t count) {
+void insertMenuItems_MacOS(const char *menuLabel, int atIndex, int firstItemIndex,
+                           const iMenuItem *items, size_t count) {
     NSApplication *app = [NSApplication sharedApplication];
     MyDelegate *myDel = (MyDelegate *) app.delegate;
     NSMenu *appMenu = [app mainMenu];
     menuLabel = translateCStr_Lang(menuLabel);
-    NSMenuItem *mainItem = [appMenu insertItemWithTitle:[NSString stringWithUTF8String:menuLabel]
-                                                 action:nil
-                                          keyEquivalent:@""
-                                                atIndex:atIndex];
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:[NSString stringWithUTF8String:menuLabel]];
+    NSMenuItem *mainItem;
+    NSMenu *menu;
+    if (firstItemIndex == 0) {
+        mainItem = [appMenu insertItemWithTitle:[NSString stringWithUTF8String:menuLabel]
+                                         action:nil
+                                  keyEquivalent:@""
+                                        atIndex:atIndex];
+        menu = [[NSMenu alloc] initWithTitle:[NSString stringWithUTF8String:menuLabel]];
+        [mainItem setSubmenu:menu];
+    }
+    else {
+        mainItem = [appMenu itemAtIndex:atIndex];
+        menu = mainItem.submenu;
+    }
     [menu setAutoenablesItems:NO];
-    makeMenuItems_(menu, [myDel menuCommands], items, count);
-    [mainItem setSubmenu:menu];
-    [menu release];
+    makeMenuItems_(menu, [myDel menuCommands], firstItemIndex, atIndex == 4, items, count);
+    if (firstItemIndex == 0) {
+        [menu release];
+    }
+}
+
+void updateMenuItems_MacOS(int atIndex, const iMenuItem *items, size_t count) {
+    NSApplication *app = [NSApplication sharedApplication];
+    MyDelegate *myDel = (MyDelegate *) app.delegate;
+    NSMenu *menu = [[app mainMenu] itemAtIndex:atIndex].submenu;
+    [menu removeAllItems];
+    makeMenuItems_(menu, [myDel menuCommands], 0, atIndex == 4, items, count);
 }
 
 void handleCommand_MacOS(const char *cmd) {
@@ -930,7 +1002,7 @@ void log_MacOS(const char *msg) {
 void showPopupMenu_MacOS(iWidget *source, iInt2 windowCoord, const iMenuItem *items, size_t n) {
     NSMenu *      menu         = [[NSMenu alloc] init];
     MenuCommands *menuCommands = [[MenuCommands alloc] init];
-    iWindow *     window       = as_Window(mainWindow_App());
+    iWindow *     window       = activeWindow_App();
     NSWindow *    nsWindow     = nsWindow_(window->win);
     /* View coordinates are flipped. */
     iBool isCentered = iFalse;
@@ -940,9 +1012,9 @@ void showPopupMenu_MacOS(iWidget *source, iInt2 windowCoord, const iMenuItem *it
     }
     windowCoord.y = window->size.y - windowCoord.y;
     windowCoord = divf_I2(windowCoord, window->pixelRatio);
-    NSPoint screenPoint = [nsWindow convertRectToScreen:(CGRect){ { windowCoord.x, windowCoord.y }, 
-								  { 0, 0 } }].origin;
-    NSMenuItem *selectedItem = makeMenuItems_(menu, menuCommands, items, n);
+    NSPoint screenPoint = [nsWindow convertRectToScreen:(CGRect){ { windowCoord.x, windowCoord.y },
+                                  { 0, 0 } }].origin;
+    NSMenuItem *selectedItem = makeMenuItems_(menu, menuCommands, 0, iFalse, items, n);
     [menuCommands setSource:source];
     if (isCentered) {
         NSSize menuSize = [menu size];
@@ -950,6 +1022,20 @@ void showPopupMenu_MacOS(iWidget *source, iInt2 windowCoord, const iMenuItem *it
         screenPoint.y += menuSize.height / 2;
     }
     [menu setAutoenablesItems:NO];
+    /* Fake the release of the left mouse button, in case it's also pressed. Otherwise,
+       SDL would miss the release event while the context menu's event loop is running. */
+    if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON_LMASK) {
+        SDL_MouseButtonEvent mbe = {
+            .type = SDL_MOUSEBUTTONUP,
+            .timestamp = SDL_GetTicks(),
+            .windowID = id_Window(get_Window()),
+            0,
+            SDL_BUTTON_LEFT,
+            SDL_RELEASED,
+            1
+        };
+        SDL_PushEvent((SDL_Event *) &mbe);
+    }
     [menu popUpMenuPositioningItem:selectedItem atLocation:screenPoint inView:nil];
     [menu release];
     [menuCommands release];
@@ -966,17 +1052,15 @@ void showPopupMenu_MacOS(iWidget *source, iInt2 windowCoord, const iMenuItem *it
 }
 
 iColor systemAccent_Color(void) {
-#if 0
     if (@available(macOS 10.14, *)) {
-	NSColor *accent = [[NSColor controlAccentColor] colorUsingColorSpace:
-							    [NSColorSpace deviceRGBColorSpace]];
-	return (iColor){ iClamp([accent redComponent]   * 255, 0, 255),
-		iClamp([accent greenComponent] * 255, 0, 255),
-		iClamp([accent blueComponent]  * 255, 0, 255),
-		255 };
+        NSColor *accent = [[NSColor controlAccentColor] colorUsingColorSpace:
+                                                            [NSColorSpace deviceRGBColorSpace]];
+        return (iColor){ iClamp([accent redComponent]   * 255, 0, 255),
+                         iClamp([accent greenComponent] * 255, 0, 255),
+                         iClamp([accent blueComponent]  * 255, 0, 255),
+                         255 };
     }
-#endif
-    return (iColor){ 255, 255, 255, 255 };
+    return get_Color(cyan_ColorId);
 }
 
 #if defined (LAGRANGE_ENABLE_SPARKLE)

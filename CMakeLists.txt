@@ -18,21 +18,24 @@
 cmake_minimum_required (VERSION 3.9)
 
 project (Lagrange
-    VERSION 1.13.6
+    VERSION 1.17.6
     DESCRIPTION "A Beautiful Gemini Client"
     LANGUAGES C
 )
-set (COPYRIGHT_YEAR 2022)
+set (COPYRIGHT_YEAR 2023)
 if (IOS)
-    set (PROJECT_VERSION 1.13)
-    set (IOS_BUNDLE_VERSION 2)
-    set (IOS_BUILD_DATE "2022-05-09")
+    set (PROJECT_VERSION 1.17)
+    set (IOS_BUNDLE_VERSION 6)
+    set (IOS_BUILD_DATE "2023-12-04")
 endif ()
 if (ANDROID)
-    set (PROJECT_VERSION 1.13)
-    set (ANDROID_BUILD_VERSION b6)  # remember to update Gradle, AndroidManifest.xml
-    set (ANDROID_BUILD_DATE "2022-05-09")
+    set (PROJECT_VERSION 1.17)
+    set (ANDROID_BUILD_VERSION b25)  # remember to update Gradle, AndroidManifest.xml
+    set (ANDROID_BUILD_DATE "2023-12-04")
 endif ()
+
+# Load modules from the source tree
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Defaults that depend on environment.
 set (DEFAULT_RESIZE_DRAW ON)
@@ -47,31 +50,34 @@ endif ()
 # Build configuration.
 option (ENABLE_CUSTOM_FRAME     "Draw a custom window frame (Windows)" OFF)
 option (ENABLE_DOWNLOAD_EDIT    "Allow changing the Downloads directory" ON)
-option (ENABLE_FRIBIDI          "Use the GNU FriBidi library for bidirectional text" ON)
-option (ENABLE_FRIBIDI_BUILD    "Build the GNU FriBidi library (if OFF, try pkg-config)" OFF)
-option (ENABLE_HARFBUZZ         "Use the HarfBuzz library to shape text" ON)
-option (ENABLE_HARFBUZZ_MINIMAL "Build the HarfBuzz library with minimal dependencies (if OFF, try pkg-config)" OFF)
 option (ENABLE_IDLE_SLEEP       "While idle, sleep in the main thread instead of waiting for events" ${DEFAULT_IDLE_SLEEP})
 option (ENABLE_IPC              "Use IPC to communicate between running instances" ON)
 option (ENABLE_KERNING          "Enable kerning in font renderer (slower)" ON)
 option (ENABLE_MAC_MENUS        "Use native context menus (macOS)" ON)
 option (ENABLE_MOBILE_PHONE     "Use the phone mobile UI design instead of desktop UI" OFF)
 option (ENABLE_MOBILE_TABLET    "Use the tablet mobile UI design instead of desktop UI" OFF)
-option (ENABLE_MPG123           "Use mpg123 for decoding MPEG audio" ON)
 option (ENABLE_POPUP_MENUS      "Use popup windows for context menus (if OFF, menus are confined inside main window)" ON)
 option (ENABLE_RELATIVE_EMBED   "Resources should always be found via relative path" OFF)
 option (ENABLE_RESIZE_DRAW      "Force window to redraw during resizing" ${DEFAULT_RESIZE_DRAW})
-option (ENABLE_SPARKLE          "Use Sparkle for automatic updates (macOS)" OFF)
 option (ENABLE_TUI              "Enable the Curses TUI instead of GUI" OFF)
-option (ENABLE_WEBP             "Use libwebp to decode .webp images (via pkg-config)" ON)
 option (ENABLE_WINDOWPOS_FIX    "Set position after showing window (workaround for SDL bug)" OFF)
-option (ENABLE_WINSPARKLE       "Use WinSparkle for automatic updates (Windows)" OFF)
 option (ENABLE_X11_SWRENDER     "Use software rendering (X11)" OFF)
+option (ENABLE_X11_XLIB         "Use Xlib directly, if available (X11)" ON)
 set    (CACERT_PEM_PATH         "" CACHE FILEPATH "Root CA cacert.pem file to include as a built-in resource")
 
-include (BuildType.cmake)
-include (Resources.cmake)
-include (Depends.cmake)
+# Optional dependencies.
+option (ENABLE_FRIBIDI          "Use the GNU FriBidi library for bidirectional text" ON)
+option (ENABLE_FRIBIDI_BUILD    "Build the GNU FriBidi library (if OFF, try pkg-config)" OFF)
+option (ENABLE_HARFBUZZ         "Use the HarfBuzz library to shape text" ON)
+option (ENABLE_HARFBUZZ_MINIMAL "Build the HarfBuzz library with minimal dependencies (if OFF, try pkg-config)" OFF)
+option (ENABLE_MPG123           "Use mpg123 for decoding MPEG audio" ON)
+option (ENABLE_SPARKLE          "Use Sparkle for automatic updates (macOS)" OFF)
+option (ENABLE_WEBP             "Use libwebp to decode .webp images (via pkg-config)" ON)
+option (ENABLE_WINSPARKLE       "Use WinSparkle for automatic updates (Windows)" OFF)
+
+include (BuildType)
+include (Resources)
+include (Depends)
 include (CheckCCompilerFlag)
 
 check_c_compiler_flag (-Werror=incompatible-pointer-types CFLAG_INCOMPATIBLE_POINTER_TYPES)
@@ -88,6 +94,7 @@ set (RESOURCES
     res/lang/eo.bin
     res/lang/es.bin
     res/lang/es_MX.bin
+    res/lang/eu.bin
     res/lang/fi.bin
     res/lang/fr.bin
     res/lang/gl.bin
@@ -96,6 +103,7 @@ set (RESOURCES
     res/lang/ie.bin
     res/lang/isv.bin
     res/lang/it.bin
+    res/lang/ja.bin
     res/lang/nl.bin
     res/lang/pl.bin
     res/lang/ru.bin
@@ -106,6 +114,7 @@ set (RESOURCES
     res/lang/uk.bin
     res/lang/zh_Hans.bin
     res/lang/zh_Hant.bin
+    res/logo.png
     res/shadow.png
     res/fontpack.ini
     res/macos-system-fonts.ini
@@ -131,6 +140,7 @@ else ()
         res/about/help.gmi
         res/about/version-0.13.gmi
         res/about/version-1.5.gmi
+        res/about/version-1.10.gmi
         res/about/version.gmi
         res/arg-help.txt
     )
@@ -197,8 +207,10 @@ set (SOURCES
     src/resources.h
     src/sitespec.c
     src/sitespec.h
+    src/snippets.c
+    src/snippets.h
     src/stb_image.h
-    src/stb_image_resize.h
+    src/stb_image_resize2.h
     src/stb_truetype.h
     src/updater.h
     src/visited.c
@@ -216,6 +228,8 @@ set (SOURCES
     src/ui/color.h
     src/ui/command.c
     src/ui/command.h
+    src/ui/documentview.c
+    src/ui/documentview.h
     src/ui/documentwidget.c
     src/ui/documentwidget.h
     src/ui/indicatorwidget.c
@@ -244,6 +258,8 @@ set (SOURCES
     src/ui/scrollwidget.h
     src/ui/sidebarwidget.c
     src/ui/sidebarwidget.h
+    src/ui/snippetwidget.c
+    src/ui/snippetwidget.h
     src/ui/text.c
     src/ui/text.h
     src/ui/touch.c
@@ -278,7 +294,7 @@ if (ENABLE_TUI)
     add_definitions (-DiPlatformTerminal=1)
     list (APPEND SOURCES
         src/ui/text_terminal.c
-    )    
+    )
 else ()
     set (ENABLE_STB_TRUETYPE YES)
     list (APPEND SOURCES
@@ -301,6 +317,12 @@ if (ENABLE_IPC)
     list (APPEND SOURCES
         src/ipc.c
         src/ipc.h
+    )
+endif ()
+if (ENABLE_X11_XLIB AND XLIB_FOUND AND NOT APPLE AND NOT MSYS)
+    list (APPEND SOURCES
+        src/x11.c
+        src/x11.h
     )
 endif ()
 if (ANDROID)
@@ -376,12 +398,10 @@ endif ()
 target_include_directories (app PUBLIC
     src
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${SDL2_INCLUDE_DIRS}
 )
 target_compile_options (app PUBLIC
     -Werror=implicit-function-declaration
     -Wno-deprecated-declarations
-    ${SDL2_CFLAGS}
     -DSTB_VORBIS_NO_STDIO=1
     -DSTB_VORBIS_NO_INTEGER_CONVERSION=1
 )
@@ -432,10 +452,15 @@ endif ()
 if (ENABLE_WINDOWPOS_FIX)
     target_compile_definitions (app PUBLIC LAGRANGE_ENABLE_WINDOWPOS_FIX=1)
 endif ()
+if (TARGET x11-lib)
+    target_link_libraries (app PUBLIC x11-lib)
+endif ()
 if (ENABLE_X11_SWRENDER)
     target_compile_definitions (app PUBLIC LAGRANGE_ENABLE_X11_SWRENDER=1)
 endif ()
 target_link_libraries (app PUBLIC the_Foundation::the_Foundation)
+target_include_directories (app PUBLIC ${SDL2_INCLUDE_DIRS})
+target_compile_options (app PUBLIC ${SDL2_CFLAGS})
 target_link_libraries (app PUBLIC ${SDL2_LDFLAGS})
 if (ENABLE_HARFBUZZ AND HARFBUZZ_FOUND AND NOT ENABLE_TUI)
     if (TARGET harfbuzz-lib)
@@ -498,6 +523,7 @@ if (APPLE AND NOT ENABLE_TUI)
             XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_APPS_DIR)"
             XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
             XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
+            XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "$(inherited)" # fix missing dSYM issue
             MACOSX_BUNDLE_ICON_FILE "AppIcon"
         )
     endif ()
@@ -508,6 +534,9 @@ if (APPLE AND NOT ENABLE_TUI)
     endif ()
 endif ()
 if (ANDROID)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+        target_compile_options (app PUBLIC -mfpu=neon-vfpv4) # 32-bit stb_image_resize2
+    endif ()
     target_compile_definitions (app PUBLIC
         LAGRANGE_ANDROID_VERSION="${ANDROID_BUILD_VERSION}"
         LAGRANGE_ANDROID_BUILD_DATE="${ANDROID_BUILD_DATE}"
@@ -519,11 +548,11 @@ if (MSYS)
         target_link_libraries (app PUBLIC winsparkle)
     endif ()
 endif ()
-if (UNIX)
-    target_link_libraries (app PUBLIC m)
-endif ()
+#if (UNIX)
+#    target_link_libraries (app PUBLIC m)
+#endif ()
 if (HAIKU)
-    target_link_libraries (app PUBLIC m network bsd)
+    target_link_libraries (app PUBLIC network bsd)
 endif ()
 
 # Deployment.
@@ -549,13 +578,14 @@ elseif (HAIKU)
 elseif (ANDROID)
     file (COPY ${EMB_BIN} DESTINATION ${CMAKE_SOURCE_DIR}/../src/main/assets)
 elseif (ENABLE_TUI AND (UNIX OR MSYS))
+    include (GNUInstallDirs)
     install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
     install (FILES res/lagrange.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
     if (NOT ENABLE_RELATIVE_EMBED)
         target_compile_definitions (app PUBLIC
                 LAGRANGE_EMB_BIN="${CMAKE_INSTALL_FULL_DATADIR}/lagrange/resources.lgr")
     endif ()
-    install (FILES ${EMB_BIN} DESTINATION ${CMAKE_INSTALL_DATADIR}/lagrange)    
+    install (FILES ${EMB_BIN} DESTINATION ${CMAKE_INSTALL_DATADIR}/lagrange)
 elseif (UNIX AND NOT APPLE)
     include (GNUInstallDirs)
     set_target_properties (app PROPERTIES
@@ -563,7 +593,6 @@ elseif (UNIX AND NOT APPLE)
     )
     set (desktop ${CMAKE_CURRENT_BINARY_DIR}/fi.skyjake.Lagrange.desktop)
     file (WRITE ${desktop} "[Desktop Entry]
-Encoding=UTF-8
 Name=Lagrange
 Comment=${PROJECT_DESCRIPTION}
 Categories=Network;
@@ -571,13 +600,14 @@ Exec=${CMAKE_INSTALL_PREFIX}/bin/lagrange %U
 Terminal=false
 Type=Application
 StartupWMClass=lagrange
-Icon=lagrange
+Icon=fi.skyjake.Lagrange
 MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/spartan;
 ")
     install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
-    install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon)
-    install (FILES debian/maemo/lagrange.png
-         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
+    install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
+    install (FILES res/lagrange-256.png
+         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps
+         RENAME fi.skyjake.Lagrange.png
     )
     install (FILES res/fi.skyjake.Lagrange.appdata.xml
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
