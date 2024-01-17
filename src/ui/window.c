@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include "documentwidget.h"
 #include "sidebarwidget.h"
 #include "paint.h"
+#include "snippets.h"
 #include "root.h"
 #include "touch.h"
 #include "util.h"
@@ -49,6 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <the_Foundation/file.h>
 #include <the_Foundation/path.h>
 #include <the_Foundation/regexp.h>
+#include <the_Foundation/thread.h>
 #include <SDL_hints.h>
 #include <SDL_timer.h>
 #include <SDL_syswm.h>
@@ -56,7 +58,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image.h"
-#include "stb_image_resize.h"
+#include "stb_image_resize2.h"
 
 static iWindow *    theWindow_;
 static iMainWindow *theMainWindow_;
@@ -82,8 +84,9 @@ static const iMenuItem fileMenuItems_[] = {
     { "---" },
     { saveToDownloads_Label, SDLK_s, KMOD_PRIMARY, "document.save" },
     { "---" },
-    { "${menu.downloads}", 0, 0, "downloads.open" },
-    { "${menu.export}", 0, 0, "export" },
+    { "${menu.userdata}", 0, 0, "submenu id:userdatamenu" },
+//    { "${menu.downloads}", 0, 0, "downloads.open" },
+//    { "${menu.export}", 0, 0, "export" },
 #if defined (iPlatformPcDesktop)
     { "---" },
     { "${menu.preferences}", preferences_KeyShortcut, "preferences" },
@@ -128,25 +131,20 @@ static const iMenuItem viewMenuItems_[] = {
     { "${menu.zoom.out}", SDLK_MINUS, KMOD_PRIMARY, "zoom.delta arg:-10" },
     { "${menu.zoom.reset}", SDLK_0, KMOD_PRIMARY, "zoom.set arg:100" },
     { "---" },
-    { "${menu.view.split}", SDLK_j, KMOD_PRIMARY, "splitmenu.open" },
+    { "${menu.view.split}", SDLK_j, KMOD_PRIMARY, "submenu id:splitmenu" },
     { NULL }
 };
 
 static iMenuItem bookmarksMenuItems_[] = {
     { "${menu.page.bookmark}", bookmarkPage_KeyShortcut, "bookmark.add" },
     { "${menu.page.subscribe}", subscribeToPage_KeyShortcut, "feeds.subscribe" },
-    { "${menu.newfolder}", 0, 0, "bookmarks.addfolder" },
-    { "---" },
-    { "${macos.menu.bookmarks.list}", 0, 0, "open url:about:bookmarks" },
-    { "${macos.menu.bookmarks.bytag}", 0, 0, "open url:about:bookmarks?tags" },
-    { "${macos.menu.bookmarks.bytime}", 0, 0, "open url:about:bookmarks?created" },
-    { "---" },
-    { "${menu.sort.alpha}", 0, 0, "bookmarks.sort" },
     { "${menu.import.links}", 0, 0, "bookmark.links confirm:1" },
-    { "${menu.bookmarks.refresh}", 0, 0, "bookmarks.reload.remote" },
     { "---" },
+    { "${menu.newfolder}", 0, 0, "bookmarks.addfolder" },
+    { "${menu.sort.alpha}", 0, 0, "bookmarks.sort" },
+    { "---" },
+    { "${menu.bookmarks.refresh}", 0, 0, "bookmarks.reload.remote" },
     { "${menu.feeds.refresh}", refreshFeeds_KeyShortcut, "feeds.refresh" },
-    { "${menu.feeds.entrylist}", 0, 0, "open url:about:feeds" },
     { NULL }
 };
 
@@ -205,12 +203,19 @@ static void insertMacMenus_(void) {
     if (macMenusInserted_) {
         return;
     }
+    iRoot *oldRoot = current_Root();
+    setCurrent_Root(submenuRoot_MacOS());
+    /* Create the needed bookmarks submenus. */
     insertMenuItems_MacOS("${menu.title.file}", 1, 0, fileMenuItems_, iElemCount(fileMenuItems_));
     insertMenuItems_MacOS("${menu.title.edit}", 2, 0, editMenuItems_, iElemCount(editMenuItems_));
     insertMenuItems_MacOS("${menu.title.view}", 3, 0, viewMenuItems_, iElemCount(viewMenuItems_));
-    insertMenuItems_MacOS("${menu.title.bookmarks}", 4, 0, bookmarksMenuItems_, iElemCount(bookmarksMenuItems_));
+    /* Bookmarks menu contents are dynamic. */ {
+        const iArray *items = updateBookmarksMenu_Widget(NULL);
+        insertMenuItems_MacOS("${menu.title.bookmarks}", 4, 0, constData_Array(items), size_Array(items));
+    }
     insertMenuItems_MacOS("${menu.title.identity}", 5, 0, identityMenuItems_, iElemCount(identityMenuItems_));
     insertMenuItems_MacOS("${menu.title.help}", 7, 0, helpMenuItems_, iElemCount(helpMenuItems_));
+    setCurrent_Root(oldRoot);
     macMenusInserted_ = iTrue;
 }
 
@@ -279,6 +284,7 @@ static void windowSizeChanged_MainWindow_(iMainWindow *d) {
 #endif
     const int totalWeight = weights[0] + weights[1];
     int w = 0;
+    setCurrent_Window(d);
     iForIndices(i, d->base.roots) {
         iRoot *root = d->base.roots[i];
         if (root) {
@@ -314,9 +320,6 @@ void resizeSplits_MainWindow(iMainWindow *d, iBool updateDocumentSize) {
 }
 
 static void setupUserInterface_MainWindow(iMainWindow *d) {
-#if defined (LAGRANGE_MAC_MENUBAR)
-    insertMacMenus_(); /* TODO: Shouldn't this be in the App? */
-#endif
     /* One root is created by default. */
     d->base.roots[0] = new_Root();
     d->base.roots[0]->window = as_Window(d);
@@ -325,6 +328,9 @@ static void setupUserInterface_MainWindow(iMainWindow *d) {
     setCurrent_Root(NULL);
     /* One of the roots always has keyboard input focus. */
     d->base.keyRoot = d->base.roots[0];
+#if defined (LAGRANGE_MAC_MENUBAR)
+    insertMacMenus_(); /* TODO: Shouldn't this be in the App? */
+#endif
 }
 
 static iBool updateSize_MainWindow_(iMainWindow *d, iBool notifyAlways) {
@@ -335,7 +341,7 @@ static iBool updateSize_MainWindow_(iMainWindow *d, iBool notifyAlways) {
     const iBool hasChanged = !isEqual_I2(oldSize, *size);
     if (hasChanged) {
         windowSizeChanged_MainWindow_(d);
-        postRefresh_App();
+        postRefresh_Window(d);
     }
     if (!isResizing_ && (hasChanged || notifyAlways)) {
         if (!isEqual_I2(*size, d->place.lastNotifiedSize)) {
@@ -347,7 +353,7 @@ static iBool updateSize_MainWindow_(iMainWindow *d, iBool notifyAlways) {
                              isHoriz,
                              isVert);
             postCommand_App("widget.overflow"); /* check bounds with updated sizes */
-            postRefresh_App();
+            postRefresh_Window(d);
         }
         d->place.lastNotifiedSize = *size;
     }
@@ -356,18 +362,28 @@ static iBool updateSize_MainWindow_(iMainWindow *d, iBool notifyAlways) {
 
 void drawWhileResizing_MainWindow(iMainWindow *d, int w, int h) {
     if (!isDrawing_) {
-        isResizing_ = iTrue;
-        setCurrent_Window(d);
-        draw_MainWindow(d);
-        isResizing_ = iFalse;
+        static uint32_t lastTime_ = 0;
+        /* Restrict the draw frequency on Linux because in some environments this would
+           otherwise cause draws to queue up as the resizing events come in too frequently. */
+        if (!isLinux_Platform() || SDL_GetTicks() - lastTime_ >= 32) {
+            lastTime_ = SDL_GetTicks();
+            isResizing_ = iTrue;
+            setCurrent_Window(d);
+            draw_MainWindow(d);
+            isResizing_ = iFalse;
+        }
     }
 }
 
 static float pixelRatio_Window_(const iWindow *d) {
+#if defined (iPlatformAppleMobile)
+    return displayScale_iOS(d);
+#else
     int dx, x;
     SDL_GetRendererOutputSize(d->render, &dx, NULL);
     SDL_GetWindowSize(d->win, &x, NULL);
     return (float) dx / (float) x;
+#endif
 }
 
 #if defined (iPlatformApple)
@@ -459,7 +475,7 @@ static SDL_HitTestResult hitTest_MainWindow_(SDL_Window *win, const SDL_Point *p
     const int   rightEdge     = left_Rect(bounds_Widget(findChild_Widget(
                                     rootAt_Window_(as_Window(d), init_I2(pos->x, pos->y))->widget,
                                     "winbar.min")));
-    setCurrent_Window(NULL);                                    
+    setCurrent_Window(NULL);
     d->place.lastHit = SDL_HITTEST_NORMAL;
     if (snap != maximized_WindowSnap) {
         if (isLeft) {
@@ -561,7 +577,8 @@ static SDL_Surface *loadImage_(const iBlock *data, int resized) {
         constData_Block(data), (int) size_Block(data), &w, &h, &num, STBI_rgb_alpha);
     if (resized) {
         stbi_uc *rsPixels = malloc(num * resized * resized);
-        stbir_resize_uint8(pixels, w, h, 0, rsPixels, resized, resized, 0, num);
+        stbir_resize_uint8_linear(pixels, w, h, 0, rsPixels, resized, resized, 0,
+                                  (stbir_pixel_layout) num);
         free(pixels);
         pixels = rsPixels;
         w = h = resized;
@@ -682,7 +699,7 @@ void init_MainWindow(iMainWindow *d, iRect rect) {
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, shouldDefaultToMetalRenderer_MacOS() ? "metal" : "opengl");
     flags |= shouldDefaultToMetalRenderer_MacOS() ? SDL_WINDOW_METAL : SDL_WINDOW_OPENGL;
     if (flags & SDL_WINDOW_METAL) {
-        /* There are some really odd refresh glitches that only occur with the Metal 
+        /* There are some really odd refresh glitches that only occur with the Metal
            backend. It's perhaps related to it not expecting refresh to stop intermittently
            to wait for input events. If forcing constant refreshing at full frame rate, the
            problems seem to go away... Rendering everything to a separate render target
@@ -719,6 +736,7 @@ void init_MainWindow(iMainWindow *d, iRect rect) {
     d->place.snap             = 0;
     d->keyboardHeight         = 0;
     d->backBuf                = NULL;
+    d->logo                   = NULL;
     const iInt2 minSize =
         (isMobile_Platform() ? zero_I2() /* windows aren't independently resizable */
                              : init_I2(425, 325));
@@ -761,6 +779,16 @@ void init_MainWindow(iMainWindow *d, iRect rect) {
         free(surf->pixels);
         SDL_FreeSurface(surf);
     }
+    /* Load the emboss graphic. */ {
+        SDL_Surface *surf = loadImage_(&imageLogo_Resources, 0);
+        d->logo = SDL_CreateTextureFromSurface(d->base.render, surf);
+        SDL_SetTextureBlendMode(d->logo, SDL_BLENDMODE_BLEND);
+#if SDL_VERSION_ATLEAST(2, 0, 12) && !defined (iPlatformTerminal)
+        SDL_SetTextureScaleMode(d->logo, SDL_ScaleModeBest);
+#endif
+        free(surf->pixels);
+        SDL_FreeSurface(surf);
+    }
     d->appIcon = NULL;
 #if defined (LAGRANGE_ENABLE_CUSTOM_FRAME)
     /* Load the app icon for drawing in the title bar. */
@@ -784,6 +812,12 @@ void init_MainWindow(iMainWindow *d, iRect rect) {
 void deinit_MainWindow(iMainWindow *d) {
     setCurrent_Window(as_Window(d));
     removeWindow_App(d);
+    if (d->logo) {
+        SDL_DestroyTexture(d->logo);
+    }
+    if (d->appIcon) {
+        SDL_DestroyTexture(d->appIcon);
+    }
     if (d->backBuf) {
         SDL_DestroyTexture(d->backBuf);
     }
@@ -816,7 +850,7 @@ iBool isFullscreen_MainWindow(const iMainWindow *d) {
 }
 
 iRoot *findRoot_Window(const iWindow *d, const iWidget *widget) {
-    
+
     while (widget->parent) {
         widget = widget->parent;
     }
@@ -961,11 +995,11 @@ static iBool handleWindowEvent_Window_(iWindow *d, const SDL_WindowEvent *ev) {
             if (d->type == extra_WindowType) {
                 checkPixelRatioChange_Window_(d);
             }
-            postRefresh_App();
+            postRefresh_Window(d);
             return iTrue;
         case SDL_WINDOWEVENT_RESTORED:
         case SDL_WINDOWEVENT_SHOWN:
-            postRefresh_App();
+            postRefresh_Window(d);
             return iTrue;
         case SDL_WINDOWEVENT_MOVED:
             if (d->type == extra_WindowType) {
@@ -976,30 +1010,30 @@ static iBool handleWindowEvent_Window_(iWindow *d, const SDL_WindowEvent *ev) {
             if (d->type == extra_WindowType) {
                 d->focusGainedAt = SDL_GetTicks();
                 setCapsLockDown_Keys(iFalse);
-                postCommand_App("window.focus.gained");
+                postCommandf_App("window.focus.gained arg:%d", id_Window(d));
                 d->isExposed = iTrue;
                 setActiveWindow_App(d);
 #if !defined (iPlatformDesktop)
                 /* Returned to foreground, may have lost buffered content. */
                 invalidate_Window(d);
                 postCommand_App("window.unfreeze");
-#endif                
+#endif
             }
             return iFalse;
         case SDL_WINDOWEVENT_TAKE_FOCUS:
             if (d->type == extra_WindowType) {
                 SDL_SetWindowInputFocus(d->win);
-                postRefresh_App();
+                postRefresh_Window(d);
                 return iTrue;
             }
             return iFalse;
         case SDL_WINDOWEVENT_FOCUS_LOST:
             if (d->type == popup_WindowType) {
                 /* Popup windows are currently only used for menus. */
-                closeMenu_Widget(d->roots[0]->widget);
+//                closeMenu_Widget(d->roots[0]->widget);
             }
             else {
-                postCommand_App("window.focus.lost");
+                postCommandf_App("window.focus.lost arg:%u", id_Window(d));
                 closePopups_App(iTrue);
             }
             return iTrue;
@@ -1009,7 +1043,7 @@ static iBool handleWindowEvent_Window_(iWindow *d, const SDL_WindowEvent *ev) {
             if (d->type == extra_WindowType) {
                 postCommand_App("window.mouse.exited");
             }
-            postRefresh_App();
+            postRefresh_Window(d);
             return iTrue;
         case SDL_WINDOWEVENT_ENTER:
             d->isMouseInside = iTrue;
@@ -1033,15 +1067,26 @@ static void savePlace_MainWindow_(iAny *mainWindow) {
         iAssert(~SDL_GetWindowFlags(d->base.win) & SDL_WINDOW_MAXIMIZED);
 #endif
         d->place.normalRect.pos =
-            max_I2(zero_I2(), sub_I2(d->place.normalRect.pos, border));        
+            max_I2(zero_I2(), sub_I2(d->place.normalRect.pos, border));
     }
+}
+
+static void notifyHovered_Window_(iWindow *d) {
+    SDL_UserEvent notif = { .type      = SDL_USEREVENT,
+                            .timestamp = SDL_GetTicks(),
+                            .code      = command_UserEventCode,
+                            .data1     = (void *) format_CStr("mouse.hovered ptr:%p arg:1",
+                                                          d->hover) };
+    dispatchEvent_Widget(d->hover, (SDL_Event *) &notif);
 }
 
 static void setHoverUnderCursor_Window_(iWindow *d) {
     if (isDesktop_Platform()) {
         iWidget *hover = hitChild_Window(d, mouseCoord_Window(d, 0));
         if (hover) {
-            setHover_Widget(hover);
+            if (setHover_Widget(hover) && hover->flags2 & commandOnHover_WidgetFlag2) {
+                notifyHovered_Window_(d);
+            }
         }
     }
 }
@@ -1058,7 +1103,7 @@ static iBool handleWindowEvent_MainWindow_(iMainWindow *d, const SDL_WindowEvent
                for ensuring that window contents get redrawn after expose events. Under certain
                circumstances (e.g., under openbox), not doing this would mean that the window
                is missing contents until other events trigger a refresh. */
-            postRefresh_App();
+            postRefresh_Window(d);
 #if defined(LAGRANGE_ENABLE_WINDOWPOS_FIX)
             if (d->place.initialPos.x >= 0) {
                 /* Must not move a maximized window. */
@@ -1136,14 +1181,14 @@ static iBool handleWindowEvent_MainWindow_(iMainWindow *d, const SDL_WindowEvent
                 d->place.normalRect.size = init_I2(ev->data1, ev->data2);
             }
             checkPixelRatioChange_Window_(as_Window(d));
-            postRefresh_App();
+            postRefresh_Window(d);
             return iTrue;
         case SDL_WINDOWEVENT_RESTORED:
         case SDL_WINDOWEVENT_SHOWN:
             updateSize_MainWindow_(d, iTrue);
             invalidate_MainWindow_(d, iTrue);
             d->base.isMinimized = iFalse;
-            postRefresh_App();
+            postRefresh_Window(d);
             return iTrue;
         case SDL_WINDOWEVENT_MAXIMIZED:
             return iTrue;
@@ -1155,7 +1200,7 @@ static iBool handleWindowEvent_MainWindow_(iMainWindow *d, const SDL_WindowEvent
         case SDL_WINDOWEVENT_RESIZED:
             /* On mobile, this occurs when the display is rotated. */
             invalidate_Window(d);
-            postRefresh_App();
+            postRefresh_Window(d);
             return iTrue;
 #endif
         case SDL_WINDOWEVENT_LEAVE:
@@ -1172,7 +1217,7 @@ static iBool handleWindowEvent_MainWindow_(iMainWindow *d, const SDL_WindowEvent
         case SDL_WINDOWEVENT_FOCUS_GAINED:
             d->base.focusGainedAt = SDL_GetTicks();
             setCapsLockDown_Keys(iFalse);
-            postCommand_App("window.focus.gained");
+            postCommandf_App("window.focus.gained arg:%u", id_Window(as_Window(d)));
             d->base.isExposed = iTrue;
             setActiveWindow_App(d);
             setHoverUnderCursor_Window_(as_Window(d));
@@ -1183,7 +1228,7 @@ static iBool handleWindowEvent_MainWindow_(iMainWindow *d, const SDL_WindowEvent
 #endif
             return iFalse;
         case SDL_WINDOWEVENT_FOCUS_LOST:
-            postCommand_App("window.focus.lost");
+            postCommandf_App("window.focus.lost arg:%u", id_Window(as_Window(d)));
 #if !defined (iPlatformDesktop)
             setFreezeDraw_MainWindow(d, iTrue);
 #endif
@@ -1191,7 +1236,7 @@ static iBool handleWindowEvent_MainWindow_(iMainWindow *d, const SDL_WindowEvent
             return iFalse;
         case SDL_WINDOWEVENT_TAKE_FOCUS:
             SDL_SetWindowInputFocus(d->base.win);
-            postRefresh_App();
+            postRefresh_Window(d);
             return iTrue;
         case SDL_WINDOWEVENT_CLOSE:
 #if defined (iPlatformAppleDesktop)
@@ -1201,9 +1246,9 @@ static iBool handleWindowEvent_MainWindow_(iMainWindow *d, const SDL_WindowEvent
                 postCommand_App("quit");
             }
             else {
-                closeWindow_App(as_Window(d));   
+                closeWindow_App(as_Window(d));
             }
-#endif            
+#endif
             return iTrue;
         default:
             break;
@@ -1245,7 +1290,7 @@ iBool processEvent_Window(iWindow *d, const SDL_Event *ev) {
             }
         }
         case SDL_RENDER_TARGETS_RESET:
-        case SDL_RENDER_DEVICE_RESET: {            
+        case SDL_RENDER_DEVICE_RESET: {
             if (mw || extraw) {
                 invalidate_Window_(d, iTrue /* force full reset */);
             }
@@ -1344,9 +1389,6 @@ iBool processEvent_Window(iWindow *d, const SDL_Event *ev) {
                 wasUsed = dispatchEvent_Window(d, &event);
             }
             if (!wasUsed) {
-                if (event.type == SDL_MOUSEBUTTONDOWN) {
-                    closePopups_App(iFalse);
-                }
                 /* As a special case, clicking the middle mouse button can be used for pasting
                    from the clipboard. */
                 if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_MIDDLE) {
@@ -1370,6 +1412,14 @@ iBool processEvent_Window(iWindow *d, const SDL_Event *ev) {
                     updateMetrics_Root(d->roots[i]);
                 }
             }
+            if (isCommand_UserEvent(&event, "snippets.changed")) {
+                /* Recreate the snippet menus with the new list of snippets. */
+                iForIndices(i, d->roots) {
+                    if (d->roots[i]) {
+                        recreateSnippetMenu_Root(d->roots[i]);
+                    }
+                }
+            }
             if (isCommand_UserEvent(&event, "lang.changed") && (mw || extraw)) {
 #if defined (LAGRANGE_MAC_MENUBAR)
                 /* Retranslate the menus. */
@@ -1385,7 +1435,7 @@ iBool processEvent_Window(iWindow *d, const SDL_Event *ev) {
                     }
                 }
             }
-            if (event.type == SDL_MOUSEMOTION) {
+            if (event.type == SDL_MOUSEMOTION && event.motion.windowID == id_Window(d)) {
                 applyCursor_Window_(d);
             }
             return wasUsed;
@@ -1398,7 +1448,7 @@ iBool setKeyRoot_Window(iWindow *d, iRoot *root) {
     if (d->keyRoot != root) {
         d->keyRoot = root;
         postCommand_App("keyroot.changed");
-        postRefresh_App();
+        postRefresh_Window(d);
         return iTrue;
     }
     return iFalse;
@@ -1478,12 +1528,7 @@ iBool dispatchEvent_Window(iWindow *d, const SDL_Event *ev) {
     if (d->hover != oldHover) {
         refresh_Widget(d->hover); /* Note: oldHover may have been deleted */
         if (d->hover && d->hover->flags2 & commandOnHover_WidgetFlag2) {
-            SDL_UserEvent notif = { .type      = SDL_USEREVENT,
-                                    .timestamp = SDL_GetTicks(),
-                                    .code      = command_UserEventCode,
-                                    .data1     = (void *) format_CStr("mouse.hovered ptr:%p arg:1",
-                                                                  d->hover) };
-            dispatchEvent_Widget(d->hover, (SDL_Event *) &notif);
+            notifyHovered_Window_(d);
         }
     }
     return wasUsed;
@@ -1529,7 +1574,8 @@ void draw_Window(iWindow *d) {
     iRoot *root = d->roots[0];
     setCurrent_Root(root);
     unsetClip_Paint(&p); /* update clip to full window */
-    const iColor back = get_Color(uiBackground_ColorId);
+    const iColor back = get_Color(root->widget->bgColor != none_ColorId ?
+                root->widget->bgColor : uiBackground_ColorId);
     SDL_SetRenderDrawColor(d->render, back.r, back.g, back.b, 255);
     SDL_RenderClear(d->render);
     d->frameTime = SDL_GetTicks();
@@ -1560,6 +1606,25 @@ void drawQuick_MainWindow(iMainWindow *d) {
     }
 }
 
+void drawLogo_MainWindow(iMainWindow *d, iRect bounds) {
+    if (d->logo) {
+        iInt2 embossSize = size_SDLTexture(d->logo);
+        float xScale = (float) (width_Rect(bounds) / 2) / (float) embossSize.x;
+        float yScale = (float) (height_Rect(bounds) / 2) / (float) embossSize.y;
+        mulfv_I2(&embossSize, iMin(xScale, yScale));
+        iRect embossRect = { zero_I2(), embossSize };
+        embossRect.pos = sub_I2(mid_Rect(bounds), divi_I2(embossRect.size, 2));
+        embossRect.pos.y -= topSafeInset_Mobile();
+        const iColor dim = get_Color(uiBackgroundSidebar_ColorId);
+        SDL_SetTextureColorMod(d->logo, dim.r, dim.g, dim.b);
+        iPaint p;
+        init_Paint(&p);
+        setClip_Paint(&p, bounds);
+        SDL_RenderCopy(d->base.render, d->logo, NULL, (const SDL_Rect *) &embossRect);
+        unsetClip_Paint(&p);
+    }
+}
+
 void draw_MainWindow(iMainWindow *d) {
     if (isDrawing_) {
         /* Already drawing! */
@@ -1577,18 +1642,31 @@ void draw_MainWindow(iMainWindow *d) {
     setCurrent_Text(d->base.text);
     /* Check if root needs resizing. */ {
         const iBool wasPortrait = isPortrait_App();
-//        iInt2 renderSize;
-//        SDL_GetRendererOutputSize(w->render, &renderSize.x, &renderSize.y);
-        if (updateSize_MainWindow_(d, iTrue)) {
-            //processEvents_App(postedEventsOnly_AppEventMode);
+#if defined (iPlatformMobile)
+        /* On a mobile device, the window doesn't get freely resized. The render size will
+           change when the device orientation changes. */
+        iInt2 renderSize;
+        SDL_GetRendererOutputSize(w->render, &renderSize.x, &renderSize.y);
+        if (!isEqual_I2(renderSize, w->size)) {
+            updateSize_MainWindow_(d, iTrue);
+            processEvents_App(postedEventsOnly_AppEventMode); /* apply changes immediately */
             if (isPortrait_App() != wasPortrait) {
-                d->maxDrawableHeight = w->size.y; // renderSize.y;
+                d->maxDrawableHeight = renderSize.y;
             }
         }
+#else
+        /* On the desktop, we cannot process events now because that would interfere with
+           regular input processing (currently drawing the window). */
+        if (updateSize_MainWindow_(d, iTrue)) {
+            if (isPortrait_App() != wasPortrait) {
+                d->maxDrawableHeight = w->size.y;
+            }
+        }
+#endif
         /* TODO: On macOS, a detached popup window will mess up the main window's rendering
            completely. Looks like a render target mixup. macOS builds normally use native menus,
            though, so leaving it in. */
-        if (d->enableBackBuf) { 
+        if (d->enableBackBuf) {
             /* Possible resize the backing buffer. */
             if (!d->backBuf || !isEqual_I2(size_SDLTexture(d->backBuf), w->size)) {
                 if (d->backBuf) {
@@ -1737,7 +1815,9 @@ void resize_MainWindow(iMainWindow *d, int w, int h) {
 }
 
 void setTitle_Window(iWindow *d, const iString *title) {
-    SDL_SetWindowTitle(d->win, cstr_String(title));
+    iString *clean = collect_String(copy_String(title));
+    replaceRegExp_String(clean, iClob(makeAnsiEscapePattern_Text(iTrue)), "", NULL, NULL);
+    SDL_SetWindowTitle(d->win, cstr_String(clean));
     iLabelWidget *bar = findChild_Widget(get_Root()->widget, "winbar.title");
     if (bar) {
         updateText_LabelWidget(bar, title);
@@ -1806,6 +1886,7 @@ uint32_t frameTime_Window(const iWindow *d) {
 
 iWindow *get_Window(void) {
     /* TODO: This should be thread-specific. */
+    /* TODO: Assert that this is only called in the main thread! */
     return theWindow_;
 }
 
@@ -1838,7 +1919,7 @@ void setKeyboardHeight_MainWindow(iMainWindow *d, int height) {
     if (d->keyboardHeight != height) {
         d->keyboardHeight = height;
         postCommandf_App("keyboard.changed arg:%d", height);
-        postRefresh_App();
+        postRefresh_Window(d);
     }
 }
 
@@ -1889,7 +1970,7 @@ void swapRoots_MainWindow(iMainWindow *d) {
     if (numRoots_Window(w) == 2) {
         iSwap(iRoot *, w->roots[0], w->roots[1]);
         windowSizeChanged_MainWindow_(d); /* re-do layout */
-        postRefresh_App();
+        postRefresh_Window(d);
     }
 }
 
@@ -2006,7 +2087,7 @@ void setSplitMode_MainWindow(iMainWindow *d, int splitFlags) {
             if (w->roots[i]) {
                 w->roots[i]->widget->padding[1] = (splitMode ? 1 : 0);
             }
-        }        
+        }
         d->splitMode = splitMode;
         windowSizeChanged_MainWindow_(d);
         postCommand_App("window.resized"); /* not really, but widgets may need to change layout */
@@ -2124,7 +2205,7 @@ void setSnap_MainWindow(iMainWindow *d, int snapMode) {
         setFlags_Widget(winBar, hidden_WidgetFlag, d->place.snap == fullscreen_WindowSnap);
         if (wasVisible != isVisible_Widget(winBar)) {
             arrange_Widget(root->widget);
-            postRefresh_App();
+            postRefresh_Window(d);
         }
     }
 #endif /* defined (LAGRANGE_ENABLE_CUSTOM_FRAME) */
@@ -2160,6 +2241,11 @@ iWindow *newPopup_Window(iInt2 screenPos, iWidget *rootWidget) {
     iRect winRect = (iRect){ screenPos,
                              min_I2(divf_I2(rootWidget->rect.size, pixelRatio),
                                     init_I2(usableRect.w, usableRect.h)) };
+    /* Ensure bottom is not outside the usable area; we'll scroll the contents. */
+    winRect.size.y = iMin(winRect.size.y, usableRect.y + usableRect.h - screenPos.y);
+    setFlags_Widget(rootWidget,
+                    overflowScrollable_WidgetFlag,
+                    winRect.size.y < rootWidget->rect.size.y / pixelRatio - 1);
     iWindow *win = new_Window(popup_WindowType,
                               winRect,
                               SDL_WINDOW_ALWAYS_ON_TOP |
@@ -2214,6 +2300,105 @@ iWindow *newExtra_Window(iWidget *rootWidget) {
     rootWidget->rect.pos = zero_I2();
     setDrawBufferEnabled_Widget(frameRoot, iFalse);
     setDrawBufferEnabled_Widget(rootWidget, iFalse);
+    createClipMenu_Root(root); /* needed for input widgets */
+    recreateSnippetMenu_Root(root);
     setCurrent_Window(oldWin);
-    return win;     
+    return win;
+}
+
+iDeclareType(FolderItems);
+
+struct Impl_FolderItems {
+    iHashNode node;
+    iArray *items;
+};
+
+void cleanupBookmarksMenu_Widget(iWidget *menu) {
+    /* Destroy the previously created folder submenus. */
+    iConstForEach(PtrArray, c,
+                  findChildren_Widget(menu ? root_Widget(menu)
+                                           : get_Root()->widget, "bfmenu.*")) {
+        destroy_Widget(c.ptr);
+    }
+}
+
+const iArray *updateBookmarksMenu_Widget(iWidget *menu) {
+    /* TODO: Updating the items is only needed if 1) there hasn't been an update yet, or 2)
+       bookmarks have changed. */
+    cleanupBookmarksMenu_Widget(menu);
+    iWidget *rootWidget = (menu ? root_Widget(menu) : get_Root()->widget);
+    iBool    isFirst    = iTrue;
+    iString *title      = new_String();
+    iHash   *hash       = new_Hash();
+    iArray  *items      = collectNew_Array(sizeof(iMenuItem));
+    pushBackN_Array(items, bookmarksMenuItems_, count_MenuItem(bookmarksMenuItems_));
+    /* Append top-level bookmarks and create new submenus. */
+    iConstForEach(PtrArray, i, list_Bookmarks(bookmarks_App(), cmpTree_Bookmark, NULL, NULL)) {
+        const iBookmark *bm = i.ptr;
+        iArray *dest = items;
+        if (bm->parentId) {
+            iFolderItems *f = (iFolderItems *) value_Hash(hash, bm->parentId);
+            if (!f) {
+                f = iZapMalloc(FolderItems);
+                f->node.key = bm->parentId;
+                f->items = new_Array(sizeof(iMenuItem));
+                insert_Hash(hash, &f->node);
+            }
+            dest = f->items;
+        }
+        else if (isFirst) {
+            isFirst = iFalse;
+            pushBack_Array(dest, &(iMenuItem){ "---" });
+        }
+        iString iconStr;
+        if (isFolder_Bookmark(bm)) {
+            initCStr_String(&iconStr, folder_Icon);
+        }
+        else if (bm->icon) {
+            initUnicodeN_String(&iconStr, &bm->icon, 1);
+        }
+        else {
+            initCStr_String(&iconStr, pin_Icon);
+        }
+        /* Truncate titles to a reasonable width. */ {
+            set_String(title, &bm->title);
+#if !defined (LAGRANGE_NATIVE_MENU)
+            const int maxTitleWidth = 60 * gap_UI;
+            const char *end;
+            tryAdvanceNoWrap_Text(uiLabel_FontId, range_String(title), maxTitleWidth, &end);
+            if (end < constEnd_String(title)) {
+                truncate_Block(&title->chars, end - constBegin_String(title));
+                appendCStr_String(title, "\u2026" /* ellipsis */);
+            }
+#endif
+        }
+        iString *setIdentArg = NULL;
+        if (!isEmpty_String(&bm->identity)) {
+            setIdentArg = copy_String(&bm->identity);
+            prependCStr_String(setIdentArg, " setident:");
+        }
+        pushBack_Array(
+            dest,
+            &(iMenuItem){ format_CStr("%s %s", cstr_String(&iconStr), cstr_String(title)),
+                          0,
+                          0,
+                          isFolder_Bookmark(bm)
+                              ? format_CStr("submenu id:bfmenu.%d", id_Bookmark(bm))
+                              : format_CStr("!open%s url:%s",
+                                            setIdentArg ? cstr_String(setIdentArg) : "",
+                                            cstr_String(&bm->url)) });
+        delete_String(setIdentArg);
+        deinit_String(&iconStr);
+    }
+    /* Create folder menus. */
+    iForEach(Hash, h, hash) {
+        iFolderItems *f = (iFolderItems *) h.value;
+        iWidget *bfmenu = makeMenu_Widget(rootWidget, data_Array(f->items), size_Array(f->items));
+        setId_Widget(bfmenu, format_CStr("bfmenu.%d", f->node.key));
+        delete_Array(f->items);
+        free(remove_HashIterator(&h));
+    }
+    delete_Hash(hash);
+    delete_String(title);
+    return items;
 }

@@ -29,14 +29,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
    too convoluted, with both variants intermingled. */
 
 #include "inputwidget.h"
-#include "command.h"
-#include "paint.h"
-#include "util.h"
-#include "keys.h"
-#include "prefs.h"
-#include "lang.h"
-#include "touch.h"
 #include "app.h"
+#include "command.h"
+#include "keys.h"
+#include "lang.h"
+#include "paint.h"
+#include "periodic.h"
+#include "prefs.h"
+#include "snippets.h"
+#include "touch.h"
+#include "util.h"
 
 #include <the_Foundation/array.h>
 #include <the_Foundation/file.h>
@@ -48,6 +50,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #if defined (iPlatformAppleDesktop)
 #   include "macos.h"
+#endif
+
+#if defined (iPlatformAndroidMobile)
+#   include "android.h"
 #endif
 
 #if defined (iPlatformAppleMobile) || defined (iPlatformAndroidMobile)
@@ -246,6 +252,8 @@ struct Impl_InputWidget {
     iTextBuf *      buffered; /* pre-rendered static text */
     iInputWidgetValidatorFunc validator;
     void *          validatorContext;
+    iInputWidgetHighlighterFunc highlighter;
+    void *          highlighterContext;
     iString *       backupPath;
     int             backupTimer;
     iString         oldText; /* for restoring if edits cancelled */
@@ -254,6 +262,7 @@ struct Impl_InputWidget {
     iSystemTextInput *sysCtrl;
 #if LAGRANGE_USE_SYSTEM_TEXT_INPUT
     iString         text;
+    iRangei         pendingSelectionRange;
 #else
     iArray          lines;        /* iInputLine[] */
     iInt2           cursor;       /* cursor position: x = byte offset, y = line index */
@@ -266,7 +275,6 @@ struct Impl_InputWidget {
     iInt2           lastTapPos;
     int             tapCount;
     int             cursorVis;
-    uint32_t        timer;
 #endif
 };
 
@@ -727,18 +735,6 @@ static void updateAllLinesAndResizeHeight_InputWidget_(iInputWidget *d) {
     }
 }
 
-static uint32_t cursorTimer_(uint32_t interval, void *w) {
-    iInputWidget *d = w;
-    if (d->cursorVis > 1) {
-        d->cursorVis--;
-    }
-    else {
-        d->cursorVis ^= 1;
-    }
-    refresh_Widget(w);
-    return interval;
-}
-
 iLocalDef iBool isBlinkingCursor_(void) {
     /* Terminal will blink if appropriate. */
     return prefs_App()->blinkingCursor && !isTerminal_Platform();
@@ -748,12 +744,11 @@ static void startOrStopCursorTimer_InputWidget_(iInputWidget *d, int doStart) {
     if (!isBlinkingCursor_() && doStart == 1) {
         doStart = iFalse;
     }
-    if (doStart && !d->timer) {
-        d->timer = SDL_AddTimer(refreshInterval_InputWidget_, cursorTimer_, d);
+    if (doStart) {
+        add_Periodic(periodic_App(), d, "input.blink");
     }
-    else if (!doStart && d->timer) {
-        SDL_RemoveTimer(d->timer);
-        d->timer = 0;
+    else if (!doStart) {
+        remove_Periodic(periodic_App(), d);
     }
 }
 
@@ -819,6 +814,7 @@ static void updateMetrics_InputWidget_(iInputWidget *d) {
         w->rect.size.y += extraPaddingHeight_InputWidget_(d);
     }
     invalidateBuffered_InputWidget_(d);
+    d->inFlags |= needUpdateBuffer_InputWidgetFlag;
     if (height_Rect(w->rect) != oldHeight) {
         postCommand_Widget(d, "input.resized arg:%d", w->root->pendingArrange + 1);
         updateTextInputRect_InputWidget_(d);
@@ -847,10 +843,13 @@ void init_InputWidget(iInputWidget *d, size_t maxLen) {
     init_Widget(w);
     d->validator = NULL;
     d->validatorContext = NULL;
+    d->highlighter = NULL;
+    d->highlighterContext = NULL;
     setFlags_Widget(w, focusable_WidgetFlag | hover_WidgetFlag, iTrue);
     setFlags_Widget(w, extraPadding_WidgetFlag, isMobile_Platform());
 #if LAGRANGE_USE_SYSTEM_TEXT_INPUT
     init_String(&d->text);
+    d->pendingSelectionRange = (iRangei){ -1, -1 };
 #else
     init_Array(&d->lines, sizeof(iInputLine));
     init_Array(&d->undoStack, sizeof(iInputUndo));
@@ -858,7 +857,6 @@ void init_InputWidget(iInputWidget *d, size_t maxLen) {
     d->prevCursor   = zero_I2();
     d->lastTapTime  = 0;
     d->tapCount     = 0;
-    d->timer        = 0;
     d->cursorVis    = 0;
     iZap(d->mark);
     splitToLines_(&iStringLiteral(""), &d->lines);
@@ -931,6 +929,7 @@ static void updateAfterVisualOffsetChange_InputWidget_(iInputWidget *d, iRoot *r
 
 void setFont_InputWidget(iInputWidget *d, int fontId) {
     d->font = fontId;
+    d->lastUpdateWidth = 0; /* force a rewrapping */
     updateMetrics_InputWidget_(d);
 }
 
@@ -1070,6 +1069,13 @@ void setValidator_InputWidget(iInputWidget *d, iInputWidgetValidatorFunc validat
     d->validatorContext = context;
 }
 
+void setHighlighter_InputWidget(iInputWidget *d, iInputWidgetHighlighterFunc highlighter,
+                                void *context) {
+    d->highlighter = highlighter;
+    d->highlighterContext = context;
+    invalidateBuffered_InputWidget_(d);
+}
+
 void setLineBreaksEnabled_InputWidget(iInputWidget *d, iBool lineBreaksEnabled) {
     iChangeFlags(d->inFlags, lineBreaksEnabled_InputWidgetFlag, lineBreaksEnabled);
 }
@@ -1158,6 +1164,7 @@ static void updateBuffered_InputWidget_(iInputWidget *d) {
                                  strlen(uiTextStrong_ColorEscape));
             }
         }
+        /* TODO: To apply syntax highlighting here, we'd have to draw line by line. */
         iWrapText wt = wrap_InputWidget_(d, 0);
         wt.maxLines = d->maxWrapLines;
         wt.text = range_String(visText);
@@ -1336,6 +1343,12 @@ void begin_InputWidget(iInputWidget *d) {
     }
     */
     setText_SystemTextInput(d->sysCtrl, &d->oldText, iFalse);
+# if defined (iPlatformAndroidMobile)
+    if (d->pendingSelectionRange.start >= 0) {
+        setSelection_SystemTextInput(d->sysCtrl, d->pendingSelectionRange);
+        d->pendingSelectionRange = (iRangei){ -1, -1 };
+    }
+# endif
     setTextChangedFunc_SystemTextInput(d->sysCtrl, systemInputChanged_InputWidget_, d);
     iConnect(Root, w->root, visualOffsetsChanged, d, updateAfterVisualOffsetChange_InputWidget_);
     updateTextInputRect_InputWidget_(d);
@@ -1404,6 +1417,24 @@ void end_InputWidget(iInputWidget *d, iBool accept) {
     const char *id = cstr_String(id_Widget(as_Widget(d)));
     if (!*id) id = "_";
     refresh_Widget(w);
+    if (d->inFlags & isUrl_InputWidgetFlag) {
+        /* Check for bang snippets. */
+        const iString *text = text_InputWidget(d);
+        if (startsWith_String(text, "!")) {
+            iRangecc snip = iNullRange;
+            if (nextSplit_Rangecc(range_String(text), " ", &snip)) {
+                const iString *content = get_Snippets(collectNewRange_String(snip));
+                if (!isEmpty_String(content)) {
+                    iString *query = collectNewRange_String((iRangecc){ snip.end, constEnd_String(text) });
+                    trim_String(query);
+                    set_String(query, collect_String(urlEncode_String(query)));
+                    prependCStr_String(query, "?");
+                    prepend_String(query, content);
+                    setText_InputWidget(d, query);
+                }
+            }
+        }
+    }
     postCommand_Widget(w,
                        "input.ended id:%s enter:%d arg:%d",
                        id,
@@ -1863,7 +1894,7 @@ static void markWordAtCursor_InputWidget_(iInputWidget *d) {
 }
 
 static void showClipMenu_InputWidget_(const iInputWidget *d, iInt2 coord) {
-    iWidget *clipMenu = findWidget_App("clipmenu");
+    iWidget *clipMenu = findChild_Widget(root_Widget(constAs_Widget(d)), "clipmenu");
     if (isVisible_Widget(clipMenu)) {
         closeMenu_Widget(clipMenu);
     }
@@ -1887,8 +1918,11 @@ static enum iEventResult processPointerEvents_InputWidget_(iInputWidget *d, cons
                              ? SDL_SYSTEM_CURSOR_IBEAM
                              : SDL_SYSTEM_CURSOR_ARROW);
     }
+    const iInt2 buttonPos = init_I2(ev->button.x, ev->button.y);
     if (ev->type == SDL_MOUSEBUTTONDOWN && ev->button.button == SDL_BUTTON_RIGHT &&
-        contains_Widget(w, init_I2(ev->button.x, ev->button.y))) {
+        contains_Widget(w, buttonPos) /* quick test without traversal */ &&
+        hitChild_Widget(w, buttonPos) == w /* don't hit child buttons */) {
+        /* Show the copy/paste context menu. */
         setFocus_Widget(w);
         showClipMenu_InputWidget_(d, mouseCoord_Window(get_Window(), ev->button.which));
         return iTrue;
@@ -2338,6 +2372,18 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
         return iFalse;
     }
 #if !LAGRANGE_USE_SYSTEM_TEXT_INPUT
+    else if (isCommand_UserEvent(ev, "input.blink")) {
+        /* Sent by Periodic. */
+        if (d->cursorVis > 1) {
+            /* After moving the cursor, it stops blinking for a while. */
+            d->cursorVis--;
+        }
+        else {
+            d->cursorVis ^= 1;
+        }
+        refresh_Widget(d);
+        return iTrue;
+    }
     else if (isCommand_UserEvent(ev, "prefs.blink.changed")) {
         if (isEditing_InputWidget_(d) && arg_Command(command_UserEvent(ev))) {
             startOrStopCursorTimer_InputWidget_(d, 2);
@@ -2346,9 +2392,12 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
     }
     else if (isEditing_InputWidget_(d) && (isCommand_UserEvent(ev, "window.focus.lost") ||
                                            isCommand_UserEvent(ev, "window.focus.gained"))) {
-        startOrStopCursorTimer_InputWidget_(d, isCommand_UserEvent(ev, "window.focus.gained"));
-        d->cursorVis = 1;
-        refresh_Widget(d);
+        /* Ignore events happening in other windows. */
+        if (arg_Command(command_UserEvent(ev)) == id_Window(window_Widget(w))) {
+            startOrStopCursorTimer_InputWidget_(d, isCommand_UserEvent(ev, "window.focus.gained"));
+            d->cursorVis = 1;
+            refresh_Widget(d);
+        }
         return iFalse;
     }
     else if ((isCommand_UserEvent(ev, "copy") || isCommand_UserEvent(ev, "input.copy")) &&
@@ -2356,11 +2405,27 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
         copy_InputWidget_(d, argLabel_Command(command_UserEvent(ev), "cut"));
         return iTrue;
     }
+    else if (isCommand_UserEvent(ev, "input.delete") && isEditing_InputWidget_(d)) {
+        pushUndo_InputWidget_(d);
+        if (deleteMarked_InputWidget_(d)) {
+            contentsWereChanged_InputWidget_(d);
+        }
+        return iTrue;
+    }
 //    else if (isFocused_Widget(d) && isCommand_UserEvent(ev, "copy")) {
 //        copy_InputWidget_(d, iFalse);
 //        return iTrue;
 //    }
     else if (isCommand_UserEvent(ev, "input.paste") && isEditing_InputWidget_(d)) {
+        const char *cmd = command_UserEvent(ev);
+        if (hasLabel_Command(cmd, "snippet")) {
+            pushUndo_InputWidget_(d);
+            deleteMarked_InputWidget_(d);
+            insertRange_InputWidget_(
+                d, range_String(get_Snippets(collect_String(suffix_Command(cmd, "snippet")))));
+            contentsWereChanged_InputWidget_(d);
+            return iTrue;
+        }
         paste_InputWidget_(d);
         if (argLabel_Command(command_UserEvent(ev), "enter")) {
             d->inFlags |= enterPressed_InputWidgetFlag;
@@ -2382,9 +2447,50 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
         contentsWereChanged_InputWidget_(d);
         return iTrue;
     }
+#else
+    else if (isCommand_UserEvent(ev, "input.paste")) {
+        const char *cmd = command_UserEvent(ev);
+# if defined (iPlatformAndroidMobile)
+        /* FIXME: Should paste to the most recently active input widget.
+           The only place where snippets can be pasted on mobile is the upload dialog's
+           text editor. In other fields, the system clipboard will have to be manually
+           accessed. */
+        if (!cmp_String(id_Widget(w), "upload.text") || !cmp_String(id_Widget(w), "input")) {
+            const iString *content = get_Snippets(collect_String(suffix_Command(
+                    cmd, "snippet")));
+            /* On Android, we don't have system menus so activating a dropdown menu will
+               unfocus the native text input field (otherwise the field over be drawn over
+               the menu). We'll do the insertion here and reactivate focus on the menu. */
+            iRangei selRange = lastInputSelectionRange_Android();
+            iString *modified = copy_String(&d->text);
+            truncate_String(modified, selRange.start);
+            append_String(modified, content);
+            append_String(modified, collect_String(mid_String(&d->text, selRange.end, iInvalidSize)));
+            set_String(&d->text, modified);
+            delete_String(modified);
+            postCommand_Widget(w, "focus.set id:%s", cstr_String(id_Widget(w)));
+            d->pendingSelectionRange = (iRangei){
+                selRange.start,
+                selRange.start + length_String(content)
+            };
+            return iTrue;
+        }
+# else
+        if (isEditing_InputWidget_(d) && d->sysCtrl) {
+            insert_SystemTextInput(d->sysCtrl, get_Snippets(collect_String(suffix_Command(
+                    cmd, "snippet"))));
+            return iTrue;
+        }
+# endif
+        return iFalse;
+    }
 #endif
     else if (isCommand_UserEvent(ev, "input.selectall") && isEditing_InputWidget_(d)) {
         selectAll_InputWidget(d);
+        return iTrue;
+    }
+    else if (isCommand_UserEvent(ev, "input.deselect") && isEditing_InputWidget_(d)) {
+        deselect_InputWidget(d);
         return iTrue;
     }
     else if (isCommand_UserEvent(ev, "theme.changed")) {
@@ -2461,6 +2567,9 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
     if (ev->type == SDL_TEXTINPUT && isFocused_Widget(w)) {
         if ((modState_Keys() & (KMOD_CTRL | KMOD_ALT)) == KMOD_CTRL) {
             /* Note: AltGr on Windows is reported as Ctrl+Alt. */
+            return iTrue;
+        }
+        if (isLinux_Platform() && keyMods_Sym(modState_Keys()) == KMOD_CTRL) {
             return iTrue;
         }
         pushUndo_InputWidget_(d);
@@ -2877,7 +2986,13 @@ static void draw_InputWidget_(const iInputWidget *d) {
             wrapText.text = range_String(&line->text);
             marker.line   = line;
             marker.pos    = drawPos;
-            addv_I2(&drawPos, draw_WrapText(&wrapText, d->font, drawPos, fg).advance); /* lines end with \n */
+            iInputWidgetHighlight highlight = { .font = d->font, .color = fg };
+            if (d->highlighter) {
+                highlight = d->highlighter(d, wrapText.text, d->highlighterContext);
+            }
+            addv_I2(&drawPos,
+                    draw_WrapText(&wrapText, highlight.font, drawPos, highlight.color)
+                        .advance); /* lines end with \n */
         }
         markerRects[0] = marker.firstMarkRect;
         markerRects[1] = marker.lastMarkRect;
@@ -2937,6 +3052,15 @@ static void draw_InputWidget_(const iInputWidget *d) {
                            uiInputCursorText_ColorId,
                            cursorChar);
         }
+    }
+    /* Draw the scroll indicator. */ {
+        const int lineHeight = lineHeight_Text(d->font);
+        iWidgetScrollInfo info;
+        contentScrollInfo_Widget(w,
+                                 &info,
+                                 lineHeight * d->visWrapLines.start,
+                                 lineHeight * numWrapLines_InputWidget_(d));
+        drawScrollIndicator_Widget(w, &info, uiInputCursor_ColorId, 0.666f);
     }
     unsetClip_Paint(&p);
     if (!isEmpty_Rect(markerRects[0])) {

@@ -256,11 +256,13 @@ iRangecc urlUser_String(const iString *d) {
         userPats_[0] = new_RegExp("~([^/?]+)", 0);
         userPats_[1] = new_RegExp("/users/([^/?]+)", caseInsensitive_RegExpOption);
     }
+    iUrl url;
+    init_Url(&url, d);
     iRegExpMatch m;
     init_RegExpMatch(&m);
     iRangecc found = iNullRange;
     iForIndices(i, userPats_) {
-        if (matchString_RegExp(userPats_[i], d, &m)) {
+        if (matchRange_RegExp(userPats_[i], url.path, &m)) {
             found = capturedRange_RegExpMatch(&m, 1);
         }
     }
@@ -495,6 +497,9 @@ const iString *absoluteUrl_String(const iString *d, const iString *urlMaybeRelat
 }
 
 iBool isLikelyUrl_String(const iString *d) {
+    if (endsWith_String(d, ":")) {
+        return iFalse;
+    }
     /* Guess whether a human intends the string to be an URL. This is supposed to be fuzzy;
        not completely per-spec: a) begins with a scheme; b) has something that looks like a
        hostname */
@@ -855,6 +860,10 @@ static const struct {
       { 0x1f520, /* ABCD */
         "${error.glyphs}",
         "${error.glyphs.msg}" } },
+    { unsupportedMimeTypeShownAsUtf8_GmStatusCode,
+      { 0x1f524, /* abc */
+        "${error.showutf8}",
+        "${error.showutf8.msg}" } },
     { temporaryFailure_GmStatusCode,
       { 0x1f50c, /* electric plug */
         "${error.temporary}",

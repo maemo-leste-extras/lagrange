@@ -18,20 +18,20 @@
 cmake_minimum_required (VERSION 3.9)
 
 project (Lagrange
-    VERSION 1.16.6
+    VERSION 1.17.6
     DESCRIPTION "A Beautiful Gemini Client"
     LANGUAGES C
 )
 set (COPYRIGHT_YEAR 2023)
 if (IOS)
-    set (PROJECT_VERSION 1.16)
-    set (IOS_BUNDLE_VERSION 4)
-    set (IOS_BUILD_DATE "2023-06-04")
+    set (PROJECT_VERSION 1.17)
+    set (IOS_BUNDLE_VERSION 6)
+    set (IOS_BUILD_DATE "2023-12-04")
 endif ()
 if (ANDROID)
-    set (PROJECT_VERSION 1.16)
-    set (ANDROID_BUILD_VERSION b20)  # remember to update Gradle, AndroidManifest.xml
-    set (ANDROID_BUILD_DATE "2023-06-01")
+    set (PROJECT_VERSION 1.17)
+    set (ANDROID_BUILD_VERSION b25)  # remember to update Gradle, AndroidManifest.xml
+    set (ANDROID_BUILD_DATE "2023-12-04")
 endif ()
 
 # Load modules from the source tree
@@ -54,8 +54,7 @@ option (ENABLE_IDLE_SLEEP       "While idle, sleep in the main thread instead of
 option (ENABLE_IPC              "Use IPC to communicate between running instances" ON)
 option (ENABLE_KERNING          "Enable kerning in font renderer (slower)" ON)
 option (ENABLE_MAC_MENUS        "Use native context menus (macOS)" ON)
-option (ENABLE_MOBILE_PHONE     "Use the phone mobile UI design instead of
-desktop UI" ON)
+option (ENABLE_MOBILE_PHONE     "Use the phone mobile UI design instead of desktop UI" OFF)
 option (ENABLE_MOBILE_TABLET    "Use the tablet mobile UI design instead of desktop UI" OFF)
 option (ENABLE_POPUP_MENUS      "Use popup windows for context menus (if OFF, menus are confined inside main window)" ON)
 option (ENABLE_RELATIVE_EMBED   "Resources should always be found via relative path" OFF)
@@ -115,6 +114,7 @@ set (RESOURCES
     res/lang/uk.bin
     res/lang/zh_Hans.bin
     res/lang/zh_Hant.bin
+    res/logo.png
     res/shadow.png
     res/fontpack.ini
     res/macos-system-fonts.ini
@@ -207,8 +207,10 @@ set (SOURCES
     src/resources.h
     src/sitespec.c
     src/sitespec.h
+    src/snippets.c
+    src/snippets.h
     src/stb_image.h
-    src/stb_image_resize.h
+    src/stb_image_resize2.h
     src/stb_truetype.h
     src/updater.h
     src/visited.c
@@ -226,6 +228,8 @@ set (SOURCES
     src/ui/color.h
     src/ui/command.c
     src/ui/command.h
+    src/ui/documentview.c
+    src/ui/documentview.h
     src/ui/documentwidget.c
     src/ui/documentwidget.h
     src/ui/indicatorwidget.c
@@ -254,6 +258,8 @@ set (SOURCES
     src/ui/scrollwidget.h
     src/ui/sidebarwidget.c
     src/ui/sidebarwidget.h
+    src/ui/snippetwidget.c
+    src/ui/snippetwidget.h
     src/ui/text.c
     src/ui/text.h
     src/ui/touch.c
@@ -528,6 +534,9 @@ if (APPLE AND NOT ENABLE_TUI)
     endif ()
 endif ()
 if (ANDROID)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+        target_compile_options (app PUBLIC -mfpu=neon-vfpv4) # 32-bit stb_image_resize2
+    endif ()
     target_compile_definitions (app PUBLIC
         LAGRANGE_ANDROID_VERSION="${ANDROID_BUILD_VERSION}"
         LAGRANGE_ANDROID_BUILD_DATE="${ANDROID_BUILD_DATE}"
@@ -539,11 +548,11 @@ if (MSYS)
         target_link_libraries (app PUBLIC winsparkle)
     endif ()
 endif ()
-if (UNIX)
-    target_link_libraries (app PUBLIC m)
-endif ()
+#if (UNIX)
+#    target_link_libraries (app PUBLIC m)
+#endif ()
 if (HAIKU)
-    target_link_libraries (app PUBLIC m network bsd)
+    target_link_libraries (app PUBLIC network bsd)
 endif ()
 
 # Deployment.
@@ -591,14 +600,14 @@ Exec=${CMAKE_INSTALL_PREFIX}/bin/lagrange %U
 Terminal=false
 Type=Application
 StartupWMClass=lagrange
-Icon=lagrange
+Icon=fi.skyjake.Lagrange
 MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/spartan;
 ")
     install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
-    install (FILES ${desktop} DESTINATION
-			${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon)
-    install (FILES debian/maemo/lagrange.png
-         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
+    install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
+    install (FILES res/lagrange-256.png
+         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps
+         RENAME fi.skyjake.Lagrange.png
     )
     install (FILES res/fi.skyjake.Lagrange.appdata.xml
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo

@@ -1,3 +1,9 @@
+lagrange (1.17.6-1+leste1) unstable; urgency=low
+
+  * update to 1.17.6, sync with releases branch and versioning.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 1 Aug 2023 02:40:00 +0400
+
 lagrange (1.16.6-3+leste1) unstable; urgency=low
 
   * update to 1.16.6, sync with releases branch and versioning.
