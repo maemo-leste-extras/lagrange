@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 */
 
 #include "the_Foundation/stringarray.h"
+#include "the_Foundation/stream.h"
 
 #include <stdarg.h>
 
@@ -164,6 +165,25 @@ iString *joinCStr_StringArray(const iStringArray *d, const char *delim) {
     return joined;
 }
 
+void serialize_StringArray(const iStringArray *d, iStream *outs) {
+    writeU32_Stream(outs, (uint32_t) size_StringArray(d));
+    iConstForEach(StringArray, i, d) {
+        serialize_String(i.value, outs);
+    }
+}
+
+void deserialize_StringArray(iStringArray *d, iStream *ins) {
+    clear_StringArray(d);
+    uint32_t n = readU32_Stream(ins);
+    while (n-- && !atEnd_Stream(ins)) {
+        iString s;
+        init_String(&s);
+        deserialize_String(&s, ins);
+        pushBack_StringArray(d, &s);
+        deinit_String(&s);
+    }
+}
+
 /*-------------------------------------------------------------------------------------*/
 
 void init_StringArrayIterator(iStringArrayIterator *d, iStringArray *array) {
@@ -180,4 +200,13 @@ void init_StringArrayConstIterator(iStringArrayConstIterator *d, const iStringAr
 
 void next_StringArrayConstIterator(iStringArrayConstIterator *d) {
     next_ArrayConstIterator(&d->iter);
+}
+
+void init_StringArrayReverseConstIterator(iStringArrayReverseConstIterator *d,
+                                          const iStringArray *array) {
+    init_ArrayReverseConstIterator(&d->iter, &array->strings);
+}
+
+void next_StringArrayReverseConstIterator(iStringArrayReverseConstIterator *d) {
+    next_ArrayReverseConstIterator(&d->iter);
 }

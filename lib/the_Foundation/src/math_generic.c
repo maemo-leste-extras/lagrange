@@ -86,6 +86,21 @@ void initRotate_Mat4(iMat4 *d, iFloat3 axis, float degrees) {
     d->col[3] = init_F4(0, 0, 0, 1);
 }
 
+void initRotate_Mat3(iMat3 *d, iFloat3 axis, float degrees) {
+    const float   ang      = iMathDegreeToRadianf(degrees);
+    const float   c        = cosf(ang);
+    const float   s        = sinf(ang);
+    const iFloat3 normAxis = normalize_F3(axis);
+    const float * av       = normAxis.v;
+    const iFloat3 omc      = init1_F3(1 - c);
+    d->col[0] = mul_F3(omc, init_F3(av[0] * av[0], av[0] * av[1], av[0] * av[2]));
+    d->col[1] = mul_F3(omc, init_F3(av[1] * av[0], av[1] * av[1], av[1] * av[2]));
+    d->col[2] = mul_F3(omc, init_F3(av[2] * av[0], av[2] * av[1], av[2] * av[2]));
+    addv_F3(&d->col[0], init_F3(+c,       +av[2]*s,   -av[1]*s));
+    addv_F3(&d->col[1], init_F3(-av[2]*s, +c,         +av[0]*s));
+    addv_F3(&d->col[2], init_F3(+av[1]*s, -av[0]*s,   +c      ));
+}
+
 void store_Mat3(const iMat3 *d, float *v9) {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {

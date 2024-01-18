@@ -42,12 +42,12 @@ int main(int argc, char *argv[]) {
         const iString str = iStringLiteral("Ääkkönén");
         iString *upper = collect_String(upper_String(&str));
         iString *lower = collect_String(lower_String(&str));
-        printf("Original: %s Upper: %s Lower: %s\n", 
+        printf("Original: %s Upper: %s Lower: %s\n",
                cstrLocal_String(&str), cstrLocal_String(upper), cstrLocal_String(lower));
     }
     /* Test Unicode strings. */ {
         iString *s = collect_String(newCStr_String("A_Äö\U0001f698a"));
-        printf("String: %s length: %zu size: %zu\n", 
+        printf("String: %s length: %zu size: %zu\n",
             cstrLocal_String(s), length_String(s), size_String(s)); {
             iConstForEach(String, i, s) {
                 printf(" char: %06x [%s]\n", i.value, cstrLocal_Char(i.value));
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
         }
         printf("Starts with: %i %i\n", startsWith_String(s, "a"), startsWithCase_String(s, "a"));
         printf("Ends with: %i %i\n", endsWith_String(s, "a"), endsWithCase_String(s, "A"));
-        printf("Mid: %s\n", cstrLocal_String(collect_String(mid_String(s, 3, 1))));        
+        printf("Mid: %s\n", cstrLocal_String(collect_String(mid_String(s, 3, 1))));
         printf("%s is at: %zu %zu\n", cstrLocal_Char(u'ö'), indexOfCStr_String(s, "ö"), indexOf_String(s, U'ö'));
         truncate_String(s, 3);
         printf("Truncated: %s\n", cstrLocal_String(s));
@@ -104,6 +104,34 @@ int main(int argc, char *argv[]) {
             iRelease(list);
         }
         iRelease(file);
+    }
+    /* String list iteration. */ {
+        iStringList *list = new_StringList();
+        pushBackCStr_StringList(list, "first");
+        pushBackCStr_StringList(list, "second");
+        /* Remove it with the iterator. */
+        iForEach(StringList, j, list) {
+            if (!cmp_String(j.value, "first")) {
+                remove_StringListIterator(&j);
+            }
+        }
+        clear_StringList(list);
+        iAssert(size_StringList(list) == 0);
+        for (size_t i = 0; i < 514; i++) {
+            iString *s = newFormat_String("str%zu", i);
+            pushBack_StringList(list, s);
+            delete_String(s);
+        }
+        int numRemoved = 2;
+        printf("Iterating %zu strings, removing some:\n", size_StringList(list));
+        iForEach(StringList, i, list) {
+            if (i.pos == 256 && numRemoved-- > 0) {
+                remove_StringListIterator(&i);
+                continue;
+            }
+            printf("%s\n", cstr_String(i.value));
+        }
+        iRelease(list);
     }
     /* Splitting a string. */ {
         const iString *str = &iStringLiteral("/usr/local/bin");

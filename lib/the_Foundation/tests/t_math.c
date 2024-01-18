@@ -125,12 +125,13 @@ int main(int argc, char **argv) {
                 iMaxf(3.f, 5.f),
                 iClampf(1, 3, 5), iClampf(7, 3, 5), iClampf(4, 3, 5));
     }
-    /* Basic vectoring. */ {
+    /* Basic vectors. */ {
         print_("zero", zero_F4());
         print_("init4", init_F4(1, 2, 3, 4)); {
             float f[4];
             store_F4(init_F4(1, 2, 3, 4), f);
             printf("stored: %f %f %f %f\n", f[0], f[1], f[2], f[3]);
+            print_("initv4", initv_F4(f));
         }
         print_("zxy", zxy_F4(init_F4(1, 2, 3, 4)));
         iFloat4 a = init_F4(1.5, -2, 3.5, -4);
@@ -146,7 +147,8 @@ int main(int argc, char **argv) {
                length_F3(init_F3(0, -2, 0)),
                length_F3(init_F3(0, 0, -2)));
         printf("Sum: F3: %f F4: %f\n", sum_F3(init_F3(1, 2, 3)), sum_F4(init_F4(1, 2, 3, 4)));
-        print_("init3", init_F3(2, 3, 4)); {
+        print_("init3", init_F3(2, 3, 4));
+        print_("xy_F3", xy_F3(init_F3(2, 3, 4))); {
             iFloat3 v3 = init_F3(1, 1, 1);
             setX_F3(&v3, 2);
             print_("set x", v3);

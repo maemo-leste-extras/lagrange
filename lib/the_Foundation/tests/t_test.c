@@ -414,6 +414,7 @@ int main(int argc, char *argv[]) {
             }
         }
         iAssert((size_t) (fullSize - remCount) == size_Map(map));
+        iUnused(remCount);
         printf("Size after removals: %zu\n", size_Map(map));
         delete_Map(map);
         iEndCollect();

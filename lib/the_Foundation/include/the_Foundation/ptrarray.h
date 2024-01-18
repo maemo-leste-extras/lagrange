@@ -40,6 +40,8 @@ iPtrArray * newPointers_PtrArray    (void *ptr, ...); // NULL-terminated
 #define     copy_PtrArray(d)        copy_Array(d)
 #define     isEmpty_PtrArray(d)     isEmpty_Array(d)
 #define     size_PtrArray(d)        size_Array(d)
+#define     popFront_PtrArray(d)    popFront_Array(d)
+#define     popBack_PtrArray(d)     popBack_Array(d)
 
 void **         data_PtrArray       (iPtrArray *);
 const void **   constData_PtrArray  (const iPtrArray *);
@@ -52,6 +54,7 @@ void        pushBack_PtrArray       (iPtrArray *, const void *ptr);
 void        pushFront_PtrArray      (iPtrArray *, const void *ptr);
 
 iLocalDef void *front_PtrArray  (iPtrArray *d) { return !isEmpty_PtrArray(d) ? at_PtrArray(d, 0) : NULL; }
+iLocalDef void *back_PtrArray   (iPtrArray *d) { return !isEmpty_PtrArray(d) ? at_PtrArray(d, size_PtrArray(d) - 1) : NULL; }
 
 iLocalDef const void *constFront_PtrArray(const iPtrArray *d) {
     return !isEmpty_PtrArray(d) ? constAt_PtrArray(d, 0) : NULL;

@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 iBeginPublic
 
 iDeclareClass(StringArray)
+iDeclareTypeSerialization(StringArray)
 
 struct Impl_StringArray {
     iObject object;

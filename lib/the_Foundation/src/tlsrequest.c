@@ -72,9 +72,9 @@ static iBool readAllFromBIO_(BIO *bio, iBlock *out) {
 /*----------------------------------------------------------------------------------------------*/
 
 iDeclareClass(CachedSession)
-    
+
 static const int maxSessionAge_CachedSession_ = 10 * 60; /* seconds */
-    
+
 struct Impl_CachedSession {
     iObject          object;
     iBlock           pemSession;
@@ -260,6 +260,7 @@ void init_Context(iContext *d) {
     SSL_CTX_set_verify(d->ctx, SSL_VERIFY_PEER, verifyCallback_Context_);
     /* Bug workarounds: https://www.openssl.org/docs/manmaster/man3/SSL_CTX_set_options.html */
     SSL_CTX_set_options(d->ctx, SSL_OP_ALL);
+    SSL_CTX_set_min_proto_version(d->ctx, TLS1_2_VERSION);
     init_Mutex(&d->cacheMutex);
     d->cache = new_StringHash();
     SSL_CTX_set_session_cache_mode(d->ctx, SSL_SESS_CACHE_CLIENT | SSL_SESS_CACHE_NO_INTERNAL_STORE);
@@ -451,7 +452,7 @@ iTlsCertificate *newSelfSignedRSA_TlsCertificate(
     d->pkey = EVP_PKEY_new();
     EVP_PKEY_assign_RSA(d->pkey, rsa);
     X509_set_pubkey(d->cert, d->pkey);
-#if !defined (LIBRESSL_VERSION_NUMBER)
+#if !defined (LIBRESSL_VERSION_NUMBER) || LIBRESSL_VERSION_NUMBER < 0x3060000fL
     /* Random serial number. */ {
         BIGNUM *big = BN_new();
         if (BN_rand(big, 64, BN_RAND_TOP_ANY, BN_RAND_BOTTOM_ANY)) {
@@ -480,7 +481,19 @@ iTlsCertificate *newSelfSignedRSA_TlsCertificate(
     }
     /* Valid until. */ {
         ASN1_TIME *notAfter = ASN1_TIME_new();
-        ASN1_TIME_set(notAfter, sinceEpoch_Date(&validUntil));
+        /* FIXME: This works correctly for UTC, but if the GMT offset is set, we assume
+           it means we are defining the time in the local time zone. That may not be a
+           valid assumption. */
+        if (validUntil.gmtOffsetSeconds == 0) {
+            ASN1_TIME_set_string(notAfter,
+                                 format_CStr("%04d%02d%02d%02d%02d%02dZ",
+                                             validUntil.year, validUntil.month,
+                                             validUntil.day, validUntil.hour,
+                                             validUntil.minute, validUntil.second));
+        }
+        else {
+            ASN1_TIME_set(notAfter, sinceEpoch_Date(&validUntil));
+        }
         X509_set1_notAfter(d->cert, notAfter);
         ASN1_TIME_free(notAfter);
     }
@@ -541,7 +554,7 @@ void validUntil_TlsCertificate(const iTlsCertificate *d, iDate *untilDate_out) {
     iZap(*untilDate_out);
     if (d->cert) {
         struct tm time;
-#if defined (LIBRESSL_VERSION_NUMBER)
+#if defined (LIBRESSL_VERSION_NUMBER) && LIBRESSL_VERSION_NUMBER < 0x3060000fL
         const ASN1_TIME *notAfter = X509_get0_notAfter(d->cert);
         ASN1_time_parse((const char *) ASN1_STRING_get0_data(notAfter),
                         ASN1_STRING_length(notAfter),
@@ -1012,7 +1025,7 @@ static iBool readIncoming_TlsRequest_(iTlsRequest *d) {
 
 static iThreadResult run_TlsRequest_(iThread *thread) {
     iTlsRequest *d = userData_Thread(thread);
-    /* Thread-local pointer to the current request so it can be accessed in the 
+    /* Thread-local pointer to the current request so it can be accessed in the
        verify callback. */
     iDebug("[TlsRequest] run_TlsRequest_: %zu bytes to send\n", size_Block(&d->sending));
     setCurrentRequestForThread_Context_(context_, d);

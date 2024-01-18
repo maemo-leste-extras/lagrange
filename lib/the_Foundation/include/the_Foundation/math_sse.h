@@ -60,7 +60,8 @@ iLocalDef iFloat4 initiv_F4(const int *v) {
 }
 
 iLocalDef iFloat4 initv_F4(const float *v) {
-    return (iFloat4){ _mm_loadu_ps(v) };
+    __m128 m = _mm_loadu_ps(v);
+    return (iFloat4){ _mm_shuffle_ps(m, m, _MM_SHUFFLE(2, 1, 0, 3)) };
 }
 
 iLocalDef iFloat4 initmm_F4(__m128 m) {
@@ -265,6 +266,11 @@ iLocalDef iFloatVec3 values_F3(const iFloat3 d) {
 
 #define iFloat3Shuffle3(d, X, Y, Z)  (iFloat3){ _mm_shuffle_ps((d).m, (d).m, _MM_SHUFFLE(Z, Y, X, 0)) }
 
+iLocalDef iFloat3 xy_F3(const iFloat3 d) {
+    __m128 t = _mm_move_ss(d.m, _mm_set_ss(0));
+    return (iFloat3){ _mm_shuffle_ps(t, t, _MM_SHUFFLE(0, 2, 1, 0)) };
+}
+
 iLocalDef iFloat3 yzx_F3(const iFloat3 d) {
     return iFloat3Shuffle3(d, 2, 3, 1);
 }
@@ -373,7 +379,6 @@ void transpose_Mat4 (iMat4 *);
 iLocalDef void load_Mat4(iMat4 *d, const float *v) {
     for (int i = 0; i < 4; ++i) {
         d->col[i] = initv_F4(v + 4*i).m;
-        d->col[i] = _mm_shuffle_ps(d->col[i], d->col[i], _MM_SHUFFLE(2, 1, 0, 3));
     }
 }
 
@@ -387,14 +392,16 @@ iLocalDef void copy_Mat4(iMat4 *d, const iMat4 *other) {
 void    mul_Mat4    (iMat4 *, const iMat4 *b);
 iFloat4 row_Mat4    (const iMat4 *, int row);
 
-iLocalDef void translate_Mat4(iMat4 *d, iFloat3 v) {
-    d->col[3] = _mm_add_ps(d->col[3],
-                           /* Ensure w is really zero. */ _mm_move_ss(v.m, _mm_set_ss(0.0f)));
+iLocalDef void initTranslate_Mat4(iMat4 *d, iFloat3 v) {
+    d->col[0] = _mm_set_ps(0, 0, 1, 0);
+    d->col[1] = _mm_set_ps(0, 1, 0, 0);
+    d->col[2] = _mm_set_ps(1, 0, 0, 0);
+    d->col[3] = _mm_set_ps(z_F3(v), y_F3(v), x_F3(v), 1);
 }
 
-iLocalDef void initTranslate_Mat4(iMat4 *d, iFloat3 v) {
-    init_Mat4(d);
-    translate_Mat4(d, v);
+iLocalDef void translate_Mat4(iMat4 *d, iFloat3 v) {
+    iMat4 t; initTranslate_Mat4(&t, v);
+    mul_Mat4(d, &t);
 }
 
 iLocalDef void initScale_Mat4(iMat4 *d, iFloat3 v) {
@@ -405,15 +412,17 @@ iLocalDef void initScale_Mat4(iMat4 *d, iFloat3 v) {
 }
 
 iLocalDef void scale_Mat4(iMat4 *d, iFloat3 v) {
-    d->col[0] = _mm_mul_ps(d->col[0], _mm_set_ps(1, 1, x_F3(v), 1));
-    d->col[1] = _mm_mul_ps(d->col[1], _mm_set_ps(1, y_F3(v), 1, 1));
-    d->col[2] = _mm_mul_ps(d->col[2], _mm_set_ps(z_F3(v), 1, 1, 1));
+    iMat4 s; initScale_Mat4(&s, v);
+    mul_Mat4(d, &s);
 }
 
 iLocalDef void scalef_Mat4(iMat4 *d, float v) {
-    d->col[0] = _mm_mul_ps(d->col[0], _mm_set_ps(1, 1, v, 1));
-    d->col[1] = _mm_mul_ps(d->col[1], _mm_set_ps(1, v, 1, 1));
-    d->col[2] = _mm_mul_ps(d->col[2], _mm_set_ps(v, 1, 1, 1));
+    iMat4 s;
+    s.col[0] = _mm_set_ps(0, 0, v, 0);
+    s.col[1] = _mm_set_ps(0, v, 0, 0);
+    s.col[2] = _mm_set_ps(v, 0, 0, 0);
+    s.col[3] = _mm_set_ps(0, 0, 0, 1);
+    mul_Mat4(d, &s);
 }
 
 void initRotate_Mat4(iMat4 *d, iFloat3 axis, float degrees);
@@ -460,6 +469,8 @@ iLocalDef iFloat3 mulF3_Mat3(const iMat3 *d, iFloat3 v) {
                    dot_F3(initmm_F3(d->col[1]), v),
                    dot_F3(initmm_F3(d->col[2]), v));
 }
+
+void initRotate_Mat3(iMat3 *d, iFloat3 axis, float degrees);
 
 /*-------------------------------------------------------------------------------------*/
 

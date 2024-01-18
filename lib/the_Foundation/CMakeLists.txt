@@ -1,6 +1,6 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.5)
 
-project (the_Foundation VERSION 1.7.0 LANGUAGES C)
+project (the_Foundation VERSION 1.7.1 LANGUAGES C)
 set (CMAKE_PROJECT_DESCRIPTION "Opinionated C11 library for low-level functionality")
 
 include (CheckIncludeFile)
@@ -293,7 +293,7 @@ if (CURL_FOUND)
     list (APPEND SOURCES src/webrequest.c)
     list (APPEND HEADERS include/the_Foundation/webrequest.h)
 endif ()
-if (OPENSSL_FOUND)
+if (TFDN_ENABLE_TLSREQUEST AND OPENSSL_FOUND)
     set (iHaveTlsRequest YES)
     list (APPEND SOURCES src/tlsrequest.c)
     list (APPEND HEADERS include/the_Foundation/tlsrequest.h)
@@ -370,7 +370,7 @@ if (IOS)
 endif ()
 
 # Generate a simple pkgconfig file.
-if (OPENSSL_FOUND)
+if (TFDN_ENABLE_TLSREQUEST AND OPENSSL_FOUND)
     foreach (flg ${OPENSSL_LDFLAGS})
         set (OPENSSL_PC_LDFLAGS "${OPENSSL_PC_LDFLAGS} ${flg}")
     endforeach (flg)
@@ -384,12 +384,18 @@ configure_file (
 # Dependencies.
 if (NOT iHaveC11Threads AND NOT ANDROID)
     # phtread is exposed via header file usage, so it must be linked publicly.
-    target_link_libraries (${TFDN_LIB} PUBLIC pthread)
+        if (MINGW)
+                target_link_libraries (${TFDN_LIB} PRIVATE libwinpthread.a)
+        else ()
+                target_link_libraries (${TFDN_LIB} PUBLIC pthread)
+        endif ()
 endif ()
 if (ANDROID AND TFDN_ENABLE_DEBUG_OUTPUT)
     target_link_libraries (${TFDN_LIB} PUBLIC log)
 endif ()
-target_link_libraries (${TFDN_LIB} PUBLIC m)
+if (NOT MINGW)
+        target_link_libraries (${TFDN_LIB} PUBLIC m)
+endif ()
 tfdn_link_depends (${TFDN_LIB} ${TFDN_DEPENDS_LINK_MODE})
 
 # Installation.
@@ -415,7 +421,7 @@ if (TFDN_ENABLE_INSTALL)
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
     )
     install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${TFDN_LIB}ConfigVersion.cmake
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TFDN_LIB}
+                DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${TFDN_LIB}
     )
 endif ()
 

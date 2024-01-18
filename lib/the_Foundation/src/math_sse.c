@@ -92,6 +92,22 @@ void initRotate_Mat4(iMat4 *d, iFloat3 axis, float degrees) {
     d->col[3] = init_F4(0, 0, 0, 1).m;
 }
 
+void initRotate_Mat3(iMat3 *d, iFloat3 axis, float degrees) {
+    const float   ang   = iMathDegreeToRadianf(degrees);
+    const float   c     = cosf(ang);
+    const float   s     = sinf(ang);
+    const iFloat3 axis3 = normalize_F3(axis);
+    _Alignas(16) float av_[4];
+    _mm_store_ps(av_, axis3.m);
+    const float *av  = av_ + 1; /* x is at 1 */
+    for (int i = 0; i < 3; ++i) {
+        d->col[i] = _mm_mul_ps(_mm_mul_ps(axis3.m, _mm_set1_ps(av[i])), _mm_set1_ps(1 - c));
+    }
+    d->col[0] = _mm_add_ps(d->col[0], init_F3(+c,       +av[2]*s,   -av[1]*s).m);
+    d->col[1] = _mm_add_ps(d->col[1], init_F3(-av[2]*s, +c,         +av[0]*s).m);
+    d->col[2] = _mm_add_ps(d->col[2], init_F3(+av[1]*s, -av[0]*s,   +c		).m);
+}
+
 void store_Mat3(const iMat3 *d, float *v9) {
     _Alignas(16) float vals[12];
     _mm_store_ps(vals,     d->col[0]);

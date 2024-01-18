@@ -1,7 +1,21 @@
 # Changelog
 
+## 1.7.1
+* PtrArray: Added `back`, `popBack`, `popFront` methods.
+* String: Added `quoteDelim` method.
+* String: Fixed issue with the `mid` method when starting position is at or past the end.
+* StringList: Implemented missing iterator `remove` and `take` methods.
+* TlsRequest: TLS 1.2 is the minimum accepted protocol version.
+
 ## 1.7
 * Native Windows build using MinGW64: Winsock2 for sockets, IP addresses.
+* Minimum CMake version requirement is now 3.5.
+* Mat4 (generic): Fixed translating a matrix with `translate_Mat4`.
+* Mat4: Fixed `scale` and `scalef` methods.
+* Math: Added `xy_F3`, `initRotate_Mat4`.
+* SSE: Fixed incorrect order of components when calling `initv_F4`.
+* StringArray: Added serialization methods, reverse const iterator.
+* StringList: Added serialization methods.
 
 ## 1.6.1
 * Library SOVERSION uses the major version number only. Minor versions do not break ABI compatibility.

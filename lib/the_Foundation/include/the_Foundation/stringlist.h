@@ -53,6 +53,7 @@ struct Impl_StringList {
 };
 
 iDeclareObjectConstruction(StringList)
+iDeclareTypeSerialization(StringList)
 
 iStringList *   newStrings_StringList       (const iString *, ...);
 iStringList *   newStringsCStr_StringList   (const char *, ...);
