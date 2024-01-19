@@ -607,7 +607,6 @@ MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/sparta
     install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon)
     install (FILES debian/maemo/lagrange.png
          DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
-         RENAME fi.skyjake.Lagrange.png
     )
     install (FILES res/fi.skyjake.Lagrange.appdata.xml
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
