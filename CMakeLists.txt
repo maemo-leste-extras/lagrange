@@ -591,7 +591,7 @@ elseif (UNIX AND NOT APPLE)
     set_target_properties (app PROPERTIES
         INSTALL_RPATH_USE_LINK_PATH YES
     )
-    set (desktop ${CMAKE_CURRENT_BINARY_DIR}/fi.skyjake.Lagrange.desktop)
+    set (desktop ${CMAKE_CURRENT_BINARY_DIR}/lagrange.desktop)
     file (WRITE ${desktop} "[Desktop Entry]
 Name=Lagrange
 Comment=${PROJECT_DESCRIPTION}
