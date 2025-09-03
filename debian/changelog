@@ -1,3 +1,9 @@
+lagrange (1.17.9-3+leste1) unstable; urgency=low
+
+  * daedalus build.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Thu, 4 Sep 2025 03:04:00 +0400
+
 lagrange (1.17.8-3+leste1) unstable; urgency=low
 
   * update to 1.17.6, sync with releases branch and versioning.
