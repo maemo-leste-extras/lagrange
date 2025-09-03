@@ -283,8 +283,22 @@ iBool isOpen_Datagram(const iDatagram *d) {
     return d->fd != INVALID_SOCKET;
 }
 
+iBool isConnected_Datagram(const iDatagram *d) {
+    return d->destination != NULL;
+}
+
 uint16_t port_Datagram(const iDatagram *d) {
     return d->port;
+}
+
+iBool openRandom_Datagram(iDatagram *d) {
+    for (int i = 0; i < 50; i++) {
+        /* TODO: It would be nicer to let the OS choose a free port for us. */
+        if (open_Datagram(d, iRandom(1024, 49151))) {
+            return iTrue;
+        }
+    }
+    return iFalse;
 }
 
 iBool open_Datagram(iDatagram *d, uint16_t port) {

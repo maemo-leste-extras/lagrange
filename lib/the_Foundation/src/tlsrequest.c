@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #include "the_Foundation/buffer.h"
 #include "the_Foundation/socket.h"
 #include "the_Foundation/stringhash.h"
+#include "the_Foundation/stringlist.h"
 #include "the_Foundation/thread.h"
 #include "the_Foundation/time.h"
 
@@ -154,7 +155,9 @@ static iTlsCertificate *maybeReuseSession_Context_(iContext *d, SSL *ssl, const 
     iForEach(StringHash, i, d->cache) {
         iCachedSession *cs = i.value->object;
         if (isExpired_CachedSession_(cs)) {
-            iDebug("[TlsRequest] session for `%s` has expired\n", cstr_Block(&i.value->keyBlock));
+            iDebug("[%s] session for `%s` has expired\n",
+                   cstr_String(name_Thread(current_Thread())),
+                   cstr_Block(&i.value->keyBlock));
             remove_StringHashIterator(&i);
         }
     }
@@ -163,7 +166,9 @@ static iTlsCertificate *maybeReuseSession_Context_(iContext *d, SSL *ssl, const 
                cmp_Block(&cs->clientHash, clientHash) == 0)) {
         reuse_CachedSession(cs, ssl);
         cert = copy_TlsCertificate(cs->cert);
-        iDebug("[TlsRequest] reusing session for `%s`\n", cstr_String(key));
+        iDebug("[%s] reusing session for `%s`\n",
+               cstr_String(name_Thread(current_Thread())),
+               cstr_String(key));
     }
     unlock_Mutex(&d->cacheMutex);
     delete_String(key);
@@ -175,15 +180,19 @@ static void saveSession_Context_(iContext *d, const iString *host, uint16_t port
                                  SSL_SESSION *sess, const iTlsCertificate *serverCert,
                                  const iTlsCertificate *clientCert) {
     if (sess && serverCert) {
+#if defined (iHaveDebugOutput)
+        const char *tname = cstr_String(name_Thread(current_Thread()));
+#endif
+        iDebug("[%s] saveSession: host=%s port=%u\n", tname, cstr_String(host), port);
         iString *key = cacheKey_(host, port);
-        lock_Mutex(&d->cacheMutex);
         iCachedSession *cs = new_CachedSession(sess, serverCert);
         if (clientCert) {
             setClientCertificate_CachedSession_(cs, clientCert);
         }
+        lock_Mutex(&d->cacheMutex);
         insert_StringHash(d->cache, key, cs);
         unlock_Mutex(&d->cacheMutex);
-        iDebug("[TlsRequest] saved session for `%s`\n", cstr_String(key));
+        iDebug("[%s] saved session for `%s`\n", tname, cstr_String(key));
         delete_String(key);
     }
 }
@@ -231,6 +240,7 @@ static int verifyCallback_Context_(int preverifyOk, X509_STORE_CTX *storeCtx) {
 }
 
 void init_Context(iContext *d) {
+    iAssert(current_Thread() == NULL); /* must be main thread */
     init_String(&d->libraryName);
 #if defined (LIBRESSL_VERSION_TEXT)
     setCStr_String(&d->libraryName, "LibreSSL");
@@ -303,9 +313,11 @@ void setVerifyFunc_TlsRequest(iTlsRequestVerifyFunc verifyFunc) {
 iDefineTypeConstruction(Context)
 
 static void globalCleanup_TlsRequest_(void) {
+#if !defined (iPlatformAndroid)
     if (context_) {
         delete_Context(context_);
     }
+#endif
 }
 
 static void initContext_(void) {
@@ -322,9 +334,30 @@ struct Impl_TlsCertificate {
     STACK_OF(X509) *chain;
     EVP_PKEY *pkey;
     enum iTlsCertificateVerifyStatus *cachedVerifyStatus; /* TODO: include domain/IP check, too? */
+    char fingerprint[SHA256_DIGEST_LENGTH];
 };
 
 iDefineTypeConstruction(TlsCertificate)
+
+static void calcSHA256_(BIO *src, void *sha256_out) {
+    iBlock der;
+    init_Block(&der, 0);
+    readAllFromBIO_(src, &der);
+    SHA256(constData_Block(&der), size_Block(&der), sha256_out);
+    deinit_Block(&der);
+}
+
+static void updateFingerprint_TlsCertificate_(iTlsCertificate *d) {
+    if (d->cert) {
+        BIO *buf = BIO_new(BIO_s_mem());
+        i2d_X509_bio(buf, d->cert);
+        calcSHA256_(buf, d->fingerprint);
+        BIO_free(buf);
+    }
+    else {
+        iZap(d->fingerprint);
+    }
+}
 
 void init_TlsCertificate(iTlsCertificate *d) {
     initContext_();
@@ -333,6 +366,7 @@ void init_TlsCertificate(iTlsCertificate *d) {
     d->pkey  = NULL;
     d->cachedVerifyStatus = malloc(sizeof(*d->cachedVerifyStatus));
     *d->cachedVerifyStatus = unknown_TlsCertificateVerifyStatus;
+    iZap(d->fingerprint);
 }
 
 static void freeX509Chain_(STACK_OF(X509) *chain) {
@@ -361,6 +395,7 @@ static iTlsCertificate *newX509Chain_TlsCertificate_(X509 *cert, STACK_OF(X509) 
     iTlsCertificate *d = new_TlsCertificate();
     d->cert  = cert;
     d->chain = chain;
+    updateFingerprint_TlsCertificate_(d);
     return d;
 }
 
@@ -369,6 +404,7 @@ iTlsCertificate *newPem_TlsCertificate(const iString *pem) {
     BIO *buf = BIO_new_mem_buf(cstr_String(pem), (int) size_String(pem));
     PEM_read_bio_X509(buf, &d->cert, NULL /* no passphrase callback */, "" /* empty passphrase */);
     BIO_free(buf);
+    updateFingerprint_TlsCertificate_(d);
     return d;
 }
 
@@ -377,6 +413,7 @@ iTlsCertificate *newPemKey_TlsCertificate(const iString *certPem, const iString 
     BIO *buf = BIO_new_mem_buf(cstr_String(keyPem), (int) size_String(keyPem));
     PEM_read_bio_PrivateKey(buf, &d->pkey, NULL, "");
     BIO_free(buf);
+    updateFingerprint_TlsCertificate_(d);
     return d;
 }
 
@@ -499,6 +536,7 @@ iTlsCertificate *newSelfSignedRSA_TlsCertificate(
     }
     X509_sign(d->cert, d->pkey, EVP_sha256());
     checkErrors_();
+    updateFingerprint_TlsCertificate_(d);
     return d;
 }
 
@@ -514,6 +552,7 @@ iTlsCertificate *copy_TlsCertificate(const iTlsCertificate *d) {
         copy->pkey = d->pkey;
     }
     *copy->cachedVerifyStatus = *d->cachedVerifyStatus;
+    memcpy(copy->fingerprint, d->fingerprint, sizeof(d->fingerprint));
     return copy;
 }
 
@@ -535,6 +574,69 @@ iString *subject_TlsCertificate(const iTlsCertificate *d) {
         BIO_free(buf);
     }
     return sub;
+}
+
+iStringList *subjectAltNames_TlsCertificate(const iTlsCertificate *d) {
+    iStringList *alt = new_StringList();
+    if (!d->cert) {
+        return alt;
+    }
+    const int sanIndex = X509_get_ext_by_NID(d->cert, NID_subject_alt_name, -1);
+    if (sanIndex < 0) {
+        return alt;
+    }
+    X509_EXTENSION *sanExt = X509_get_ext(d->cert, sanIndex);
+    if (!sanExt) {
+        return alt;
+    }
+    GENERAL_NAMES *names = X509V3_EXT_d2i(sanExt);
+    if (!names) {
+        return alt;
+    }
+    iBeginCollect();
+    for (int i = 0; i < sk_GENERAL_NAME_num(names); i++) {
+        GENERAL_NAME *name = sk_GENERAL_NAME_value(names, i);
+        switch (name->type) {
+            case GEN_DNS:
+                pushBackCStr_StringList(
+                    alt,
+                    format_CStr("DNS:%s", (const char *) ASN1_STRING_get0_data(name->d.dNSName)));
+                break;
+            case GEN_EMAIL:
+                pushBackCStr_StringList(
+                    alt,
+                    format_CStr("EMAIL:%s",
+                                (const char *) ASN1_STRING_get0_data(name->d.rfc822Name)));
+                break;
+            case GEN_IPADD: {
+                uint8_t *ip = name->d.iPAddress->data;
+                if (name->d.iPAddress->length == 4) {
+                    pushBackCStr_StringList(
+                        alt, format_CStr("IP:%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]));
+                }
+                else {
+                    iString *str = newCStr_String("IP");
+                    for (int j = 0; j < 16; j += 2) {
+                        appendFormat_String(str, ":%02x%02x", ip[j], ip[j + 1]);
+                    }
+                    pushBack_StringList(alt, str);
+                    delete_String(str);
+                }
+                break;
+            }
+            case GEN_URI:
+                pushBackCStr_StringList(alt,
+                                        format_CStr("URI:%s",
+                                                    (const char *) ASN1_STRING_get0_data(
+                                                        name->d.uniformResourceIdentifier)));
+                break;
+            default:
+                break;
+        }
+    }
+    iEndCollect();
+    GENERAL_NAMES_free(names);
+    return alt;
 }
 
 iString *issuer_TlsCertificate(const iTlsCertificate *d) {
@@ -643,24 +745,8 @@ iBool equal_TlsCertificate(const iTlsCertificate *d, const iTlsCertificate *othe
     return X509_cmp(d->cert, other->cert) == 0;
 }
 
-static void calcSHA256_(BIO *src, iBlock *dst) {
-    iBlock der;
-    init_Block(&der, 0);
-    readAllFromBIO_(src, &der);
-    SHA256(constData_Block(&der), size_Block(&der), data_Block(dst));
-    deinit_Block(&der);
-}
-
 iBlock *fingerprint_TlsCertificate(const iTlsCertificate *d) {
-    iBlock *sha = new_Block(SHA256_DIGEST_LENGTH);
-    if (d->cert) {
-        /* Get the DER serialization of the certificate. */
-        BIO *buf = BIO_new(BIO_s_mem());
-        i2d_X509_bio(buf, d->cert);
-        calcSHA256_(buf, sha);
-        BIO_free(buf);
-    }
-    return sha;
+    return newData_Block(d->fingerprint, sizeof(d->fingerprint));
 }
 
 iBlock *publicKeyFingerprint_TlsCertificate(const iTlsCertificate *d) {
@@ -673,7 +759,7 @@ iBlock *publicKeyFingerprint_TlsCertificate(const iTlsCertificate *d) {
         /* Get the DER serialization of the public key. */
         BIO *buf = BIO_new(BIO_s_mem());
         i2d_PUBKEY_bio(buf, pub);
-        calcSHA256_(buf, sha);
+        calcSHA256_(buf, data_Block(sha));
         BIO_free(buf);
         EVP_PKEY_free(pub);
     }
@@ -686,7 +772,7 @@ iBlock *privateKeyFingerprint_TlsCertificate(const iTlsCertificate *d) {
         /* Get the DER serialization of the private key. */
         BIO *buf = BIO_new(BIO_s_mem());
         i2d_PrivateKey_bio(buf, d->pkey);
-        calcSHA256_(buf, sha);
+        calcSHA256_(buf, data_Block(sha));
         BIO_free(buf);
     }
     return sha;
@@ -896,6 +982,7 @@ void deinit_TlsRequest(iTlsRequest *d) {
         join_Thread(d->thread);
         iRelease(d->thread);
     }
+    iRelease(d->socket);
     deinit_Block(&d->sending);
     SSL_free(d->ssl);
     deinit_Condition(&d->requestDone);
@@ -909,7 +996,6 @@ void deinit_TlsRequest(iTlsRequest *d) {
     delete_TlsCertificate(d->cert);
     iRelease(d->result);
     deinit_Block(&d->content);
-    iRelease(d->socket);
     delete_String(d->hostName);
     deinit_Mutex(&d->mtx);
 }
@@ -966,8 +1052,9 @@ static int processIncoming_TlsRequest_(iTlsRequest *d, const char *src, size_t l
         }
         if (!d->cert) {
             STACK_OF(X509) *chain = SSL_get_peer_cert_chain(d->ssl);
-            d->cert = newX509Chain_TlsCertificate_(SSL_get_peer_certificate(d->ssl),
-                                                   X509_chain_up_ref(chain));
+            X509 *cert = sk_X509_value(chain, 0);
+            X509_up_ref(cert);
+            d->cert = newX509Chain_TlsCertificate_(cert, X509_chain_up_ref(chain));
         }
         /* The encrypted data is now in the input bio so now we can perform actual
            read of unencrypted data. */
@@ -1027,7 +1114,10 @@ static iThreadResult run_TlsRequest_(iThread *thread) {
     iTlsRequest *d = userData_Thread(thread);
     /* Thread-local pointer to the current request so it can be accessed in the
        verify callback. */
-    iDebug("[TlsRequest] run_TlsRequest_: %zu bytes to send\n", size_Block(&d->sending));
+#if defined (iHaveDebugOutput)
+    const char *tname = cstr_String(name_Thread(thread));
+#endif
+    iDebug("[%s] run_TlsRequest_: %zu bytes to send\n", tname, size_Block(&d->sending));
     setCurrentRequestForThread_Context_(context_, d);
     doHandshake_TlsRequest_(d);
     for (;;) {
@@ -1044,31 +1134,36 @@ static iThreadResult run_TlsRequest_(iThread *thread) {
                 unlock_Mutex(&d->incomingMtx);
             }
             else {
-                //fprintf(stderr, "[TlsRequest] run loop exiting, status %d\n", d->status);
+                iDebug("[%s] run loop exiting, status %d\n", tname, d->status);
                 unlock_Mutex(&d->mtx);
                 break;
             }
         }
     }
-    if (!SSL_session_reused(d->ssl) && d->status != error_TlsRequestStatus) {
+    if (d->status != error_TlsRequestStatus && !SSL_session_reused(d->ssl)) {
+        iDebug("[%s] saving session\n", tname);
         saveSession_Context_(
             context_, d->hostName, d->port, SSL_get0_session(d->ssl), d->cert, d->clientCert);
+        iDebug("[%s] saving session succeeded\n", tname);
     }
     readIncoming_TlsRequest_(d);
     iNotifyAudience(d, finished, TlsRequestFinished);
-    iDebug("[TlsRequest] finished\n");
+    iDebug("[%s] finished\n", tname);
     return 0;
 }
 
 static void connected_TlsRequest_(iTlsRequest *d, iSocket *sock) {
     /* The socket has been connected. During this notification the socket remains locked
        so we must start a different thread for carrying out the I/O. */
+    iBeginCollect();
     iUnused(sock);
     iAssert(!d->thread);
     d->thread = new_Thread(run_TlsRequest_);
-    setName_Thread(d->thread, "TlsRequest");
+    static iAtomicInt idGen_ = 1;
+    setName_Thread(d->thread, format_CStr("TlsRequest-%d", add_Atomic(&idGen_, 1)));
     setUserData_Thread(d->thread, d);
     start_Thread(d->thread);
+    iEndCollect();
 }
 
 static void disconnected_TlsRequest_(iTlsRequest *d, iSocket *sock) {
@@ -1165,7 +1260,9 @@ const iString *errorMessage_TlsRequest(const iTlsRequest *d) {
 }
 
 static void certificateVerifyFailed_TlsRequest_(iTlsRequest *d, const iTlsCertificate *cert) {
-    iAssert(d->cert == NULL);
+    if (d->cert) {
+        delete_TlsCertificate(d->cert);
+    }
     d->cert = copy_TlsCertificate(cert);
     d->certVerifyFailed = iTrue;
 }

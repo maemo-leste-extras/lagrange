@@ -365,6 +365,7 @@ static iThreadResult connectAsync_Socket_(iThread *thd) {
                 /* Ran out of addresses. */
                 break;
             }
+            lock_Mutex(&d->mutex);
             iDebug("[Socket] connecting async to %s (addrSize:%u index:%d)\n",
                    cstrCollect_String(toString_SockAddr(addr)),
                    addrSize, indexInFamily);
@@ -375,6 +376,7 @@ static iThreadResult connectAsync_Socket_(iThread *thd) {
             }
             iDebug("[Socket] family:%d type:%d protocol:%d\n", sp.family, sp.type, sp.protocol);
             d->fd = socket(sp.family, sp.type, sp.protocol);
+            unlock_Mutex(&d->mutex);
             if (!setNonBlocking_Socket_(d, iTrue)) {
                 /* Wait indefinitely. */
                 rc = connect(d->fd, addr, addrSize);

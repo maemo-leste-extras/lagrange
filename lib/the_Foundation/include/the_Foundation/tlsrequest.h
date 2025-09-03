@@ -84,13 +84,14 @@ iDeclareTypeConstruction(TlsCertificate)
 iTlsCertificate *   newPem_TlsCertificate       (const iString *pem);
 iTlsCertificate *   newPemKey_TlsCertificate    (const iString *certPem, const iString *keyPem);
 
-iTlsCertificate *   newSelfSignedRSA_TlsCertificate(int rsaBits, iDate validUntil,
-                                                    const iTlsCertificateName *namesNullTerminatedArray);
+iTlsCertificate *   newSelfSignedRSA_TlsCertificate (int rsaBits, iDate validUntil,
+                                                     const iTlsCertificateName *namesNullTerminatedArray);
 iTlsCertificate *   copy_TlsCertificate         (const iTlsCertificate *);
 
 iBool               isEmpty_TlsCertificate      (const iTlsCertificate *);
 iBool               hasPrivateKey_TlsCertificate(const iTlsCertificate *);
 iString *           subject_TlsCertificate      (const iTlsCertificate *);
+iStringList *       subjectAltNames_TlsCertificate  (const iTlsCertificate *);
 iString *           issuer_TlsCertificate       (const iTlsCertificate *);
 void                validUntil_TlsCertificate   (const iTlsCertificate *, iDate *untilDate_out);
 iBool               isExpired_TlsCertificate    (const iTlsCertificate *);

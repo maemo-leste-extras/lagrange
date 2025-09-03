@@ -38,6 +38,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #include <sys/socket.h>
 #include <unistd.h>
 
+#if defined (iPlatformLinux)
+#include <netinet/in.h>
+#endif
+
 /* address.c */
 int getSockAddr_Address(const iAddress *  d,
                         struct sockaddr **addr_out,
@@ -105,6 +109,7 @@ struct Impl_DatagramThread {
 static iThreadResult run_DatagramThread_(iThread *thread) {
     iDatagramThread *d = (iAny *) thread;
     iMutex *mtx = &d->mutex;
+    iDebug("[Datagram] I/O thread started\n");
     while (d->mode == run_DatagramThreadMode) {
         /* Wait for activity. */
         fd_set reads, errors; {
@@ -115,13 +120,16 @@ static iThreadResult run_DatagramThread_(iThread *thread) {
             iGuardMutex(mtx, {
                 iConstForEach(PtrSet, i, &d->datagrams) {
                     const iDatagram *dgm = *i.value;
-                    FD_SET(dgm->fd, &reads);
-                    FD_SET(dgm->fd, &errors);
-                    maxfd = iMax(maxfd, dgm->fd);
+                    if (dgm->fd != -1) {
+                        FD_SET(dgm->fd, &reads);
+                        FD_SET(dgm->fd, &errors);
+                        maxfd = iMax(maxfd, dgm->fd);
+                    }
                 }
             });
             int ready = select(maxfd + 1, &reads, NULL, &errors, NULL);
-            if (ready == -1) {
+            if (ready == -1 && errno != EBADF) {
+                iDebug("[Datagram] I/O thread exited due to select() error: %s\n", strerror(errno));
                 return errno;
             }
         }
@@ -147,7 +155,7 @@ static iThreadResult run_DatagramThread_(iThread *thread) {
                         iWarning("[Datagram] socket %i: error %i while receiving: %s\n",
                                  dgm->fd, errno, strerror(errno));
                         iNotifyAudienceArgs(dgm, error, DatagramError, errno, strerror(errno));
-                        /* Maybe remove the datagram from the set? */
+                        continue;
                     }
                     /* Keep the data as a message. */ {
                         iMessage *msg = new_Message();
@@ -202,6 +210,7 @@ static iThreadResult run_DatagramThread_(iThread *thread) {
         }
         unlock_Mutex(mtx);
     }
+    iDebug("[Datagram] I/O thread exits\n");
     return 0;
 }
 
@@ -226,9 +235,13 @@ iDefineObjectConstruction(DatagramThread)
 
 iLocalDef void start_DatagramThread_(iDatagramThread *d) { start_Thread(&d->thread); }
 
+static void wake_DatagramThread_(iDatagramThread *d) {
+    writeByte_Pipe(&d->wakeup, 1);
+}
+
 static void exit_DatagramThread_(iDatagramThread *d) {
     d->mode = stop_DatagramThreadMode;
-    writeByte_Pipe(&d->wakeup, 1);
+    wake_DatagramThread_(d);
     join_Thread(&d->thread);
 }
 
@@ -277,8 +290,22 @@ iBool isOpen_Datagram(const iDatagram *d) {
     return d->fd != -1;
 }
 
+iBool isConnected_Datagram(const iDatagram *d) {
+    return d->destination != NULL;
+}
+
 uint16_t port_Datagram(const iDatagram *d) {
     return d->port;
+}
+
+iBool openRandom_Datagram(iDatagram *d) {
+    for (int i = 0; i < 50; i++) {
+        /* TODO: It would be nicer to let the OS choose a free port for us. */
+        if (open_Datagram(d, iRandom(1024, 49151))) {
+            return iTrue;
+        }
+    }
+    return iFalse;
 }
 
 iBool open_Datagram(iDatagram *d, uint16_t port) {
@@ -297,7 +324,7 @@ iBool open_Datagram(iDatagram *d, uint16_t port) {
         iSocketParameters sp = socketParametersFamily_Address(d->address, AF_INET);
         d->fd = socket(sp.family, sp.type, sp.protocol);
         if (d->fd == -1) {
-            iWarning("[Datagram] error creating socket\n");
+            iWarning("[Datagram] error creating socket (port %u): %s\n", port, strerror(errno));
             iReleasePtr(&d->address);
             return iFalse;
         }
@@ -305,6 +332,12 @@ iBool open_Datagram(iDatagram *d, uint16_t port) {
             const int broadcast = 1;
             setsockopt(d->fd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
         }
+#if defined (iPlatformLinux)
+        /* Receive error messages. */ {
+            const int value = 1;
+            setsockopt(d->fd, SOL_IP, IP_RECVERR, &value, sizeof(value));
+        }
+#endif
         getSockAddr_Address(d->address, &sockAddr, &sockLen, AF_INET, 0 /* first one */);
         if (bind(d->fd, sockAddr, sockLen) == -1) {
             iReleasePtr(&d->address);
@@ -319,7 +352,7 @@ iBool open_Datagram(iDatagram *d, uint16_t port) {
             init_DatagramThreads_();
         }
         iGuardMutex(&datagramIO_->mutex, insert_PtrSet(&datagramIO_->datagrams, d));
-        writeByte_Pipe(&datagramIO_->wakeup, 1); // update the set of waiting datagrams
+        wake_DatagramThread_(datagramIO_); // update the set of waiting datagrams
     }
     return iTrue;
 }
@@ -329,7 +362,7 @@ void close_Datagram(iDatagram *d) {
     /* Remove from the I/O thread. */
     if (datagramIO_) {
         iGuardMutex(&datagramIO_->mutex, remove_PtrSet(&datagramIO_->datagrams, d));
-        writeByte_Pipe(&datagramIO_->wakeup, 1); // update the set of waiting datagrams
+        wake_DatagramThread_(datagramIO_); // update the set of waiting datagrams
     }
     iGuardMutex(&d->mutex, {
         if (isOpen_Datagram(d)) {
@@ -365,7 +398,7 @@ void send_Datagram(iDatagram *d, const iBlock *data, const iAddress *to) {
     set_Block(&msg->data, data);
     put_Queue(d->output, msg);
     iRelease(msg);
-    writeByte_Pipe(&datagramIO_->wakeup, 1);
+    wake_DatagramThread_(datagramIO_);
 }
 
 void sendData_Datagram(iDatagram *d, const void *data, size_t size, const iAddress *to) {
@@ -413,6 +446,7 @@ void disconnect_Datagram(iDatagram *d) {
 void flush_Datagram(iDatagram *d) {
     iGuardMutex(&d->mutex, {
         if (isOpen_Datagram(d) && !isEmpty_Queue(d->output)) {
+            wake_DatagramThread_(datagramIO_);
             wait_Condition(&d->allSent, &d->mutex);
         }
     });

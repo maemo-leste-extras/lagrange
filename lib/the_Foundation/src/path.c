@@ -150,7 +150,6 @@ static iBool splitSegments_Path_(const iRangecc path, iRangecc *segments,
             *changed = iTrue;
             continue;
         }
-#if defined (iPlatformMsys) || !defined (iPlatformWindows)
         if (*count == 0 && !iCmpStrRange(seg, "~")) {
             const iString *home = collect_String(home_Path());
             if (!isEmpty_String(home)) {
@@ -161,7 +160,6 @@ static iBool splitSegments_Path_(const iRangecc path, iRangecc *segments,
                 continue;
             }
         }
-#endif
         if (!iCmpStrRange(seg, ".")) {
             *changed = iTrue;
             continue; // No change in directory.

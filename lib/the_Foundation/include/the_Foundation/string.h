@@ -157,6 +157,8 @@ iString *       upperLang_String    (const iString *, const char *langCode);
 iString *       lower_String        (const iString *);
 iString *       lowerLang_String    (const iString *, const char *langCode);
 iStringList *   split_String        (const iString *, const char *separator);
+iString *       concat_String       (const iString *, const iString *other);
+iString *       concatCStr_String   (const iString *, const char *other);
 iChar           first_String        (const iString *);
 iChar           last_String         (const iString *);
 iBlock *        toLocal_String      (const iString *);
@@ -190,10 +192,22 @@ iLocalDef const char *cstrCollect_String(iString *d) {
 
 iLocalDef iRangecc range_String(const iString *d) {
     const iRangecc r = {
-        d ? constBegin_Block(&(d)->chars) : NULL,
-        d ? constEnd_Block(&(d)->chars) : NULL
+        d ? constBegin_Block(&d->chars) : NULL,
+        d ? constEnd_Block(&d->chars) : NULL
     };
     return r;
+}
+
+iLocalDef iRangecc rangeN_String(const iString *d, size_t n) {
+    if (!d) return (iRangecc) { NULL, NULL };
+    return (iRangecc) { constBegin_Block(&d->chars),
+                        constBegin_Block(&d->chars) + iMin(n, size_Block(&d->chars)) };
+}
+
+iLocalDef iRangecc rangeFrom_String(const iString *d, size_t from) {
+    if (!d) return (iRangecc) { NULL, NULL };
+    return (iRangecc) { constBegin_Block(&d->chars) + iMin(from, size_Block(&d->chars)),
+                        constEnd_Block(&d->chars) };
 }
 
 iLocalDef const iBlock *utf8_String(const iString *d) {
@@ -304,6 +318,8 @@ iString *       quote_String    (const iString *, iBool numericUnicode);
 iString *       unquote_String  (const iString *); /* delimiter is `"` */
 iString *       unquoteDelim_String (const iString *, iChar delim); /* custom delimiter */
 
+void            setLocaleCharSet_String (const char *charSet); /* charset for initLocal, toLocal */
+
 const char *    format_CStr     (const char *format, ...);
 const char *    skipSpace_CStr  (const char *);
 
@@ -361,6 +377,7 @@ iLocalDef iBool endsWithCase_Rangecc(const iRangecc d, const char *cstr) {
     return endsWithSc_Rangecc(d, cstr, &iCaseInsensitive);
 }
 
+iBlock *        toLocal_Rangecc     (iRangecc);
 iStringList *   split_Rangecc       (iRangecc, const char *separator);
 void            trimStart_Rangecc   (iRangecc *);
 void            trimEnd_Rangecc     (iRangecc *);

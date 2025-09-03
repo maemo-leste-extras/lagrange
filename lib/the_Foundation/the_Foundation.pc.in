@@ -6,6 +6,6 @@ includedir="${prefix}/@CMAKE_INSTALL_INCLUDEDIR@"
 Name: @PROJECT_NAME@
 Description: @CMAKE_PROJECT_DESCRIPTION@
 Version: @PROJECT_VERSION@
-Cflags: -I${includedir}
+Cflags: -I${includedir} @TFDN_PC_SSEFLAG@
 Libs: -L${libdir} -l_Foundation
 Libs.private: @OPENSSL_PC_LDFLAGS@

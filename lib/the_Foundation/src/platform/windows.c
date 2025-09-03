@@ -36,8 +36,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 #  include "win32/wide.h"
 #endif
 
-void setLocaleCharSet_String(const char *);
-
 int idealConcurrentCount_Thread(void) {
     static int ncpu;
     if (ncpu == 0) {

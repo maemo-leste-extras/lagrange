@@ -436,39 +436,38 @@ iBool parse_XmlDocument(iXmlDocument *d, const iString *source) {
     init_XmlParser_(&par, d, source);
     /* Must begin with the header. */
     nextToken_XmlParser_(&par);
-    if (par.tokenType != headerOpen_XmlToken) {
-        return iFalse;
-    }
-    nextToken_XmlParser_(&par);
-    if (par.tokenType != name_XmlToken || !equal_Rangecc(par.token, "xml")) {
-        return iFalse;
-    }
-    while (par.tokenType != headerClose_XmlToken) {
-        /* Header must say version 1.0 and UTF-8. */
+    if (par.tokenType == headerOpen_XmlToken) {
         nextToken_XmlParser_(&par);
-        if (par.tokenType == name_XmlToken) {
-            if (equal_Rangecc(par.token, "version")) {
-                nextToken_XmlParser_(&par);
-                if (!expect_XmlParser_(&par, assignment_XmlToken)) {
-                    return iFalse;
+        if (par.tokenType != name_XmlToken || !equal_Rangecc(par.token, "xml")) {
+            return iFalse;
+        }
+        while (par.tokenType != headerClose_XmlToken) {
+            /* Header must say version 1.0 and UTF-8. */
+            nextToken_XmlParser_(&par);
+            if (par.tokenType == name_XmlToken) {
+                if (equal_Rangecc(par.token, "version")) {
+                    nextToken_XmlParser_(&par);
+                    if (!expect_XmlParser_(&par, assignment_XmlToken)) {
+                        return iFalse;
+                    }
+                    if (par.tokenType != stringLiteral_XmlToken || !equal_Rangecc(par.token, "1.0")) {
+                        return iFalse;
+                    }
                 }
-                if (par.tokenType != stringLiteral_XmlToken || !equal_Rangecc(par.token, "1.0")) {
-                    return iFalse;
-                }
-            }
-            else if (equal_Rangecc(par.token, "encoding")) {
-                nextToken_XmlParser_(&par);
-                if (!expect_XmlParser_(&par, assignment_XmlToken)) {
-                    return iFalse;
-                }
-                if (par.tokenType != stringLiteral_XmlToken ||
-                    !equalCase_Rangecc(par.token, "UTF-8")) {
-                    return iFalse;
+                else if (equal_Rangecc(par.token, "encoding")) {
+                    nextToken_XmlParser_(&par);
+                    if (!expect_XmlParser_(&par, assignment_XmlToken)) {
+                        return iFalse;
+                    }
+                    if (par.tokenType != stringLiteral_XmlToken ||
+                        !equalCase_Rangecc(par.token, "UTF-8")) {
+                        return iFalse;
+                    }
                 }
             }
         }
+        nextToken_XmlParser_(&par);
     }
-    nextToken_XmlParser_(&par);
     /* This should now be the root element. */
     if (!parseTree_XmlParser_(&par, &d->root)) {
         return iFalse;

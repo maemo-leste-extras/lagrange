@@ -32,6 +32,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</small>
 
 #include <ctype.h>
 
+#if defined (iPlatformLinux)
+#  include <unistd.h>
+#endif
+
 iDeclareType(DefinedArg)
 iDeclareStaticClass(DefinedArg)
 
@@ -146,6 +150,25 @@ static size_t findArg_CommandLine_(const iCommandLine *d, const iRangecc arg) {
     return iInvalidPos;
 }
 
+#if defined (iPlatformLinux)
+iString *readSymlinkTarget_(const iString *path) {
+    iString *target = new_String();
+    iBlock *buf = &target->chars;
+    resize_Block(buf, 64);
+    for (;;) {
+        ssize_t rc = readlink(cstr_String(path), data_Block(buf), size_Block(buf));
+        if (rc == -1) { /* failure */
+            delete_String(target);
+            return NULL;
+        } else if (rc <= size_Block(buf)) {
+            break;
+        }
+        resize_Block(buf, size_Block(buf) * 2);
+    }
+    return target;
+}
+#endif
+
 void init_CommandLine(iCommandLine *d, int argc, char **argv) {
     init_StringList(&d->args);
     d->defined = NULL;
@@ -167,10 +190,23 @@ void init_CommandLine(iCommandLine *d, int argc, char **argv) {
         appendCStr_String(d->execPath, ".exe");
     }
 #else
+    d->execPath = NULL;
+#   if defined (iPlatformLinux)
+    if (access("/proc", F_OK) == 0) {
+        /* The kernel provides a symbolic link to the executable's path. */
+        iString path;
+        init_String(&path);
+        format_String(&path, "/proc/%llu/exe", (unsigned long long) getpid());
+        d->execPath = readSymlinkTarget_(&path);
+        deinit_String(&path);
+    }    
+#   endif
     /* TODO: This does not work if the executable was started via PATH. It
        would be more reliable to use platform-specific means to determine the
        path. See: https://stackoverflow.com/a/1024937 */
-    d->execPath = makeAbsolute_Path(constFront_StringList(&d->args));
+    if (!d->execPath) {
+        d->execPath = makeAbsolute_Path(constFront_StringList(&d->args));
+    }
 #endif
 }
 

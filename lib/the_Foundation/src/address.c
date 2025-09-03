@@ -74,7 +74,7 @@ iDefineAudienceGetter(Address, lookupFinished)
 #   endif
 #   define AI_V4MAPPED_CFG  0
 #elif defined (iPlatformLinux) || \
-      defined (iPlatformMsys) || defined (iPlatformCygwin) || defined (iPlatformWindows)     
+      defined (iPlatformMsys) || defined (iPlatformCygwin) || defined (iPlatformWindows)
 #   define AI_V4MAPPED_CFG  AI_V4MAPPED
 #endif
 
@@ -294,7 +294,7 @@ iBool isPending_Address(const iAddress *d) {
 iBool equal_Address(const iAddress *d, const iAddress *other) {
     waitForFinished_Address(d);
     waitForFinished_Address(other);
-    /* Compare the addresses with each other. */
+    /* Compare the addresses with each other. At least one must match. */
     for (const struct addrinfo *i = d->info; i; i = i->ai_next) {
         for (const struct addrinfo *j = other->info; j; j = j->ai_next) {
             if (i->ai_family == j->ai_family && i->ai_protocol == j->ai_protocol &&
@@ -430,12 +430,12 @@ iObjectList *networkInterfaces_Address(void) {
                 free(pAddresses);
                 pAddresses = NULL;
                 continue;
-            } 
+            }
             break;
         }
         if (dwRetVal == NO_ERROR) {
             for (PIP_ADAPTER_ADDRESSES pCurr = pAddresses; pCurr; pCurr = pCurr->Next) {
-                iDebug("[Address] adapter name: %s (%s)\n", 
+                iDebug("[Address] adapter name: %s (%s)\n",
                         fromWide_CStr_(pCurr->FriendlyName), fromWide_CStr_(pCurr->Description));
                 for (PIP_ADAPTER_UNICAST_ADDRESS uni = pCurr->FirstUnicastAddress; uni; uni = uni->Next) {
                     struct sockaddr *sockAddr = uni->Address.lpSockaddr;

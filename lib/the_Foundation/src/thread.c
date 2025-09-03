@@ -159,6 +159,13 @@ iBool isFinished_Thread(const iThread *d) {
 }
 
 const iString *name_Thread(const iThread *d) {
+    if (!d) {
+        static iString *name_;
+        if (!name_) {
+            name_ = newCStr_String("main thread");
+        }
+        return name_;
+    }
     return &d->name;
 }
 

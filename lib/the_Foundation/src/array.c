@@ -323,7 +323,9 @@ void removeN_Array(iArray *d, size_t pos, size_t count) {
 }
 
 void fill_Array(iArray *d, char value) {
-    memset(front_Array(d), value, d->elementSize * size_Array(d));
+    if (!isEmpty_Array(d)) {
+        memset(front_Array(d), value, d->elementSize * size_Array(d));
+    }
 }
 
 void move_Array(iArray *d, iRanges range, iArray *dest, size_t destPos) {

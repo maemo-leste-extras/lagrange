@@ -551,6 +551,18 @@ iStringList *split_String(const iString *d, const char *separator) {
     return split_Rangecc(range, separator);
 }
 
+iString *concat_String(const iString *d, const iString *other) {
+    iString *cat = copy_String(d);
+    append_String(cat, other);
+    return cat;
+}
+
+iString *concatCStr_String(const iString *d, const char *other) {
+    iString *cat = copy_String(d);
+    appendCStr_String(cat, other);
+    return cat;
+}
+
 iString *urlEncodeExclude_String(const iString *d, const char *excluded) {
     iString *enc = maybeUrlEncodeExclude_String(d, excluded);
     return enc ? enc : copy_String(d);
@@ -899,6 +911,20 @@ int cmpCStrNSc_Rangecc(const iRangecc d, const char *cstr, size_t n, const iStri
         return size < n ? -1 : 1;
     }
     return cmp;
+}
+
+iBlock *toLocal_Rangecc(const iRangecc d) {
+    size_t len = 0;
+    char * str = u8_conv_to_encoding(localeCharSet_,
+                                    iconveh_question_mark,
+                                    (const uint8_t *) d.start,
+                                    size_Range(&d),
+                                    NULL,
+                                    NULL,
+                                    &len);
+    str = realloc(str, len + 1);
+    str[len] = 0;
+    return newPrealloc_Block(str, len, len + 1);
 }
 
 iStringList *split_Rangecc(const iRangecc d, const char *separator) {

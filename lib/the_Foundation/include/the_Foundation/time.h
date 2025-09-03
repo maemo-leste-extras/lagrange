@@ -74,7 +74,7 @@ iTime       now_Time        (void);
 double      seconds_Time    (const iTime *);
 iString *   format_Time     (const iTime *, const char *format);
 
-#define isValid_Time(d)         ((d)->ts.tv_sec > 0)
+#define isValid_Time(d)         (((int64_t)(d)->ts.tv_sec) > 0)
 #define integralSeconds_Time(d) ((d)->ts.tv_sec)
 #define nanoSeconds_Time(d)     ((d)->ts.tv_nsec)
 

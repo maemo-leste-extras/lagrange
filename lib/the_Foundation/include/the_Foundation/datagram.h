@@ -49,9 +49,11 @@ iDeclareType(Address)
 iDeclareType(Block)
 
 iBool       open_Datagram       (iDatagram *, uint16_t port);
+iBool       openRandom_Datagram (iDatagram *);
 void        close_Datagram      (iDatagram *);
 
 iBool       isOpen_Datagram     (const iDatagram *);
+iBool       isConnected_Datagram(const iDatagram *);
 uint16_t    port_Datagram       (const iDatagram *);
 
 void        send_Datagram       (iDatagram *, const iBlock *data, const iAddress *to);

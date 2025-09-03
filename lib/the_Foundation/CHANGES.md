@@ -1,13 +1,35 @@
 # Changelog
 
-## 1.7.1
-* PtrArray: Added `back`, `popBack`, `popFront` methods.
-* String: Added `quoteDelim` method.
+## 1.9.1
+* TlsCertificate: Calculate SHA256 fingerprint when initializing (it will never change).
+
+## 1.9 - 2024-09-20
+* Added CMake build option `TFDN_ENABLE_STATIC_LINK` for linking dependencies statically.
+* CommandLine: Query executable path via Linux /proc/ filesystem.
+* Datagram: Added `isConnected` and `openRandom` methods.
+* Datagram: Fixed premature termination of the UDP worker thread when an error occurs with one socket.
+* Datagram: Handle UDP-related errors on Linux (e.g., ICMP port unreachable).
+* TlsCertificate: Added method for querying subject alternative names.
+* TlsRequest: Replaced use of deprecated OpenSSL API function.
+* TlsRequest: Fixed a possible memory leak.
+* XmlDocument: The `<?xml` header line is no longer required by the parser.
+
+## 1.8.1 - 2024-04-14
+* Fixed library version number in the CMakeLists file.
+
+## 1.8 - 2024-04-14
+* PtrArray: Added `back`, `constBack`, `popBack`, and `popFront` methods.
+* String: Added `concat`, `concatCStr`, and `quoteDelim` methods.
+* String: Added a function for setting the locale for 8-bit charset conversions.
+* String: Added a method for converting a `Rangecc` to the local charset.
 * String: Fixed issue with the `mid` method when starting position is at or past the end.
 * StringList: Implemented missing iterator `remove` and `take` methods.
 * TlsRequest: TLS 1.2 is the minimum accepted protocol version.
+* TlsRequest: Adjusted ifdefs for improved LibreSSL compatibility.
+* pkg-config: Compiler flag for SSE 4.1 added into the .pc file (if enabled in the build).
+* Fixed warnings (errors) abouts implicit conversions.
 
-## 1.7
+## 1.7 - 2023-09-09
 * Native Windows build using MinGW64: Winsock2 for sockets, IP addresses.
 * Minimum CMake version requirement is now 3.5.
 * Mat4 (generic): Fixed translating a matrix with `translate_Mat4`.
@@ -17,7 +39,7 @@
 * StringArray: Added serialization methods, reverse const iterator.
 * StringList: Added serialization methods.
 
-## 1.6.1
+## 1.6.1 - 2023-03-09
 * Library SOVERSION uses the major version number only. Minor versions do not break ABI compatibility.
 
 ## 1.6 - 2023-01-21

@@ -95,7 +95,7 @@ static iCollected *new_Collected_(void) {
 static void recycle_Collected_(iCollected *d) {
     if (!d->isRecycling && !isEmpty_List(&d->collected)) {
         d->isRecycling = iTrue; /* avoid re-entrant recycling */
-        iDebug("[Garbage] recycling %zu allocations\n", size_List(&d->collected));
+        // iDebug("[Garbage] recycling %zu allocations\n", size_List(&d->collected));
         iReverseForEach(List, i, &d->collected) {
             delete_GarbageNode_((iGarbageNode *) i.value);
         }
@@ -189,10 +189,6 @@ static iCollected *initForThread_Garbage_(void) {
     return d;
 }
 
-static iBool pop_Garbage_(void) {
-    return pop_Collected_(initForThread_Garbage_());
-}
-
 void *collect_Garbage(void *ptr, iDeleteFunc del) {
     push_Collected_(initForThread_Garbage_(), (iCollectedPtr){ ptr, del });
     return ptr;
@@ -203,10 +199,13 @@ void beginScope_Garbage(void) {
 }
 
 void endScope_Garbage(void) {
-    int count = 0;
-    while (pop_Garbage_()) { count++; }
-    if (count) {
-        iDebug("[Garbage] recycled %i scope allocations\n", count);
+    iCollected *d = tss_get(threadLocal_Garbage_);
+    if (d) {
+        int count = 0;
+        while (pop_Collected_(d)) { count++; }
+        if (count) {
+            // iDebug("[Garbage] recycled %i scope allocations\n", count);
+        }
     }
 }
 

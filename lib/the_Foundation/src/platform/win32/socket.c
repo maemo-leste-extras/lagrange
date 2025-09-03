@@ -173,10 +173,12 @@ static iThreadResult run_SocketThread_(iThread *thread) {
                 while (remaining > 0) {
                     ssize_t sent = send(d->socket->fd, ptr, remaining, 0);
                     if (sent == -1) {
-                        /* Error! */
+                        /* Error! */                        
+#if defined (iHaveDebugOutput)
                         const DWORD err = WSAGetLastError();
                         iWarning("[Socket] peer closed the connection while we were sending "
                                  "(%s)\n", errorMessage_Windows_(err));
+#endif
                         /* Don't quit immediately because we need to see if something was received. */
                         /* TODO: Need to set the Socket in a fail state, though?
                            Now we're assuming that the error will be noticed later. */
