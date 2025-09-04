@@ -300,6 +300,13 @@ set (SOURCES
     ${EMB_BIN}
 )
 
+# Stub safeAreaInsets_Mobile for desktop builds that force the mobile UI
+if (NOT IOS AND NOT ANDROID)
+    if (ENABLE_MOBILE_PHONE OR ENABLE_MOBILE_TABLET)
+        list (APPEND SOURCES src/ui/safearea_stub.c)
+    endif ()
+endif ()
+
 if (IOS OR NOT APPLE) # macos.m has Sparkle updater
     list (APPEND SOURCES src/updater.c)
 endif ()
