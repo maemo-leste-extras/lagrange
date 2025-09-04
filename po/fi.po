@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
 "POT-Creation-Date: 2023-03-09 05:32+0000\n"
-"PO-Revision-Date: 2023-10-21 04:38+0000\n"
+"PO-Revision-Date: 2025-08-30 17:06+0000\n"
 "Last-Translator: Weblate Admin <jaakko.keranen@iki.fi>\n"
 "Language-Team: Finnish <http://weblate.skyjake.fi/projects/lagrange/ui/fi/>\n"
 "Language: fi\n"
@@ -122,7 +122,7 @@ msgid "macos.menu.bookmarks.bytime"
 msgstr "Luettele luontijärjestyksessä"
 
 msgid "menu.feeds.entrylist"
-msgstr "Näytä syötteiden artikkelit"
+msgstr "Luettele syötteiden artikkelit"
 
 msgid "menu.preferences"
 msgstr "Asetukset…"
@@ -236,7 +236,7 @@ msgid "sidebar.bookmarks"
 msgstr "Kirjanmerkit"
 
 msgid "sidebar.feeds"
-msgstr "Syötteet"
+msgstr "Artikkelit"
 
 msgid "sidebar.history"
 msgstr "Historia"
@@ -404,7 +404,7 @@ msgid "dlg.ident.notes"
 msgstr "Muistiinpanot liittyen identiteettiin %s:"
 
 msgid "ident.fingerprint"
-msgstr "Kopioi sormenjälki"
+msgstr "Kopioi SHA-256-sormenjälki"
 
 msgid "ident.delete"
 msgstr "Poista identiteetti…"
@@ -476,7 +476,7 @@ msgid "dlg.cert.trust"
 msgstr "Luota"
 
 msgid "dlg.cert.fingerprint"
-msgstr "Kopioi sormenjälki"
+msgstr "Kopioi sormenjäljet"
 
 msgid "dlg.input.prompt"
 msgstr "Anna syöte sivulle \"%s\":"
@@ -745,7 +745,7 @@ msgid "heading.prefs.general"
 msgstr "Yleiset"
 
 msgid "heading.prefs.interface"
-msgstr "UI"
+msgstr "Toiminta"
 
 msgid "heading.prefs.keys"
 msgstr "Näppäimet"
@@ -1185,9 +1185,9 @@ msgstr "Vastaanotettua sisältöä ei voi toistaa tällä sovelluksella."
 
 msgid "error.badheader.msg"
 msgstr ""
-"Vastaanotettu otsaketieto ei ole Gemini-protokollan spesifikaation mukainen. "
-"Ehkä palvelin on epäkunnossa, tai yritit ottaa yhteyttä palvelimeen, joka ei "
-"tue Gemini-protokollaa."
+"Vastaanotettu otsaketieto ei ole protokollan spesifikaation mukainen. Ehkä "
+"palvelin on epäkunnossa, tai yritit ottaa yhteyttä palvelimeen, joka ei tue "
+"tätä protokollaa."
 
 msgid "error.badredirect.msg"
 msgstr ""
@@ -1627,7 +1627,7 @@ msgid "upload.file.name"
 msgstr "Nimi:"
 
 msgid "upload.file.drophere"
-msgstr "(pudota tiedosto ikkunaan)"
+msgstr "(kirjoita polku tai pudota tiedosto ikkunaan)"
 
 msgid "upload.file.size"
 msgstr "Koko:"
@@ -1718,7 +1718,7 @@ msgstr[1] "Sinulla on %d kirjanmerkkiä."
 
 # used on mobile
 msgid "dlg.upload.text"
-msgstr "Lähetä tekstiä"
+msgstr "Syötä lähetettävä teksti"
 
 # used on mobile
 msgid "heading.settings"
@@ -1774,11 +1774,11 @@ msgstr "Oletusidentiteetti"
 
 # used on mobile
 msgid "dlg.upload.file"
-msgstr "Lähetä tiedosto"
+msgstr "Ei valittua tiedostoa"
 
 # used on mobile
 msgid "dlg.upload.pickfile"
-msgstr "Valitse tiedosto"
+msgstr "Valitse tiedosto…"
 
 msgid "heading.bookmark.tags"
 msgstr "Ominaisuudet"
@@ -2353,7 +2353,7 @@ msgid "error.incompleteheader"
 msgstr "Keskeneräinen otsaketieto"
 
 msgid "prefs.tui.simple"
-msgstr "Yksinkertainen merkistö:"
+msgstr "Pakota ASCII-merkistön käyttö:"
 
 msgid "prefs.evensplit"
 msgstr "Tasaleveä jaettu näkymä:"
@@ -2688,3 +2688,228 @@ msgstr "Uusi katkelma"
 
 msgid "heading.snip.edit"
 msgstr "Muokkaa katkelmaa"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.url"
+msgstr "Syötä URL"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.menu"
+msgstr "Valikko"
+
+msgid "heading.upload.edit"
+msgstr "Muokkaa Titanilla"
+
+msgid "dlg.upload.edit.error"
+msgstr "Muokattavan resurssin sisällön lataaminen epäonnistui."
+
+msgid "dlg.upload.edit.incompatible"
+msgstr "Tämän tyyppistä resurssia ei pysty muokkaamaan tässä sovelluksessa."
+
+msgid "heading.upload.edit.error"
+msgstr "Muokkaus epäonnistui"
+
+msgid "dlg.upload.edit"
+msgstr "Hyväksy muutokset"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.linkkeys"
+msgstr "Avaa linkki"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.menubar"
+msgstr "Valikkorivi"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.sidebar"
+msgstr "Sivupalkki"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.tab.new"
+msgstr "Uusi lehti"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.tab.close"
+msgstr "Sulje lehti"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.hover"
+msgstr "Kohdenna linkki"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.focus"
+msgstr "Kohdenna"
+
+msgid "heading.upload.error.file"
+msgstr "Virheellinen tiedosto"
+
+msgid "upload.error.directory"
+msgstr "Vain yksittäisiä tiedostoja voi lähettää, ei hakemistoja."
+
+msgid "upload.file.path"
+msgstr "Tiedostopolku:"
+
+msgid "dlg.cert.fingerprint.pubkey"
+msgstr "Kopioi julkisen avaimen SHA-256"
+
+msgid "dlg.cert.fingerprint.full"
+msgstr "Kopioi sertifikaatin SHA-256"
+
+msgid "prefs.warn.security"
+msgstr "TLS-turvallisuusvaroitukset:"
+
+# Only shown in a message box when CCing self fails.
+msgid "misfin.cc"
+msgstr "Viestin lähetys itselle"
+
+# Only shown in a message box when verifying the recipient fails.
+msgid "misfin.verify"
+msgstr "Vastaanottajan varmistus"
+
+msgid "misfin.self.copy"
+msgstr "Lähetä minulle kopio"
+
+msgid "ident.sendmsg"
+msgstr "Lähetä viesti…"
+
+msgid "heading.upload.misfin"
+msgstr "Lähetä Misfin-viesti"
+
+msgid "heading.upload.misfin.noident"
+msgstr "Ei Misfin-identiteettejä"
+
+msgid "dlg.upload.misfin.noident"
+msgstr ""
+"Sinun pitää ensin tuoda Misfin-sertifikaatti, jotta voit lähettää viestejä."
+
+msgid "heading.misfin.ok"
+msgstr "Viesti lähetetty"
+
+msgid "misfin.success"
+msgstr "Viestisi lähetys onnistui."
+
+msgid "misfin.redirect"
+msgstr "Vastaanottaja pyytää lähettämään viestin eri osoitteeseen."
+
+msgid "misfin.failure"
+msgstr "Viestin lähetyksessä tapahtui virhe."
+
+msgid "misfin.needcert"
+msgstr "Sinun täytyy tunnistautua Misfin-sertifikaatilla."
+
+msgid "misfin.unauth"
+msgstr "Sinulla ei ole lupaa lähettää viestiä tälle vastaanottajalle."
+
+msgid "misfin.badcert"
+msgstr "Misfin-sertifikaattisi on virheellinen."
+
+msgid "misfin.changed"
+msgstr ""
+"Misfin-sertifikaattisi ei vastaa vastaanottajan odottamaa sertifikaattia."
+
+msgid "misfin.unknown"
+msgstr "Kommunikointi palvelimen kanssa epäonnistui."
+
+msgid "upload.from"
+msgstr "Lähettäjä:"
+
+msgid "upload.to"
+msgstr "Vastaanottaja:"
+
+msgid "hint.upload.misfin"
+msgstr "kirjoita viesti"
+
+msgid "dlg.upload.sendmsg"
+msgstr "Lähetä viesti"
+
+msgid "upload.type"
+msgstr "Sisältö"
+
+msgid "prefs.expandline"
+msgstr "Laajenna pitkien rivien mukaan:"
+
+msgid "num.entries"
+msgid_plural "num.entries.n"
+msgstr[0] "%u artikkeli"
+msgstr[1] "%u artikkelia"
+
+msgid "heading.prefs.theme"
+msgstr "Teema"
+
+msgid "menu.feed.edit"
+msgstr "Syötteen asetukset…"
+
+msgid "heading.prefs.ui"
+msgstr "Käyttöliittymä"
+
+msgid "prefs.hidetabs"
+msgstr "Piilota välisivupalkki:"
+
+msgid "heading.prefs.toolbartabs"
+msgstr "Sivupaneelin välilehdet"
+
+# Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
+msgid "menu.show.subscriptions"
+msgstr "Näytä tilaukset"
+
+# Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
+msgid "menu.show.opendocs"
+msgstr "Näytä välilehdet"
+
+msgid "feeds.reset"
+msgstr "Nollaa löydetyt artikkelit"
+
+msgid "hint.filter.bookmark"
+msgstr "suodata kirjanmerkit"
+
+msgid "prefs.sidebar.left"
+msgstr "Vasen"
+
+msgid "prefs.sidebar.right"
+msgstr "Oikea"
+
+# Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
+msgid "menu.show.structure"
+msgstr "Näytä hakemistorakenne"
+
+msgid "link.copy.label"
+msgstr "Kopioi linkin teksti"
+
+msgid "heading.prefs.sidebars"
+msgstr "Sivupaneelit"
+
+msgid "menu.sidebar.configure"
+msgstr "Asetukset…"
+
+msgid "sidebar.structure"
+msgstr "Rakenne"
+
+msgid "sidebar.documents"
+msgstr "Välilehdet"
+
+msgid "sidebar.subscriptions"
+msgstr "Tilaukset"
+
+msgid "sidebar.sub.empty"
+msgstr "Tyhjä syöte"
+
+msgid "menu.sub.edit"
+msgstr "Muokkaa kirjanmerkkiä…"
+
+msgid "heading.prefs.toolbartabs.left"
+msgstr "Vasemman paneelin välilehdet"
+
+msgid "heading.prefs.toolbartabs.right"
+msgstr "Oikean paneelin välilehdet"
+
+msgid "prefs.quote.italic"
+msgstr "Lainausteksti kursiivilla:"
+
+msgid "menu.fold"
+msgstr "Tiivistä"
+
+msgid "menu.closetab.below"
+msgstr "Sulje välilehdet alhaalla"
+
+msgid "menu.closetab.above"
+msgstr "Sulje välilehdet ylhäällä"

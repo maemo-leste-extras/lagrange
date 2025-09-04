@@ -32,6 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #   include "../ios.h"
 #endif
 
+#if !defined (iPlatformTerminal)
+
 iDeclareType(Momentum)
 iDeclareType(Pinch)
 iDeclareType(Touch)
@@ -105,6 +107,8 @@ struct Impl_Pinch {
     int id;
     SDL_FingerID touchIds[2];
     iWidget *affinity;
+    uint32_t startTime;
+    iBool isStarted;
 };
 
 struct Impl_TouchState {
@@ -126,13 +130,21 @@ static iTouchState *touchState_(void) {
         d->pinches        = new_Array(sizeof(iPinch));
         d->moms           = new_Array(sizeof(iMomentum));
         d->lastMomTime    = 0.0;
-        d->stepDurationMs = 1000.0 / 60.0; /* TODO: Ask SDL about the display refresh rate. */
 #if defined (iPlatformAppleMobile)
         d->stepDurationMs = 1000.0 / (double) displayRefreshRate_iOS();
+#else
+        /* Ask SDL about the display refresh rate. */ {
+            SDL_DisplayMode dispMode;
+            SDL_GetDesktopDisplayMode(0, &dispMode);
+            if (dispMode.refresh_rate == 0) {
+                dispMode.refresh_rate = 60;
+            }
+            d->stepDurationMs = 1000.0 / (double) dispMode.refresh_rate;
+        }
 #endif
         d->momFrictionPerStep = pow(0.985, 120.0 / (1000.0 / d->stepDurationMs));
 #if defined (iPlatformAndroidMobile)
-        d->momFrictionPerStep = 10 * gap_UI;
+        d->momFrictionPerStep = 9 * gap_UI;
 #endif
     }
     return d;
@@ -305,11 +317,11 @@ static void postPendingScroll_TouchState_(iTouchState *d, iTouch *touch) {
 }
 
 static void update_TouchState_(void *ptr) {
-    iWindow *win = get_Window();
+    iTouchState   *d        = ptr;
+    iWindow       *win      = get_Window();
     const iWidget *oldHover = win->hover;
-    iTouchState *d = ptr;
+    const uint32_t nowTime  = SDL_GetTicks();
     /* Check for long presses to simulate right clicks. */
-    const uint32_t nowTime = SDL_GetTicks();
     iForEach(Array, i, d->touches) {
         iTouch *touch = i.value;
         postPendingScroll_TouchState_(d, touch);
@@ -372,6 +384,24 @@ static void update_TouchState_(void *ptr) {
                 touch->isTouchDrag = iTrue;
                 dispatchButtonDown_Touch_(touch->pos[0]);
                 touch->isLeftDown = iTrue;
+            }
+        }
+    }
+    /* Start pending pinches. */ {
+        const uint32_t pinchStartDelay = 250;
+        iForEach(Array, p, d->pinches) {
+            iPinch *pinch = p.value;
+            if (!pinch->isStarted) {
+                const iTouch *touch[2] = {
+                    find_TouchState_(d, pinch->touchIds[0]),
+                    find_TouchState_(d, pinch->touchIds[1])
+                };
+                if (nowTime - touch[0]->startTime < pinchStartDelay ||
+                    nowTime - touch[1]->startTime < pinchStartDelay) {
+                    continue; /* too early, could be unintentional */
+                }
+                pinch->isStarted = iTrue;
+                postCommandf_App("pinch.began ptr:%p", pinch->affinity);
             }
         }
     }
@@ -465,23 +495,28 @@ static void checkNewPinch_TouchState_(iTouchState *d, iTouch *newTouch) {
     if (!affinity) {
         return;
     }
+    const uint32_t nowTime = SDL_GetTicks();
     iForEach(Array, i, d->touches) {
         iTouch *other = i.value;
         if (other->id == newTouch->id || other->pinchId || other->affinity != affinity) {
             continue;
         }
         /* A second finger on the same widget. */
-        iPinch pinch = { .affinity = affinity, .id = SDL_GetTicks() };
+        iPinch pinch = {
+            .affinity  = affinity,
+            .id        = (uint32_t) SDL_GetPerformanceCounter(),
+            .startTime = SDL_GetTicks()
+        };
         pinch.touchIds[0] = newTouch->id;
         pinch.touchIds[1] = other->id;
-        newTouch->pinchId = other->pinchId = pinch.id;
+        newTouch->pinchId = other->pinchId = pinch.id; /* associated with a pinch gesture */
         clearWidgetMomentum_TouchState_(d, affinity);
         if (other->edge && other->didPostEdgeMove) {
             postCommandf_App("edgeswipe.ended abort:1 side:%d edge:%d id:%llu",
                              other->edge, other->edge, other->id);
             other->didPostEdgeMove = iFalse;
         }
-        other->edge = none_TouchEdge;
+        other->edge    = none_TouchEdge;
         newTouch->edge = none_TouchEdge;
         /* Remember current positions to determine pinch amount. */
         newTouch->startPos = newTouch->pos[0];
@@ -489,7 +524,7 @@ static void checkNewPinch_TouchState_(iTouchState *d, iTouch *newTouch) {
         pushBack_Array(d->pinches, &pinch);
         /*printf("[Touch] pinch %d starts with fingers %lld and %lld\n", pinch.id,
                newTouch->id, other->id);*/
-        postCommandf_App("pinch.began ptr:%p", affinity);
+        //postCommandf_App("pinch.began ptr:%p", affinity);
         break;
     }
 }
@@ -507,7 +542,9 @@ static iPinch *findPinch_TouchState_(iTouchState *d, int pinchId) {
 static void pinchMotion_TouchState_(iTouchState *d, int pinchId) {
     const iPinch *pinch = findPinch_TouchState_(d, pinchId);
     iAssert(pinch != NULL);
-    if (!pinch) return;
+    if (!pinch || !pinch->isStarted) {
+        return;
+    }
     const iTouch *touch[2] = {
         find_TouchState_(d, pinch->touchIds[0]),
         find_TouchState_(d, pinch->touchIds[1])
@@ -528,7 +565,9 @@ static void endPinch_TouchState_(iTouchState *d, int pinchId) {
     iForEach(Array, i, d->pinches) {
         iPinch *pinch = i.value;
         if (pinch->id == pinchId) {
-            postCommandf_App("pinch.ended ptr:%p", pinch->affinity);
+            if (pinch->isStarted) {
+                postCommandf_App("pinch.ended ptr:%p", pinch->affinity);
+            }
             /* Cancel both touches. */
             iForEach(Array, j, d->touches) {
                 iTouch *touch = j.value;
@@ -552,8 +591,8 @@ static iBool shouldPostEdgeMove_Touch_(const iTouch *d) {
         if (x_F3(delta) != 0 && iAbs(y_F3(delta) / x_F3(delta)) > 0.6f) {
             return iFalse;
         }
-        if ((d->edge == left_TouchEdge && x_F3(delta) > 3 * pixelRatio) ||
-            (d->edge == right_TouchEdge && x_F3(delta) < -3 * pixelRatio)) {
+        if ((d->edge == left_TouchEdge && x_F3(delta) > 5 * pixelRatio) ||
+            (d->edge == right_TouchEdge && x_F3(delta) < -5 * pixelRatio)) {
             return iTrue;
         }
     }
@@ -566,7 +605,7 @@ iBool processEvent_Touch(const SDL_Event *ev) {
         return iFalse;
     }
     iTouchState *d = touchState_();
-    iWindow *window = get_Window();    
+    iWindow *window = get_Window();
     const iInt2 rootSize = size_Window(window);
     const SDL_TouchFingerEvent *fing = &ev->tfinger;
     const iFloat3 pos = init_F3(fing->x * rootSize.x, fing->y * rootSize.y, 0); /* pixels */
@@ -1005,3 +1044,57 @@ iBool isHovering_Touch(void) {
 size_t numFingers_Touch(void) {
     return size_Array(touchState_()->touches);
 }
+
+#else /* iPlatformTerminal */
+
+/* Terminal just needs stubs for the functions called from elsewhere. */
+
+iBool processEvent_Touch(const SDL_Event *ev) {
+    iUnused(ev);
+    return iFalse;
+}
+
+void update_Touch(void) {}
+
+void clear_Touch(void) {}
+
+float stopWidgetMomentum_Touch(const iWidget *widget) {
+    iUnused(widget);
+    return 0;
+}
+
+enum iWidgetTouchMode widgetMode_Touch(const iWidget *widget) {
+    iUnused(widget);
+    return none_WidgetTouchMode;
+}
+
+void widgetDestroyed_Touch(iWidget *widget) {
+    iUnused(widget);
+}
+
+void transferAffinity_Touch(iWidget *src, iWidget *dst) {
+    iUnused(src, dst);
+}
+
+iBool hasAffinity_Touch(const iWidget *widget) {
+    iUnused(widget);
+    return iFalse;
+}
+
+iInt2 latestPosition_Touch(void) {
+    return init1_I2(-1);
+}
+
+iInt2 latestTapPosition_Touch(void) {
+    return init1_I2(-1);
+}
+
+iBool isHovering_Touch(void) {
+    return iFalse;
+}
+
+size_t numFingers_Touch(void) {
+    return 0;
+}
+
+#endif

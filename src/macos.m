@@ -408,7 +408,8 @@ static void appearanceChanged_MacOS_(NSString *name) {
     else if ([identifier isEqualToString:sidebarMode_TouchId_]) {
         NSCustomTouchBarItem *item = [[NSCustomTouchBarItem alloc] initWithIdentifier:sidebarMode_TouchId_];
         NSSegmentedControl *seg =
-            [NSSegmentedControl segmentedControlWithLabels:@[ @"Bookmarks", @"Feeds", @"History", @"Idents", @"Outline"]
+            [NSSegmentedControl segmentedControlWithLabels:@[ @"Bookmarks", @"Feeds", @"History",
+                                                              @"Idents", @"Outline"]
                                               trackingMode:NSSegmentSwitchTrackingMomentary
                                                     target:[[NSApplication sharedApplication] delegate]
                                                     action:@selector(sidebarModePressed:)];
@@ -818,6 +819,9 @@ static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, int atIn
     atIndex = iMin(atIndex, menu.numberOfItems);
     NSMenuItem *selectedItem = nil;
     for (size_t i = 0; i < n && items[i].label; ++i) {
+        if (!checkDevice_MenuItem(&items[i])) {
+            continue;
+        }
         const char *label = translateCStr_Lang(items[i].label);
         if (equal_CStr(label, "---")) {
             [menu insertItem:[NSMenuItem separatorItem] atIndex:atIndex++];
@@ -880,10 +884,18 @@ static NSMenuItem *makeMenuItems_(NSMenu *menu, MenuCommands *commands, int atIn
                 item.action = (hasCommand ? @selector(postMenuItemCommand:) : nil);
 #if defined (__MAC_11_0)
                 if (@available(macOS 11.0, *)) {
-                    if (isBookmarksMenu && hasCommand && startsWith_CStr(items[i].command, "!open ")) {
+                    if (isBookmarksMenu && hasCommand &&
+                        startsWith_CStr(items[i].command, "!open ")) {
                         /* TODO: Is there an equivalent symbol for older macOS? */
                         [item setImage:[NSImage imageWithSystemSymbolName:@"bookmark.fill"
                                                  accessibilityDescription:nil]];
+                    }
+                    else {
+                        const char *imgName = systemImageName_Apple(itemIcon);
+                        if (imgName) {
+                            [item setImage:[NSImage imageWithSystemSymbolName:[NSString stringWithUTF8String:imgName]
+                                                     accessibilityDescription:nil]];
+                        }
                     }
                 }
 #endif

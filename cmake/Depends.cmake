@@ -15,10 +15,10 @@ find_program (NINJA_EXECUTABLE ninja DOC "Ninja build tool")
 include (ExternalProject)
 set (_dependsToBuild)
 
-if (DEFINED the_Foundation_DIR OR
+if (the_Foundation_DIR OR
     NOT EXISTS ${CMAKE_SOURCE_DIR}/lib/the_Foundation/CMakeLists.txt)
     set (INSTALL_THE_FOUNDATION YES)
-    find_package (the_Foundation 1.7.0 REQUIRED)
+    find_package (the_Foundation 1.9.0 REQUIRED)
 else ()
     if (EXISTS ${CMAKE_SOURCE_DIR}/lib/the_Foundation/.git)
         # the_Foundation is checked out as a submodule, make sure it's up to date.
@@ -35,11 +35,12 @@ else ()
             endif ()
         endif ()
     endif ()
-    set (INSTALL_THE_FOUNDATION OFF)
-    set (TFDN_STATIC_LIBRARY    ON  CACHE BOOL "")
-    set (TFDN_ENABLE_INSTALL    OFF CACHE BOOL "")
-    set (TFDN_ENABLE_TESTS      OFF CACHE BOOL "")
-    set (TFDN_ENABLE_WEBREQUEST OFF CACHE BOOL "")
+    set (INSTALL_THE_FOUNDATION  OFF)
+    set (TFDN_STATIC_LIBRARY     ON  CACHE BOOL "" FORCE)
+    set (TFDN_ENABLE_INSTALL     OFF CACHE BOOL "" FORCE)
+    set (TFDN_ENABLE_TESTS       OFF CACHE BOOL "" FORCE)
+    set (TFDN_ENABLE_WEBREQUEST  OFF CACHE BOOL "" FORCE)
+    set (TFDN_ENABLE_STATIC_LINK ${ENABLE_STATIC} CACHE BOOL "" FORCE)
     add_subdirectory (lib/the_Foundation)
     add_library (the_Foundation::the_Foundation ALIAS the_Foundation)
     if (NOT OPENSSL_FOUND)
@@ -69,10 +70,19 @@ if (ENABLE_HARFBUZZ)
         # Build HarfBuzz with minimal dependencies.
         if (MESON_EXECUTABLE AND NINJA_EXECUTABLE)
             set (_dst ${CMAKE_BINARY_DIR}/lib/harfbuzz)
+            if (ENABLE_LIBCPP_HARDENING_MODE) # libc++ v20+
+                set (_extraCppOpts "-Dcpp_args=-U_LIBCPP_ENABLE_ASSERTIONS -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST"
+                )
+                if (CMAKE_OSX_DEPLOYMENT_TARGET)
+                    set (_extraCppOpts "${_extraCppOpts} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+                endif ()
+            else ()
+                set (_extraCppOpts)
+            endif ()
             ExternalProject_Add (harfbuzz-ext
                 PREFIX              ${CMAKE_BINARY_DIR}/harfbuzz-ext
                 SOURCE_DIR          ${CMAKE_SOURCE_DIR}/lib/harfbuzz
-                CONFIGURE_COMMAND   NINJA=${NINJA_EXECUTABLE} ${MESON_EXECUTABLE}
+                CONFIGURE_COMMAND   ${MESON_EXECUTABLE}
                                         ${CMAKE_SOURCE_DIR}/lib/harfbuzz
                                         -Dbuildtype=release
                                         -Ddefault_library=both
@@ -81,9 +91,11 @@ if (ENABLE_HARFBUZZ)
                                         -Dcairo=disabled -Dicu=disabled -Dfreetype=disabled
                                         -Ddocs=disabled
                                         ${_dependMacOpts}
+                                        ${_extraCppOpts}
                                         --prefix ${_dst}
                 BUILD_COMMAND       ${NINJA_EXECUTABLE} install
                 INSTALL_COMMAND     ""
+                BUILD_BYPRODUCTS    ${_dst}/lib/libharfbuzz.a
             )
             list (APPEND _dependsToBuild harfbuzz-ext)
             add_library (harfbuzz-lib INTERFACE)
@@ -92,6 +104,8 @@ if (ENABLE_HARFBUZZ)
                 # Link dynamically.
                 target_link_libraries (harfbuzz-lib INTERFACE -L${_dst}/lib harfbuzz)
                 install (PROGRAMS ${_dst}/bin/msys-harfbuzz-0.dll DESTINATION .)
+            elseif (MINGW)
+                target_link_libraries (harfbuzz-lib INTERFACE ${_dst}/lib/libharfbuzz.a)
             else ()
                 if (APPLE)
                     target_link_libraries (harfbuzz-lib INTERFACE ${_dst}/lib/libharfbuzz.0.dylib)
@@ -138,7 +152,7 @@ if (ENABLE_FRIBIDI)
             ExternalProject_Add (fribidi-ext
                 PREFIX              ${CMAKE_BINARY_DIR}/fribidi-ext
                 SOURCE_DIR          ${CMAKE_SOURCE_DIR}/lib/fribidi
-                CONFIGURE_COMMAND   NINJA=${NINJA_EXECUTABLE} ${MESON_EXECUTABLE}
+                CONFIGURE_COMMAND   ${MESON_EXECUTABLE}
                                         ${CMAKE_SOURCE_DIR}/lib/fribidi
                                         -Dbuildtype=release
                                         -Ddefault_library=static
@@ -157,8 +171,9 @@ if (ENABLE_FRIBIDI)
                 "GNU FriBidi must be built with Meson. Please install Meson and Ninja and try again, or provide FriBidi via pkg-config.")
         endif ()
         add_library (fribidi-lib INTERFACE)
-        target_include_directories (fribidi-lib INTERFACE ${_dst}/include)
+        target_include_directories (fribidi-lib INTERFACE ${_dst}/include/fribidi)
         target_link_libraries (fribidi-lib INTERFACE ${_dst}/lib/libfribidi.a)
+        target_compile_definitions (fribidi-lib INTERFACE FRIBIDI_LIB_STATIC=1)
         set (FRIBIDI_FOUND YES)
     endif ()
 endif ()
@@ -191,7 +206,7 @@ if (ENABLE_WINSPARKLE)
     message (STATUS "Using WinSparkle: ${WINSPARKLE_DLL}")
 endif ()
 
-if (ENABLE_X11_XLIB AND NOT ENABLE_TUI AND NOT APPLE AND NOT MSYS)
+if (ENABLE_X11_XLIB AND NOT APPLE AND NOT MSYS)
     find_package (X11)
     if (X11_FOUND)
         set (XLIB_FOUND YES)
@@ -204,9 +219,21 @@ if (ENABLE_X11_XLIB AND NOT ENABLE_TUI AND NOT APPLE AND NOT MSYS)
 endif ()
 
 if (ENABLE_TUI)
-    pkg_check_modules (SDL2 REQUIRED sealcurses)
-else ()
-    pkg_check_modules (SDL2 REQUIRED sdl2)
+    if (EXISTS ${CMAKE_SOURCE_DIR}/lib/sealcurses/CMakeLists.txt)
+        # Build a static version of SEALCurses.
+        set (SEALCURSES_SUBDIR         YES CACHE BOOL "" FORCE)
+        set (SEALCURSES_STATIC_NCURSES ${ENABLE_STATIC} CACHE BOOL "" FORCE)
+        set (SEALCURSES_ENABLE_STATIC  YES CACHE BOOL "" FORCE)
+        set (SEALCURSES_ENABLE_SHARED  NO  CACHE BOOL "" FORCE)
+        set (SEALCURSES_ENABLE_INSTALL NO  CACHE BOOL "" FORCE)
+        add_subdirectory (${CMAKE_SOURCE_DIR}/lib/sealcurses)
+    else ()
+        pkg_check_modules (SEALCURSES REQUIRED sealcurses)
+    endif ()
 endif ()
+
+pkg_check_modules (SDL2 REQUIRED sdl2)
 pkg_check_modules (MPG123 IMPORTED_TARGET libmpg123)
 pkg_check_modules (WEBP IMPORTED_TARGET libwebp)
+pkg_check_modules (JXL IMPORTED_TARGET libjxl libjxl_threads)
+pkg_check_modules (OPUSFILE IMPORTED_TARGET opusfile)

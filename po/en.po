@@ -182,6 +182,12 @@ msgstr "Close Tabs To Left"
 msgid "menu.closetab.right"
 msgstr "Close Tabs To Right"
 
+msgid "menu.closetab.above"
+msgstr "Close Tabs Above"
+
+msgid "menu.closetab.below"
+msgstr "Close Tabs Below"
+
 msgid "menu.duptab"
 msgstr "Duplicate Tab"
 
@@ -271,6 +277,9 @@ msgstr "Toggle Left Sidebar"
 msgid "menu.sidebar.right"
 msgstr "Toggle Right Sidebar"
 
+msgid "menu.sidebar.configure"
+msgstr "Configure…"
+
 msgid "menu.zoom.in"
 msgstr "Zoom In"
 
@@ -288,6 +297,9 @@ msgstr "New Folder…"
 
 msgid "menu.sort.alpha"
 msgstr "Sort Alphabetically"
+
+msgid "menu.fold"
+msgstr "Fold"
 
 msgid "menu.foldall"
 msgstr "Fold All"
@@ -316,8 +328,9 @@ msgstr "List Bookmarks by Creation Time"
 msgid "macos.menu.bookmarks.bytime"
 msgstr "List by Creation Time"
 
+# This opens "about:feeds" and should have a different label than `menu.show.feeds`.
 msgid "menu.feeds.entrylist"
-msgstr "Show Feed Entries"
+msgstr "List Feed Entries"
 
 msgid "menu.preferences"
 msgstr "Preferences…"
@@ -390,7 +403,7 @@ msgstr "Show Bookmarks"
 
 # Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
 msgid "menu.show.feeds"
-msgstr "Show Feeds"
+msgstr "Show Feed Entries"
 
 # Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
 msgid "menu.show.history"
@@ -407,6 +420,18 @@ msgstr "Hide Identities"
 # Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
 msgid "menu.show.outline"
 msgstr "Show Page Outline"
+
+# Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
+msgid "menu.show.structure"
+msgstr "Show Site Structure"
+
+# Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
+msgid "menu.show.subscriptions"
+msgstr "Show Subscriptions"
+
+# Used in the View menu on macOS. Shows sidebar and switches sidebar tab.
+msgid "menu.show.opendocs"
+msgstr "Show Tabs"
 
 msgid "menu.back"
 msgstr "Go Back"
@@ -520,7 +545,7 @@ msgid "sidebar.bookmarks"
 msgstr "Bookmarks"
 
 msgid "sidebar.feeds"
-msgstr "Feeds"
+msgstr "Feed Entries"
 
 msgid "sidebar.history"
 msgstr "History"
@@ -530,6 +555,15 @@ msgstr "Identities"
 
 msgid "sidebar.outline"
 msgstr "Outline"
+
+msgid "sidebar.structure"
+msgstr "Structure"
+
+msgid "sidebar.documents"
+msgstr "Tabs"
+
+msgid "sidebar.subscriptions"
+msgstr "Subscriptions"
 
 msgid "sidebar.action.bookmarks.newfolder"
 msgstr "New Folder"
@@ -564,6 +598,15 @@ msgid "sidebar.unread"
 msgid_plural "sidebar.unread.n"
 msgstr[0] "Unread"
 msgstr[1] "Unread"
+
+msgid "sidebar.sub.empty"
+msgstr "Empty feed"
+
+msgid "menu.feed.edit"
+msgstr "Feed Settings…"
+
+msgid "menu.sub.edit"
+msgstr "Edit Bookmark…"
 
 msgid "toolbar.outline"
 msgstr "Page Outline"
@@ -605,6 +648,11 @@ msgid "num.fonts"
 msgid_plural "num.fonts.n"
 msgstr[0] "%u font"
 msgstr[1] "%u fonts"
+
+msgid "num.entries"
+msgid_plural "num.entries.n"
+msgstr[0] "%u entry"
+msgstr[1] "%u entries"
 
 # strftime() formatted. Should be split evenly on two lines with a newline character.
 msgid "page.timestamp"
@@ -650,6 +698,9 @@ msgstr "Mark All as Read"
 
 msgid "feeds.refresh"
 msgstr "Refresh Feeds"
+
+msgid "feeds.reset"
+msgstr "Reset Known Entries"
 
 msgid "feeds.atom.translated"
 msgstr "This Atom XML document has been automatically translated to a Gemini feed to allow subscribing to it."
@@ -738,6 +789,9 @@ msgstr "Delete Bookmark Folder"
 msgid "bookmarks.reload"
 msgstr "Refresh Remote Sources"
 
+msgid "hint.filter.bookmark"
+msgstr "filter bookmarks"
+
 msgid "ident.using"
 msgstr "Using on this page"
 
@@ -756,6 +810,9 @@ msgstr "Temporary"
 # strftime() formatted
 msgid "ident.expiry"
 msgstr "Expires %b %d, %Y"
+
+msgid "ident.sendmsg"
+msgstr "Send Message As…"
 
 msgid "ident.use"
 msgstr "Use on This Page"
@@ -792,7 +849,7 @@ msgid "dlg.ident.notes"
 msgstr "Notes about %s:"
 
 msgid "ident.fingerprint"
-msgstr "Copy Fingerprint"
+msgstr "Copy SHA-256 Fingerprint"
 
 msgid "ident.delete"
 msgstr "Delete Identity…"
@@ -872,7 +929,13 @@ msgid "dlg.cert.trust"
 msgstr "Trust"
 
 msgid "dlg.cert.fingerprint"
-msgstr "Copy Fingerprint"
+msgstr "Fingerprints"
+
+msgid "dlg.cert.fingerprint.pubkey"
+msgstr "Copy SHA-256 of Public Key"
+
+msgid "dlg.cert.fingerprint.full"
+msgstr "Copy SHA-256 of Certificate"
 
 msgid "pageinfo.settings"
 msgstr "Settings"
@@ -1028,6 +1091,9 @@ msgstr "Open without Proxy"
 
 msgid "link.copy"
 msgstr "Copy Link"
+
+msgid "link.copy.label"
+msgstr "Copy Link Label"
 
 msgid "link.searchurl"
 msgstr "Use as Search URL"
@@ -1268,14 +1334,85 @@ msgstr "Open Editor…"
 msgid "heading.upload"
 msgstr "Upload with Titan"
 
+msgid "heading.upload.edit"
+msgstr "Edit with Titan"
+
+msgid "heading.upload.misfin"
+msgstr "Send Misfin Message"
+
 msgid "heading.upload.spartan"
 msgstr "Upload with Spartan"
+
+msgid "heading.upload.error.file"
+msgstr "Invalid File"
+
+msgid "dlg.upload.edit.error"
+msgstr "Failed to download contents of the editable resource."
+
+msgid "dlg.upload.edit.incompatible"
+msgstr "This type of resource cannot be edited in the application."
+
+msgid "heading.upload.edit.error"
+msgstr "Editing Failed"
+
+msgid "heading.upload.misfin.noident"
+msgstr "No Misfin Identities"
+
+msgid "dlg.upload.misfin.noident"
+msgstr "You must first import a Misfin certificate to send messages."
+
+msgid "heading.misfin.ok"
+msgstr "Message Sent"
+
+# Only shown in a message box when CCing self fails.
+msgid "misfin.cc"
+msgstr "Sending Myself a Copy"
+
+# Only shown in a message box when verifying the recipient fails.
+msgid "misfin.verify"
+msgstr "Verifying Recipient"
+
+msgid "misfin.success"
+msgstr "You message was sent successfully."
+
+msgid "misfin.redirect"
+msgstr "The recipient requests sending the message to a different address."
+
+msgid "misfin.failure"
+msgstr "An error occurred while sending the message."
+
+msgid "misfin.needcert"
+msgstr "You must identify yourself by providing a Misfin certificate."
+
+msgid "misfin.unauth"
+msgstr "You are not authorized to send messages to this recipient."
+
+msgid "misfin.badcert"
+msgstr "Your Misfin certificate is invalid."
+
+msgid "misfin.changed"
+msgstr "Your Misfin certificate does not match the one expected by the recipient."
+
+msgid "misfin.unknown"
+msgstr "Failed to communicate with the server."
+
+msgid "upload.error.directory"
+msgstr "Only individual files can be uploaded, not directories."
+
+msgid "misfin.self.copy"
+msgstr "Send me a copy"
 
 msgid "upload.id"
 msgstr "Identity:"
 
+msgid "upload.from"
+msgstr "From:"
+
+msgid "upload.to"
+msgstr "To:"
+
 msgid "heading.upload.id"
-msgstr "Authorization"
+msgstr "Credentials"
 
 msgid "dlg.upload.id.none"
 msgstr "None"
@@ -1285,6 +1422,9 @@ msgstr "Default Identity"
 
 msgid "heading.upload.dest"
 msgstr "Address"
+
+msgid "upload.type"
+msgstr "Content"
 
 msgid "heading.upload.text"
 msgstr "Text"
@@ -1301,14 +1441,20 @@ msgstr "Really Delete All (No Undo)"
 msgid "hint.upload.text"
 msgstr "enter text to upload"
 
+msgid "hint.upload.misfin"
+msgstr "enter message"
+
 msgid "heading.upload.file"
 msgstr "File"
 
 msgid "upload.file.name"
 msgstr "File name:"
 
+msgid "upload.file.path"
+msgstr "File path:"
+
 msgid "upload.file.drophere"
-msgstr "(drag-and-drop a file on the window)"
+msgstr "enter file path or drag-and-drop a file on the window"
 
 msgid "upload.file.size"
 msgstr "File size:"
@@ -1339,6 +1485,12 @@ msgstr "token — see server's instructions"
 msgid "dlg.upload.send"
 msgstr "Upload"
 
+msgid "dlg.upload.sendmsg"
+msgstr "Send Message"
+
+msgid "dlg.upload.edit"
+msgstr "Submit"
+
 msgid "upload.port"
 msgstr "Port…"
 
@@ -1353,15 +1505,15 @@ msgstr "Set Port"
 
 # used on mobile
 msgid "dlg.upload.text"
-msgstr "Upload Plain Text"
+msgstr "Enter text to upload"
 
 # used on mobile
 msgid "dlg.upload.file"
-msgstr "Upload a File"
+msgstr "No file selected"
 
 # used on mobile
 msgid "dlg.upload.pickfile"
-msgstr "Select File"
+msgstr "Select File…"
 
 msgid "heading.translate"
 msgstr "Translate Page"
@@ -1726,7 +1878,22 @@ msgstr "Appearance"
 
 # tab button
 msgid "heading.prefs.interface"
-msgstr "UI"
+msgstr "Behavior"
+
+msgid "heading.prefs.ui"
+msgstr "User Interface"
+
+msgid "heading.prefs.theme"
+msgstr "Theme"
+
+msgid "heading.prefs.sidebars"
+msgstr "Sidebars"
+
+msgid "prefs.sidebar.left"
+msgstr "Left"
+
+msgid "prefs.sidebar.right"
+msgstr "Right"
 
 # tab button
 msgid "heading.prefs.keys"
@@ -1848,6 +2015,9 @@ msgstr "Bottom Nav Bar"
 msgid "prefs.bottomtabbar"
 msgstr "Bottom Tabs"
 
+msgid "prefs.hidetabs"
+msgstr "Hide tab bar:"
+
 msgid "prefs.menubar"
 msgstr "Menu Bar"
 
@@ -1865,6 +2035,15 @@ msgstr "Hide toolbar on scroll:"
 
 msgid "heading.prefs.toolbaractions"
 msgstr "Toolbar Actions"
+
+msgid "heading.prefs.toolbartabs"
+msgstr "Toolbar Tabs"
+
+msgid "heading.prefs.toolbartabs.left"
+msgstr "Left Toolbar Tabs"
+
+msgid "heading.prefs.toolbartabs.right"
+msgstr "Right Toolbar Tabs"
 
 msgid "prefs.toolbaraction1"
 msgstr "Button 1"
@@ -2013,7 +2192,7 @@ msgid "prefs.imagestyle.preformat"
 msgstr "Preformatted Color"
 
 msgid "prefs.tui.simple"
-msgstr "Simple characters:"
+msgstr "Force ASCII character set:"
 
 msgid "prefs.font.ui"
 msgstr "UI font:"
@@ -2086,6 +2265,9 @@ msgstr "Syntax highlighting:"
 msgid "prefs.linewidth"
 msgstr "Line width:"
 
+msgid "prefs.expandline"
+msgstr "Expand to long lines:"
+
 msgid "prefs.linewidth.normal"
 msgstr "Normal"
 
@@ -2107,6 +2289,9 @@ msgstr "\" Icon"
 msgid "prefs.quoteicon.line"
 msgstr "Line"
 
+msgid "prefs.quote.italic"
+msgstr "Quote text in italics:"
+
 msgid "prefs.biglede"
 msgstr "Big 1st paragaph:"
 
@@ -2115,6 +2300,9 @@ msgstr "Justify:"
 
 msgid "prefs.plaintext.wrap"
 msgstr "Wrap long plaintext lines:"
+
+msgid "prefs.warn.security"
+msgstr "TLS security warnings:"
 
 msgid "prefs.redirect.allowscheme"
 msgstr "Scheme-changing redirects:"
@@ -2325,7 +2513,7 @@ msgid "error.badheader"
 msgstr "Invalid Header"
 
 msgid "error.badheader.msg"
-msgstr "The received header does not conform to the Gemini protocol specification. Perhaps the server is malfunctioning, or you tried to contact a non-Gemini server."
+msgstr "The received header does not conform to the protocol specification. Perhaps the server is malfunctioning or does not support this protocol."
 
 msgid "error.incompleteheader"
 msgstr "Incomplete Header"
@@ -2469,7 +2657,7 @@ msgid "error.glyphs"
 msgstr "Missing Glyphs"
 
 msgid "error.glyphs.msg"
-msgstr "This page could not displayed in full because some characters are missing. You can install additional fonts to fix this."
+msgstr "This page could not be displayed in full because some characters are missing. You can install additional fonts to fix this."
 
 msgid "error.showutf8"
 msgstr "Autodetected UTF-8"
@@ -2633,4 +2821,38 @@ msgstr "Content:"
 msgid "snip.accept"
 msgstr "Save Snippet"
 
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.url"
+msgstr "Enter URL"
 
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.linkkeys"
+msgstr "Open link"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.menu"
+msgstr "Context menu"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.menubar"
+msgstr "Menubar"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.sidebar"
+msgstr "Sidebar"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.tab.new"
+msgstr "New tab"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.tab.close"
+msgstr "Close tab"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.hover"
+msgstr "Focus link"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.focus"
+msgstr "Focus"

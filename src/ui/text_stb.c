@@ -70,7 +70,7 @@ Optimization notes:
 #endif
 
 #if defined (LAGRANGE_ENABLE_FRIBIDI)
-#   include <fribidi/fribidi.h>
+#   include <fribidi.h>
 #endif
 
 #if SDL_VERSION_ATLEAST(2, 0, 10)
@@ -197,7 +197,6 @@ iDefineTypeConstruction(GlyphTable)
 
 struct Impl_Font {
     iBaseFont    font;
-    int          baseline;
     int          vertOffset; /* offset due to glyph scaling */
     float        xScale, yScale;
     float        emAdvance;
@@ -221,8 +220,8 @@ static void init_Font(iFont *d, const iFontSpec *fontSpec, const iFontFile *font
             d->xScale *= floorf(advance) / advance;
         }
     }
-    d->emAdvance  = fontFile->emAdvance * d->xScale;
-    d->baseline   = fontFile->ascent * d->yScale;
+    d->emAdvance     = fontFile->emAdvance * d->xScale;
+    d->font.baseline = fontFile->ascent * d->yScale;
     d->vertOffset = d->font.height * (1.0f - glyphScale) / 2 * fontSpec->vertOffsetScale[scaleType];
     d->table = NULL;
 }
@@ -278,6 +277,7 @@ struct Impl_StbText {
     iText          base;
     iArray         fonts; /* fonts currently selected for use (incl. all styles/sizes) */
     int            overrideFontId; /* always checked for glyphs first, regardless of which font is used */
+    iFontSpec      iosevkaFallback; /* copy of Iosevka as a low-priority spec */
     iArray         fontPriorityOrder;
     SDL_Texture *  cache;
     iInt2          cacheSize;
@@ -346,6 +346,16 @@ static const iFontSpec *tryFindSpec_(enum iPrefsString ps, const char *fallback)
     return spec ? spec : findSpec_Fonts(fallback);
 }
 
+static const iFont *findFontVariant_StbText_(const iStbText *d, const iFontSpec *spec) {
+    for (size_t i = 0; i < size_Array(&d->fonts); i += maxVariants_Fonts) {
+        const iFont *font = constAt_Array(&d->fonts, i);
+        if (font->font.spec == spec) {
+            return font;
+        }
+    }
+    return NULL;
+}
+
 static void initFonts_StbText_(iStbText *d) {
     /* The `fonts` array has precomputed scaling factors and other parameters in all sizes
        and styles for each available font. Indices to `fonts` act as font runtime IDs. */
@@ -366,6 +376,17 @@ static void initFonts_StbText_(iStbText *d) {
             const int fontId = size_Array(&d->fonts);
             resize_Array(&d->fonts, fontId + maxVariants_Fonts);
             setupFontVariants_StbText_(d, spec, fontId);
+        }
+    }
+    /* If Iosevka is not the monospace font, add it as a fallback variant because it has a good
+       coverage of symbols. */ {
+        const iFontSpec *iosevka = findSpec_Fonts("iosevka"); /* this is expected to be built-in */
+        if (iosevka && !findFontVariant_StbText_(d, iosevka)) {
+            d->iosevkaFallback = *iosevka;
+            d->iosevkaFallback.priority = 20; /* make it pretty important */
+            const int fontId = size_Array(&d->fonts);
+            resize_Array(&d->fonts, fontId + maxVariants_Fonts);
+            setupFontVariants_StbText_(d, &d->iosevkaFallback, fontId);
         }
     }
     sort_Array(&d->fontPriorityOrder, cmp_PrioMapItem_);
@@ -395,7 +416,7 @@ static void initCache_StbText_(iStbText *d) {
                               : get_Window()->pixelRatio < 2.5f ? 3
                                                                 : 2;
     rasterizedAll_GlyphFlag_ = makeRasterizedAll_GlyphFlag_(numOffsetSteps_Glyph_);
-#if !defined(NDEBUG)
+#if !defined (NDEBUG)
     printf("[Text] subpixel offsets: %d\n", numOffsetSteps_Glyph_);
 #endif
     const iInt2 cacheDims = init_I2(8 * numOffsetSteps_Glyph_, 40);
@@ -588,8 +609,11 @@ iLocalDef iFont *characterFont_Font_(iFont *d, iChar ch, uint32_t *glyphIndex) {
     if (isVariationSelector_Char(ch)) {
         return d;
     }
-    const enum iFontStyle styleId = styleId_Text_(d);
-    const enum iFontSize  sizeId  = sizeId_Text_(d);
+
+    const enum iFontStyle styleId      = styleId_Text_(d);
+    const enum iFontSize  sizeId       = sizeId_Text_(d);
+    const iBool           isMonospaced = isMonospaced_Font(d);
+
     iFont *overrideFont = NULL;
     if (ch != 0x20 && current_StbText_()->overrideFontId >= 0) {
         /* Override font is checked first. */
@@ -602,24 +626,29 @@ iLocalDef iFont *characterFont_Font_(iFont *d, iChar ch, uint32_t *glyphIndex) {
     if ((*glyphIndex = glyphIndex_Font_(d, ch)) != 0) {
         return d;
     }
-    /* As a fallback, check all other available fonts of this size in priority order. */
-    iConstForEach(Array, i, &current_StbText_()->fontPriorityOrder) {
-        iFont *font = font_Text_(FONT_ID(((const iPrioMapItem *) i.value)->fontIndex,
-                                         styleId, sizeId));
-        if (font == d || font == overrideFont) {
-            continue; /* already checked this one */
-        }
-        if ((*glyphIndex = glyphIndex_Font_(font, ch)) != 0) {
+    for (int preferMonospaced = isMonospaced ? 1 : 0; preferMonospaced >= 0; preferMonospaced--) {
+        /* As a fallback, check all other available fonts of this size in priority order. */
+        iConstForEach(Array, i, &current_StbText_()->fontPriorityOrder) {
+            iFont *font = font_Text_(FONT_ID(((const iPrioMapItem *) i.value)->fontIndex,
+                                             styleId, sizeId));
+            if (font == d || font == overrideFont) {
+                continue; /* already checked this one */
+            }
+            if (preferMonospaced && !isMonospaced_Font(font)) {
+                continue;
+            }
+            if ((*glyphIndex = glyphIndex_Font_(font, ch)) != 0) {
 #if 0
             printf("using '%s' (pr:%d) for %lc (%x) => %d  [missing in '%s']\n",
-                   cstr_String(&font->fontSpec->id),
-                   font->fontSpec->priority,
+                   cstr_String(&font->font.spec->id),
+                   font->font.spec->priority,
                    (int) ch,
                    ch,
                    glyphIndex_Font_(font, ch),
-                   cstr_String(&d->fontSpec->id));
+                   cstr_String(&d->font.spec->id));
 #endif
-            return font;
+                return font;
+            }
         }
     }
     if (!*glyphIndex) {
@@ -716,7 +745,7 @@ struct Impl_RasterGlyph {
 static void cacheGlyphs_Font_(iFont *d, const uint32_t *glyphIndices, size_t numGlyphIndices) {
     /* TODO: Make this an object so it can be used sequentially without reallocating buffers. */
     SDL_Surface *buf     = NULL;
-    const iInt2  bufSize = init_I2(iMin(512, d->font.height * iMin(2 * numGlyphIndices, 20)),
+    const iInt2  bufSize = init_I2(iMin(1024, d->font.height * iMin(5 * numGlyphIndices, 20)),
                                    d->font.height * 4 / 3);
     int          bufX    = 0;
     iArray *     rasters = NULL;
@@ -762,8 +791,9 @@ static void cacheGlyphs_Font_(iFont *d, const uint32_t *glyphIndices, size_t num
                 iBool outOfSpace = iFalse;
                 iForIndices(i, surfaces) {
                     if (surfaces[i]) {
-                        const int w = surfaces[i]->w;
+                        const int w = iMin(surfaces[i]->w, bufSize.x);
                         const int h = surfaces[i]->h;
+                        iAssert(w <= bufSize.x);
                         if (bufX + w <= bufSize.x) {
                             SDL_BlitSurface(surfaces[i],
                                             NULL,
@@ -963,7 +993,8 @@ static void evenMonospaceAdvances_GlyphBuffer_(iGlyphBuffer *d, iFont *baseFont)
         const hb_glyph_info_t *info = d->glyphInfo + i;
         if (d->glyphPos[i].x_advance > 0 && d->font != baseFont) {
             const iChar ch = d->logicalText[info->cluster];
-            if (isPictograph_Char(ch) || isEmoji_Char(ch)) {
+            if (ch == 0x20 || isPictograph_Char(ch) || isEmoji_Char(ch) ||
+                (ch >= 0x1fb00 && ch <= 0x1fbff /* legacy computing */)) {
                 const float dw = d->font->xScale * d->glyphPos[i].x_advance - (isEmoji_Char(ch) ? 2 : 1) * monoAdvance;
                 d->glyphPos[i].x_offset  -= dw / 2 / d->font->xScale - 1;
                 d->glyphPos[i].x_advance -= dw     / d->font->xScale - 1;
@@ -1258,7 +1289,7 @@ void process_RunLayer_(iRunLayer *d, int layerIndex) {
                 subpixel = 1.0f + subpixel;
             }
             const int hoff = enableHalfPixelGlyphs_Text ? (int) (subpixel / offsetStep_Glyph_()) : 0;
-            if (ch == 0x3001 || ch == 0x3002) {
+            if (ch == 0x3001 || ch == 0x3002) { /* Ideographic Comma and Full Stop */
                 /* Vertical misalignment?? */
                 if (yOffset == 0.0f) {
                     /* Move down to baseline. Why doesn't HarfBuzz do this? */
@@ -1267,15 +1298,16 @@ void process_RunLayer_(iRunLayer *d, int layerIndex) {
             }
             /* Output position for the glyph. */
             SDL_Rect dst = { d->orig.x + d->xCursor + xOffset + glyph->d[hoff].x,
-                             d->orig.y + d->yCursor - yOffset + glyph->font->baseline + glyph->d[hoff].y,
+                             d->orig.y + d->yCursor - yOffset + glyph->font->font.baseline +
+                                 glyph->d[hoff].y,
                              glyph->rect[hoff].size.x,
                              glyph->rect[hoff].size.y };
             /* Align baselines of different fonts. */
             if (run->font != attrText->baseFont &&
                 ~run->font->spec->flags & auxiliary_FontSpecFlag) {
-                const int bl1 = ((iFont *) attrText->baseFont)->baseline +
+                const int bl1 = ((iFont *) attrText->baseFont)->font.baseline +
                                 ((iFont *) attrText->baseFont)->vertOffset;
-                const int bl2 = runFont->baseline + runFont->vertOffset;
+                const int bl2 = runFont->font.baseline + runFont->vertOffset;
                 dst.y += bl1 - bl2;
             }
             /* Update the bounding box. */

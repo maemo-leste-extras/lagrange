@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include "../sitespec.h"
 #include "../visited.h"
 
-#if defined (iPlatformMsys)
+#if defined (iPlatformMsys) || defined (iPlatformWindows)
 #   include "../win32.h"
 #endif
 #if defined (iPlatformAppleDesktop)
@@ -105,6 +105,7 @@ static const iMenuItem tabletNavMenuItems_[] = {
     { "${menu.reopentab}", SDLK_t, KMOD_SECONDARY, "tabs.new reopen:1" },
     { "---" },
     { magnifyingGlass_Icon " ${menu.find}", 0, 0, "focus.set id:find.input" },
+    { "${menu.page.copyurl}", 0, 0, "document.copylink" },
     { leftHalf_Icon " ${menu.sidebar.left}", leftSidebar_KeyShortcut, "sidebar.toggle" },
     { rightHalf_Icon " ${menu.sidebar.right}", rightSidebar_KeyShortcut, "sidebar2.toggle" },
     { "${menu.view.split}", SDLK_j, KMOD_PRIMARY, "splitmenu.open" },
@@ -122,6 +123,7 @@ static const iMenuItem phoneNavMenuItems_[] = {
     { "${menu.reopentab}", SDLK_t, KMOD_SECONDARY, "tabs.new reopen:1" },
     { "---" },
     { magnifyingGlass_Icon " ${menu.find}", 0, 0, "focus.set id:find.input" },
+    { "${menu.page.copyurl}", 0, 0, "document.copylink" },
     { "---" },
     { gear_Icon " ${menu.settings}", preferences_KeyShortcut, "preferences" },
     { NULL }
@@ -415,6 +417,64 @@ static iBool isBookmarkFolder_(void *context, const iBookmark *bm) {
     return isFolder_Bookmark(bm);
 }
 
+static size_t visibleSize_String(const iString *d) {
+    size_t n = 0;
+    iConstForEach(String, i, d) {
+        if (i.value == '\v') {
+            next_StringConstIterator(&i); /* skip escape */
+            continue;
+        }
+        n += width_Char(i.value);
+    }
+    return n;
+}
+
+static void formatShortcut_(iString *d, int maxLen, const char *label, int key, int mods) {
+    iString str;
+    init_String(&str);
+    iString keyStr;
+    init_String(&keyStr);
+    toString_Sym(key, mods, &keyStr);
+    if (!isEmpty_String(d)) {
+        appendCStr_String(&str, "   ");
+    }
+    appendFormat_String(&str,
+                  "%s%s%s %s",
+                  escape_Color(uiTextShortcut_ColorId),
+                  cstr_String(&keyStr),
+                  uiText_ColorEscape,
+                  label);
+    if (visibleSize_String(d) + visibleSize_String(&str) <= maxLen) {
+        append_String(d, &str);
+    }
+    deinit_String(&keyStr);
+    deinit_String(&str);
+}
+
+static void updateTerminalStatus_(iLabelWidget *term) {
+    const iBinding *bind;
+    iString *str = new_String();
+    const int maxLen = width_Widget(root_Widget(as_Widget(term))) - 2;
+    formatShortcut_(str, maxLen, "${term.url}", SDLK_RETURN, 0);
+    bind = findCommand_Keys("document.linkkeys arg:1");
+    formatShortcut_(str, maxLen, "${term.linkkeys}", bind->key, bind->mods);
+    bind = findCommand_Keys("contextkey");
+    formatShortcut_(str, maxLen, "${term.menu}", bind->key, bind->mods);
+    bind = findCommand_Keys("menubar.focus");
+    formatShortcut_(str, maxLen, "${term.menubar}", bind->key, bind->mods);
+    formatShortcut_(str, maxLen, "${cancel}", 'g', KMOD_CTRL);
+    formatShortcut_(str, maxLen, "${term.focus}", SDLK_TAB, 0);
+    formatShortcut_(str, maxLen, "${term.sidebar}", leftSidebar_KeyShortcut);
+    bind = findCommand_Keys("tabs.new append:1");
+    formatShortcut_(str, maxLen, "${term.tab.new}", bind->key, bind->mods);
+    bind = findCommand_Keys("tabs.close");
+    formatShortcut_(str, maxLen, "${term.tab.close}", bind->key, bind->mods);
+    bind = findCommand_Keys("document.linkkeys arg:1 hover:1");
+    formatShortcut_(str, maxLen, "${term.hover}", bind->key, bind->mods);
+    updateText_LabelWidget(term, str);
+    delete_String(str);
+}
+
 iBool handleRootCommands_Widget(iWidget *root, const char *cmd) {
     iUnused(root);
     if (equal_Command(cmd, "menu.open")) {
@@ -447,9 +507,10 @@ iBool handleRootCommands_Widget(iWidget *root, const char *cmd) {
         return iTrue;
     }
     else if (equal_Command(cmd, "submenu")) {
-        iAssert(isAndroid_Platform());
-        iWidget *menu = findWidget_App(cstr_Command(cmd, "id"));
-        postCommand_Widget(menu, "menu.open self:1");
+        if (isAndroid_Platform()) {
+            iWidget *menu = findWidget_App(cstr_Command(cmd, "id"));
+            postCommand_Widget(menu, "menu.open self:1");
+        }
         return iTrue;
     }
     else if (equal_Command(cmd, "splitmenu.open")) {
@@ -518,16 +579,46 @@ iBool handleRootCommands_Widget(iWidget *root, const char *cmd) {
         return iFalse;
     }
     else if (equal_Command(cmd, "focus.set")) {
+        if (hasLabel_Command(cmd, "id2")) {
+            iWidget *override = findWidget_App(cstr_Command(cmd, "id2"));
+            if (isVisible_Widget(override) && !isFocused_Widget(override)) {
+                setFocus_Widget(override);
+                return iTrue;
+            }
+        }
         setFocus_Widget(findWidget_App(cstr_Command(cmd, "id")));
+        return iTrue;
+    }
+    else if (equal_Command(cmd, "focus.default")) {
+        const iWidget *activeFocusRoot = focusRoot_Widget(NULL);
+        /* Look backward because the last button is the default action. */
+        setFocus_Widget(findFocusable_Widget(activeFocusRoot, backward_WidgetFocusDir));
         return iTrue;
     }
     else if (equal_Command(cmd, "menubar.focus")) {
         iWidget *menubar = findWidget_App("menubar");
         if (menubar) {
-            setFocus_Widget(child_Widget(menubar, 0));
+            setFocus_Widget(child_Widget(menubar, prefs_App()->recentMenuBarIndex));
             postCommand_Widget(focus_Widget(), "trigger");
+            if (isTerminal_Platform()) {
+                setFlags_Widget(findChild_Widget(root, "termstatus"), hidden_WidgetFlag, iTrue);
+            }
         }
         return iTrue;
+    }
+    else if (isTerminal_Platform() && equal_Command(cmd, "focus.gained")) {
+        if (!cmp_String(id_Widget(parent_Widget(focus_Widget())), "menubar")) {
+            setFlags_Widget(findChild_Widget(root, "termstatus"), hidden_WidgetFlag, iTrue);
+        }
+        return iFalse;
+    }
+    else if (isTerminal_Platform() && equal_Command(cmd, "menu.closed")) {
+        if (!focus_Widget()) {
+            iLabelWidget *status = findChild_Widget(root, "termstatus");
+            setFlags_Widget(as_Widget(status), hidden_WidgetFlag, iFalse);
+            updateTerminalStatus_(status);
+        }
+        return iFalse;
     }
     else if (equal_Command(cmd, "input.resized")) {
         /* No parent handled this, so do a full rearrangement. */
@@ -590,6 +681,9 @@ iBool handleRootCommands_Widget(iWidget *root, const char *cmd) {
         return iTrue;
     }
     else if (equal_Command(cmd, "window.resized")) {
+        if (isTerminal_Platform()) {
+            updateTerminalStatus_(findWidget_Root("termstatus"));
+        }
         iSidebarWidget *sidebar = findChild_Widget(root, "sidebar");
         iSidebarWidget *sidebar2 = findChild_Widget(root, "sidebar2");
         if (deviceType_App() != phone_AppDeviceType) {
@@ -665,6 +759,10 @@ iBool handleRootCommands_Widget(iWidget *root, const char *cmd) {
         /* The phone toolbar is draw-buffered so it needs refreshing. */
         refresh_Widget(findWidget_App("toolbar"));
         return iFalse;
+    }
+    else if (equal_Command(cmd, "visited.save")) {
+        deferVisitedSave_App();
+        return iTrue;
     }
     return iFalse;
 }
@@ -793,10 +891,10 @@ static void checkLoadAnimation_Root_(iRoot *d) {
 
 void updatePadding_Root(iRoot *d) {
     if (!d) return;
-#if defined (iPlatformAppleMobile)
+#if defined (iPlatformMobile)
     iWidget *toolBar = findChild_Widget(d->widget, "toolbar");
     float left, top, right, bottom;
-    safeAreaInsets_iOS(&left, &top, &right, &bottom);
+    safeAreaInsets_Mobile(&left, &top, &right, &bottom);
     /* Respect the safe area insets. */ {
         setPadding_Widget(findChild_Widget(d->widget, "navdiv"), left, top, right, 0);
         if (toolBar) {
@@ -888,7 +986,7 @@ static void updateUrlInputContentPadding_(iWidget *navBar) {
     const int indicatorsWidth = width_Widget(findChild_Widget(navBar, "url.rightembed"));
     /* The indicators widget has a padding that covers the urlButtons area. */
     setContentPadding_InputWidget(url,
-                                  lockWidth - 2 * gap_UI, // * 0.75f,
+                                  isTerminal_Platform() ? lockWidth : (lockWidth - 2 * gap_UI),
                                   indicatorsWidth);
 }
 
@@ -920,7 +1018,7 @@ static int navBarAvailableSpace_(iWidget *navBar) {
 
 iBool isNarrow_Root(const iRoot *d) {
     return width_Rect(safeRect_Root(d)) / gap_UI <
-        (isTerminal_Platform() ? 81 : deviceType_App() == tablet_AppDeviceType ? 160 : 140);
+        (isTerminal_Platform() ? 80 : deviceType_App() == tablet_AppDeviceType ? 160 : 140);
 }
 
 static void updateNavBarSize_(iWidget *navBar) {
@@ -1126,7 +1224,7 @@ static iBool handleNavBarCommands_(iWidget *navBar, const char *cmd) {
         setFocus_Widget(NULL);
         return iTrue;
     }
-    else if (equal_Command(cmd, "input.edited")) {
+    else if (equalArg_Command(cmd, "input.edited", "id", "url")) {
         iAnyObject *   url  = findChild_Widget(navBar, "url");
         const iString *text = rawText_InputWidget(url);
         const iBool    show = willPerformSearchQuery_(text);
@@ -1207,8 +1305,10 @@ static iBool handleNavBarCommands_(iWidget *navBar, const char *cmd) {
                 }
                 /* Icon updates should be limited to automatically chosen icons if the user
                    is allowed to pick their own in the future. */
-                if (updateBookmarkIcon_Bookmarks(bookmarks_App(), urlStr,
-                                                 siteIcon_GmDocument(document_DocumentWidget(document_App())))) {
+                if (updateIcons_Bookmarks(
+                        bookmarks_App(),
+                        urlStr,
+                        siteIcon_GmDocument(document_DocumentWidget(document_App())))) {
                     postCommand_App("bookmarks.changed");
                 }
                 return iFalse;
@@ -1239,11 +1339,12 @@ static iBool handleNavBarCommands_(iWidget *navBar, const char *cmd) {
             checkLoadAnimation_Root_(get_Root());
             updateToolbarColors_Root(as_Widget(doc)->root);
             updateNavBarIdentity_(navBar);
+            updateNavDirButtons_(navBar);
         }
         makePaletteGlobal_GmDocument(document_DocumentWidget(doc));
         refresh_Widget(findWidget_Root("doctabs"));
     }
-    else if (equal_Command(cmd, "mouse.clicked") && arg_Command(cmd)) {
+    else if (equal_Command(cmd, "mouse.clicked")) {
         iWidget *widget = pointer_Command(cmd);
         iWidget *menu = findWidget_App("doctabs.menu");
         iAssert(menu->root == navBar->root);
@@ -1252,11 +1353,17 @@ static iBool handleNavBarCommands_(iWidget *navBar, const char *cmd) {
                 iWidget *tabs = findWidget_App("doctabs");
                 iWidget *page = tabPage_Widget(tabs, indexOfChild_Widget(widget->parent, widget));
                 if (argLabel_Command(cmd, "button") == SDL_BUTTON_MIDDLE) {
-                    postCommandf_App("tabs.close id:%s", cstr_String(id_Widget(page)));
-                    return iTrue;
+                    if (!arg_Command(cmd)) {
+                        postCommandf_App("tabs.close id:%s", cstr_String(id_Widget(page)));
+                        return iTrue;
+                    }
                 }
-                showTabPage_Widget(tabs, page);
-                openMenu_Widget(menu, coord_Command(cmd));
+                if (arg_Command(cmd)) { /* switch tabs on button down */
+                    showTabPage_Widget(tabs, page);
+                }
+                else { /* open context menu on button up */
+                    openMenu_Widget(menu, coord_Command(cmd));
+                }
             }
         }
     }
@@ -1425,20 +1532,26 @@ static iBool handleToolBarCommands_(iWidget *toolBar, const char *cmd) {
         if (!bottomBar) {
             return iFalse;
         }
-        iWidget *navBar = findChild_Widget(root_Widget(toolBar), "navbar");
+        const iWidget *navBar = findChild_Widget(bottomBar, "navbar");
 #if defined (iPlatformAppleMobile)
-        const int showSpan = 400;
-        const int hideSpan = 350;
-        const int animFlag = easeOut_AnimFlag | softer_AnimFlag;
+        const int showSpan = 500;
+        const int hideSpan = 250;
+        const int animFlag = easeOut_AnimFlag | muchSofter_AnimFlag;
         int landscapeOffset = 5 * gap_UI; /* TODO: Why this amount? Something's funny here. */
 #else
-        const int showSpan = 80;
+        const int showSpan = 350;
         const int hideSpan = 250;
-        const int animFlag = easeOut_AnimFlag;
+        const int animFlag = easeOut_AnimFlag | softer_AnimFlag;
         int landscapeOffset = 0;
 #endif
         if (focus_Widget() == findChild_Widget(navBar, "url") && height > 0) {
-            int keyboardPad = height - (isPortrait_App() ? height_Widget(toolBar) : landscapeOffset);
+            int keyboardPad;
+            if (isAppleMobile_Platform()) {
+                keyboardPad = height - (isPortrait_App() ? height_Widget(toolBar) : landscapeOffset);
+            }
+            else {
+                keyboardPad = height - height_Widget(navBar) + (isLandscape_App() ? 9 * gap_UI : 0);
+            }
             bottomBar->padding[3] = keyboardPad;
             arrange_Widget(bottomBar);
             arrange_Widget(bottomBar);
@@ -1489,6 +1602,8 @@ void updateMetrics_Root(iRoot *d) {
         setFixedSize_Widget(appIcon, init_I2(appIconSize_Root(), appMin->rect.size.y));
     }
     iWidget      *navBar     = findChild_Widget(d->widget, "navbar");
+    iWidget      *menuBar    = findChild_Widget(d->widget, "menubar");
+    iWidget      *termStatus = findChild_Widget(d->widget, "termstatus");
     iWidget      *url        = findChild_Widget(d->widget, "url");
     iWidget      *rightEmbed = findChild_Widget(navBar, "url.rightembed");
     iWidget      *embedPad   = findChild_Widget(navBar, "url.embedpad");
@@ -1503,6 +1618,9 @@ void updateMetrics_Root(iRoot *d) {
     arrange_Widget(d->widget);
     if (navBar) {
         updateUrlInputContentPadding_(navBar);
+    }
+    if (termStatus) {
+        setFixedSize_Widget(menuBar, menuBar->rect.size);
     }
     if (idName) {
         setFixedSize_Widget(as_Widget(idName),
@@ -1533,8 +1651,9 @@ static iBool updateWindowMenu_(iWidget *menuBarItem, const char *cmd) {
         /* Remove the old dynamic window list items first. See `windowMenuItems_` in window.c
            for the fixed list. */
         iWidget *menu = findChild_Widget(menuBarItem, "menu");
-        while (childCount_Widget(menu) > 9) {
-            destroy_Widget(removeChild_Widget(menu, child_Widget(menu, 9)));
+        const size_t numFixedItems = numWindowMenuItems_Window() + 1;
+        while (childCount_Widget(menu) > numFixedItems) {
+            destroy_Widget(removeChild_Widget(menu, child_Widget(menu, numFixedItems)));
         }
         iArray winItems;
         init_Array(&winItems, sizeof(iMenuItem));
@@ -1563,17 +1682,29 @@ static iBool updateWindowMenu_(iWidget *menuBarItem, const char *cmd) {
     return handleTopLevelMenuBarCommand_Widget(menuBarItem, cmd);
 }
 
-static iBool updateMobilePageMenuItems_(iWidget *menu, const char *cmd) {
-    if (equalWidget_Command(cmd, menu, "menu.opened")) {
-        /* Update the items. */
-        setMenuItemLabel_Widget(menu,
-                                "document.viewformat",
-                                isSourceTextView_DocumentWidget(document_App())
-                                    ? "${menu.viewformat.gemini}"
-                                    : "${menu.viewformat.plain}",
-                                ' ');
-    }
-    return handleMenuCommand_Widget(menu, cmd);
+static const iArray *makeMobilePageMenuItems_(iWidget *menu) {
+    iArray *items = collectNew_Array(sizeof(iMenuItem));
+    pushBackN_Array(items, (iMenuItem[]){
+        { upArrow_Icon " ${menu.parent}", navigateParent_KeyShortcut, "navigate.parent" },
+        { upArrowBar_Icon " ${menu.root}", navigateRoot_KeyShortcut, "navigate.root" },
+        { "---" },
+        { bookmark_Icon " ${menu.page.bookmark}", bookmarkPage_KeyShortcut, "bookmark.add" },
+        { star_Icon " ${menu.page.subscribe}", subscribeToPage_KeyShortcut, "feeds.subscribe" },
+        { "---${menu.tools}" },
+        { globe_Icon " ${menu.page.translate}", 0, 0, "document.translate" },
+        { upload_Icon " ${menu.page.upload}", 0, 0, "document.upload" },
+        { edit_Icon " ${menu.page.upload.edit}", 0, 0, "document.upload copy:1" },
+        { book_Icon " ${menu.page.import}", 0, 0, "bookmark.links confirm:1" },
+        { "${menu.page.visitlinks}", 0, 0, "document.visitlinks" },
+        { timer_Icon " ${menu.autoreload}", 0, 0, "document.autoreload.menu" },
+        { "---" },
+        { download_Icon " " saveToDownloads_Label, SDLK_s, KMOD_PRIMARY, "document.save" },
+        { "${menu.page.copysource}", 'c', KMOD_PRIMARY, "copy" },
+        { isSourceTextView_DocumentWidget(document_App())
+            ? "${menu.viewformat.gemini}"
+            : "${menu.viewformat.plain}", 0, 0, "document.viewformat" } },
+    16);
+    return items;
 }
 
 void createClipMenu_Root(iRoot *d) {
@@ -1735,16 +1866,19 @@ void createUserInterface_Root(iRoot *d) {
         /* TODO: Use Widget's `updateMenuItems` callback. */
         setCommandHandler_Widget(child_Widget(menuBar, 5), updateWindowMenu_);
         setId_Widget(menuBar, "menubar");
-#  if 0
-        addChildFlags_Widget(menuBar, iClob(new_Widget()), expand_WidgetFlag);
-        /* It's nice to use this space for something, but it should be more valuable than
-           just the app version... */
-        iLabelWidget *ver = addChildFlags_Widget(menuBar, iClob(new_LabelWidget(LAGRANGE_APP_VERSION, NULL)),
-                                                 frameless_WidgetFlag);
-        setTextColor_LabelWidget(ver, uiAnnotation_ColorId);
-#  endif
     }
 #endif
+    /* Terminal status/help indicator. */
+    if (isTerminal_Platform()) {
+        iWidget *termStatus =
+            addChildFlags_Widget(div,
+                                 iClob(new_LabelWidget("", NULL)),
+                                 fixedPosition_WidgetFlag | fixedHeight_WidgetFlag |
+                                 resizeToParentWidth_WidgetFlag | frameless_WidgetFlag);
+        setBackgroundColor_Widget(termStatus, uiBackground_ColorId);
+        updateTerminalStatus_((iLabelWidget *) termStatus);
+        setId_Widget(termStatus, "termstatus");
+    }
     iWidget *navBar;
     /* Navigation bar. */ {
         navBar = new_Widget();
@@ -1795,7 +1929,7 @@ void createUserInterface_Root(iRoot *d) {
                     iClob(newIcon_LabelWidget("\U0001f513", SDLK_i, KMOD_PRIMARY, "document.info")),
                     embedFlags | moveToParentLeftEdge_WidgetFlag);
                 setId_Widget(as_Widget(lock), "navbar.lock");
-//                setFont_LabelWidget(lock, symbols_FontId + uiNormal_FontSize);
+               // setFont_LabelWidget(lock, symbols_FontId + uiNormal_FontSize);
                 updateTextCStr_LabelWidget(lock, "\U0001f512");
             }
             /* Button for clearing the URL bar contents. */ {
@@ -1804,10 +1938,10 @@ void createUserInterface_Root(iRoot *d) {
                     iClob(newIcon_LabelWidget(delete_Icon, 0, 0, "navbar.clear")),
                     hidden_WidgetFlag | embedFlags | moveToParentLeftEdge_WidgetFlag | tight_WidgetFlag);
                 setId_Widget(as_Widget(clear), "navbar.clear");
-//                setFont_LabelWidget(clear, symbols2_FontId + uiNormal_FontSize);
+               // setFont_LabelWidget(clear, symbols2_FontId + uiNormal_FontSize);
                 setFont_LabelWidget(clear, uiLabelSymbols_FontId);
-//                setFlags_Widget(as_Widget(clear), noBackground_WidgetFlag, iFalse);
-//                setBackgroundColor_Widget(as_Widget(clear), uiBackground_ColorId);
+               // setFlags_Widget(as_Widget(clear), noBackground_WidgetFlag, iFalse);
+               // setBackgroundColor_Widget(as_Widget(clear), uiBackground_ColorId);
             }
             iWidget *rightEmbed = new_Widget();
             setId_Widget(rightEmbed, "url.rightembed");
@@ -1823,7 +1957,7 @@ void createUserInterface_Root(iRoot *d) {
                 setFont_LabelWidget(queryInd, uiLabelSmall_FontId);
                 setBackgroundColor_Widget(as_Widget(queryInd), uiBackground_ColorId);
                 setFrameColor_Widget(as_Widget(queryInd), uiTextAction_ColorId);
-//                setAlignVisually_LabelWidget(queryInd, iTrue);
+               // setAlignVisually_LabelWidget(queryInd, iTrue);
                 setNoAutoMinHeight_LabelWidget(queryInd, iTrue);
                 addChildFlags_Widget(rightEmbed,
                                      iClob(queryInd),
@@ -1835,7 +1969,7 @@ void createUserInterface_Root(iRoot *d) {
                 setTextColor_LabelWidget(fprog, uiTextAction_ColorId);
                 setFont_LabelWidget(fprog, uiLabelSmall_FontId);
                 setBackgroundColor_Widget(as_Widget(fprog), uiBackground_ColorId);
-//                setAlignVisually_LabelWidget(fprog, iTrue);
+               // setAlignVisually_LabelWidget(fprog, iTrue);
                 setNoAutoMinHeight_LabelWidget(fprog, iTrue);
                 iWidget *progBar = new_Widget();
                 setBackgroundColor_Widget(progBar, uiTextAction_ColorId);
@@ -1880,29 +2014,10 @@ void createUserInterface_Root(iRoot *d) {
                 as_Widget(navCancel)->sizeRef = as_Widget(url);
                 setFont_LabelWidget(navCancel, uiContentBold_FontId);
                 setId_Widget(as_Widget(navCancel), "navbar.cancel");
-                iLabelWidget *pageMenuButton;
                 /* In a mobile layout, the reload button is replaced with the Page/Ellipsis menu. */
-                pageMenuButton = makeMenuButton_LabelWidget(pageMenuCStr_,
-                    (iMenuItem[]){
-                        { upArrow_Icon " ${menu.parent}", navigateParent_KeyShortcut, "navigate.parent" },
-                        { upArrowBar_Icon " ${menu.root}", navigateRoot_KeyShortcut, "navigate.root" },
-                        { "---" },
-                        { bookmark_Icon " ${menu.page.bookmark}", bookmarkPage_KeyShortcut, "bookmark.add" },
-                        { star_Icon " ${menu.page.subscribe}", subscribeToPage_KeyShortcut, "feeds.subscribe" },
-                        { "---${menu.tools}" },
-                        { globe_Icon " ${menu.page.translate}", 0, 0, "document.translate" },
-                        { upload_Icon " ${menu.page.upload}", 0, 0, "document.upload" },
-                        { edit_Icon " ${menu.page.upload.edit}", 0, 0, "document.upload copy:1" },
-                        { book_Icon " ${menu.page.import}", 0, 0, "bookmark.links confirm:1" },
-                        { "${menu.page.visitlinks}", 0, 0, "document.visitlinks" },
-                        { timer_Icon " ${menu.autoreload}", 0, 0, "document.autoreload.menu" },
-                        { "---" },
-                        { download_Icon " " saveToDownloads_Label, SDLK_s, KMOD_PRIMARY, "document.save" },
-                        { "${menu.page.copysource}", 'c', KMOD_PRIMARY, "copy" },
-                        { "${menu.viewformat.plain}", 0, 0, "document.viewformat" } },
-                    16);
-                setCommandHandler_Widget(findChild_Widget(as_Widget(pageMenuButton), "menu"),
-                                         updateMobilePageMenuItems_);
+                iLabelWidget *pageMenuButton = makeMenuButton_LabelWidget(pageMenuCStr_, NULL, 0);
+                setMenuUpdateItemsFunc_Widget(findChild_Widget(as_Widget(pageMenuButton), "menu"),
+                                              makeMobilePageMenuItems_);
                 setId_Widget(as_Widget(pageMenuButton), "pagemenubutton");
                 setFont_LabelWidget(pageMenuButton, uiContentBold_FontId);
                 setAlignVisually_LabelWidget(pageMenuButton, iTrue);
@@ -1983,8 +2098,10 @@ void createUserInterface_Root(iRoot *d) {
                                                         unhittable_WidgetFlag);
         iWidget *docTabs = makeTabs_Widget(mainStack);
         setId_Widget(docTabs, "doctabs");
-        setBackgroundColor_Widget(docTabs, uiBackground_ColorId);
-//        setTabBarPosition_Widget(docTabs, prefs_App()->bottomTabBar);
+        if (isDesktop_Platform()) {
+            setBackgroundColor_Widget(findChild_Widget(docTabs, "tabs.buttons"),
+                                      uiBackground_ColorId);
+        }
         iDocumentWidget *doc;
         appendTabPage_Widget(docTabs, iClob(doc = new_DocumentWidget()), "Document", 0, 0);
         addTabCloseButton_Widget(docTabs, as_Widget(doc), "tabs.close");
@@ -2115,8 +2232,11 @@ void createUserInterface_Root(iRoot *d) {
         const iMenuItem items[] = {
             { book_Icon " ${sidebar.bookmarks}", 0, 0, "toolbar.showview arg:0" },
             { star_Icon " ${sidebar.feeds}", 0, 0, "toolbar.showview arg:1" },
-            { clock_Icon " ${sidebar.history}", 0, 0, "toolbar.showview arg:2" },
+            { whiteStar_Icon " ${sidebar.subscriptions}", 0, 0, "toolbar.showview arg:2" },
             { page_Icon " ${toolbar.outline}", 0, 0, "toolbar.showview arg:4" },
+            { hierarchy_Icon " ${sidebar.structure}", 0, 0, "toolbar.showview arg:5" },
+            { openTabBg_Icon " ${sidebar.documents}", 0, 0, "toolbar.showview arg:6" },
+            { clock_Icon " ${sidebar.history}", 0, 0, "toolbar.showview arg:7" },
         };
         iWidget *menu = makeMenu_Widget(findChild_Widget(toolBar, "toolbar.view"),
                                         items, iElemCount(items));
@@ -2173,21 +2293,28 @@ void createUserInterface_Root(iRoot *d) {
         setId_Widget(toolsMenu, "toolsmenu");
     }
     /* Global keyboard shortcuts. */ {
-        addAction_Widget(root, SDLK_h, KMOD_PRIMARY | KMOD_SHIFT, "navigate.home");
+        addAction_Widget(root, 'h', KMOD_PRIMARY | KMOD_SHIFT, "navigate.home");
         addAction_Widget(root, 'l', KMOD_PRIMARY, "navigate.focus");
-        addAction_Widget(root, 'f', KMOD_PRIMARY, "focus.set id:find.input");
+        addAction_Widget(root, 'f', KMOD_PRIMARY, "focus.set id:find.input id2:filter.bookmark.input");
         addAction_Widget(root, '1', leftSidebarTab_KeyModifier, "sidebar.mode arg:0 toggle:1");
         addAction_Widget(root, '2', leftSidebarTab_KeyModifier, "sidebar.mode arg:1 toggle:1");
         addAction_Widget(root, '3', leftSidebarTab_KeyModifier, "sidebar.mode arg:2 toggle:1");
         addAction_Widget(root, '4', leftSidebarTab_KeyModifier, "sidebar.mode arg:3 toggle:1");
         addAction_Widget(root, '5', leftSidebarTab_KeyModifier, "sidebar.mode arg:4 toggle:1");
+        addAction_Widget(root, '6', leftSidebarTab_KeyModifier, "sidebar.mode arg:5 toggle:1");
+        addAction_Widget(root, '7', leftSidebarTab_KeyModifier, "sidebar.mode arg:6 toggle:1");
+        addAction_Widget(root, '8', leftSidebarTab_KeyModifier, "sidebar.mode arg:7 toggle:1");
         addAction_Widget(root, '1', rightSidebarTab_KeyModifier, "sidebar2.mode arg:0 toggle:1");
         addAction_Widget(root, '2', rightSidebarTab_KeyModifier, "sidebar2.mode arg:1 toggle:1");
         addAction_Widget(root, '3', rightSidebarTab_KeyModifier, "sidebar2.mode arg:2 toggle:1");
         addAction_Widget(root, '4', rightSidebarTab_KeyModifier, "sidebar2.mode arg:3 toggle:1");
         addAction_Widget(root, '5', rightSidebarTab_KeyModifier, "sidebar2.mode arg:4 toggle:1");
-        addAction_Widget(root, SDLK_j, KMOD_PRIMARY, "splitmenu.open");
+        addAction_Widget(root, '6', rightSidebarTab_KeyModifier, "sidebar2.mode arg:5 toggle:1");
+        addAction_Widget(root, '7', rightSidebarTab_KeyModifier, "sidebar2.mode arg:6 toggle:1");
+        addAction_Widget(root, '8', rightSidebarTab_KeyModifier, "sidebar2.mode arg:7 toggle:1");
+        addAction_Widget(root, 'j', KMOD_PRIMARY, "splitmenu.open");
         addAction_Widget(root, SDLK_F10, 0, "menubar.focus");
+        addAction_Widget(root, 't', KMOD_PRIMARY | KMOD_ALT, "tabs.swap newwindow:1");
     }
     updateMetrics_Root(d);
     updateNavBarSize_(navBar);
@@ -2253,6 +2380,7 @@ static void setupMovableElements_Root_(iRoot *d) {
     }
     if (tabBar) {
         iChangeFlags(tabBar->flags2, permanentVisualOffset_WidgetFlag2, prefs->bottomTabBar);
+        iChangeFlags(tabBar->flags, drawBackgroundToBottom_WidgetFlag, prefs->bottomTabBar);
         /* Tab button frames. */
         iForEach(ObjectList, i, children_Widget(tabBar)) {
             if (isInstance_Object(i.object, &Class_LabelWidget)) {
@@ -2267,6 +2395,8 @@ static void setupMovableElements_Root_(iRoot *d) {
         else {
             tabBar->padding[3] = 0;
         }
+        setFlags_Widget(tabBar, hidden_WidgetFlag,
+                        prefs->hideTabBar || tabCount_Widget(docTabs) <= 1);
     }
     setTabBarPosition_Widget(docTabs, prefs->bottomTabBar);
     arrange_Widget(d->widget);
@@ -2297,9 +2427,9 @@ static void updateBottomBarPosition_(iWidget *bottomBar, iBool animate) {
             bottomTabBar = iFalse; /* it's not visible */
         }
     }
-#if defined (iPlatformAppleMobile)
+#if defined (iPlatformMobile)
     if (bottomTabBar) {
-        safeAreaInsets_iOS(NULL, NULL, NULL, &bottomSafe);
+        safeAreaInsets_Mobile(NULL, NULL, NULL, &bottomSafe);
         if (bottomSafe >= gap_UI) {
             bottomSafe -= gap_UI; /* kludge: something's leaving a gap between the tabs and the bottombar */
         }
@@ -2325,7 +2455,10 @@ static void updateBottomBarPosition_(iWidget *bottomBar, iBool animate) {
     }
     else {
         /* Close any menus that open via the toolbar. */
-        setVisualOffset_Widget(bottomBar, height - bottomSafe, 200 * animate, easeOut_AnimFlag);
+        setVisualOffset_Widget(bottomBar,
+                       height - (bottomTabBar && tabBar->flags & hidden_WidgetFlag ? 0 : bottomSafe),
+                       200 * animate,
+                       easeOut_AnimFlag);
         if (bottomTabBar) {
             if (isPortraitPhone_App()) {
                 setVisualOffset_Widget(toolBar, bottomSafe, 200 * animate, 0);
@@ -2396,9 +2529,9 @@ iRect rect_Root(const iRoot *d) {
 
 iRect safeRect_Root(const iRoot *d) {
     iRect rect = rect_Root(d);
-#if defined (iPlatformAppleMobile)
+#if defined (iPlatformMobile)
     float left, top, right, bottom;
-    safeAreaInsets_iOS(&left, &top, &right, &bottom);
+    safeAreaInsets_Mobile(&left, &top, &right, &bottom);
     adjustEdges_Rect(&rect, top, -right, -bottom, left);
 #endif
     return rect;
@@ -2407,10 +2540,10 @@ iRect safeRect_Root(const iRoot *d) {
 iRect visibleRect_Root(const iRoot *d) {
     iRect visRect = rect_Root(d);
     float bottom = 0.0f;
-#if defined (iPlatformAppleMobile)
+#if defined (iPlatformMobile)
     /* TODO: Check this on device... Maybe DisplayUsableBounds would be good here, too? */
     float left, top, right;
-    safeAreaInsets_iOS(&left, &top, &right, &bottom);
+    safeAreaInsets_Mobile(&left, &top, &right, &bottom);
     visRect.pos.x = (int) left;
     visRect.size.x -= (int) (left + right);
     visRect.pos.y = (int) top;
@@ -2442,7 +2575,7 @@ iRect visibleRect_Root(const iRoot *d) {
     if (get_MainWindow()) {
         const int keyboardHeight = get_MainWindow()->keyboardHeight;
         if (keyboardHeight > bottom) {
-            adjustEdges_Rect(&visRect, 0, 0, -keyboardHeight + bottom, 0);
+            adjustEdges_Rect(&visRect, 0, 0, -keyboardHeight + (!isAndroid_Platform() ? bottom : 0), 0);
         }
     }
     return visRect;

@@ -92,6 +92,7 @@ void                refresh_App                 (void);
 
 iBool               isFinishedLaunching_App     (void);
 iBool               isRunningUnderWindowSystem_App(void);
+iBool               isRunningUnderWayland_App   (void);
 iBool               isRefreshPending_App        (void);
 iBool               isLandscape_App             (void);
 iLocalDef iBool     isPortrait_App              (void) { return !isLandscape_App(); }
@@ -106,6 +107,7 @@ iBool               forceSoftwareRender_App     (void);
 void                setForceSoftwareRender_App  (iBool sw);
 void                setInputZoomLevel_App       (int level);
 void                setEditorZoomLevel_App      (int level);
+void                setRecentMenuBarIndex_App   (int index);
 enum iColorTheme    colorTheme_App              (void);
 const iString *     schemeProxy_App             (iRangecc scheme);
 iBool               schemeProxyHostAndPort_App  (iRangecc scheme, const iString **host, uint16_t *port);
@@ -117,6 +119,7 @@ const iString *     downloadPathForUrl_App      (const iString *url, const iStri
 
 const iString *     execPath_App                (void);
 const iString *     dataDir_App                 (void);
+const iString *     fontsDir_App                (void);
 const iString *     downloadDir_App             (void);
 const iString *     debugInfo_App               (void);
 const iCommandLine *commandLine_App             (void);
@@ -135,11 +138,13 @@ iDocumentWidget *   newTab_App                  (const iDocumentWidget *duplicat
 void                trimCache_App               (void);
 void                trimMemory_App              (void);
 void                saveStateQuickly_App        (void);
+void                deferVisitedSave_App        (void);
 void                setTextInputActive_App      (iBool);
 
 const iStringArray *recentlySubmittedInput_App  (void);
 void                saveSubmittedInput_App      (const iString *queryInput);
 void                clearSubmittedInput_App     (void);
+void                setRecentMisfinId_App       (const iGmIdentity *ident);
 iBool               checkSavedWidth_App         (const iString *resizeId, float *gaps_out);
 
 typedef void (*iTickerFunc)(iAny *);
@@ -186,6 +191,8 @@ iLocalDef void postCommand_App(const char *command) {
 iDocumentWidget *document_Command       (const char *cmd);
 
 iAny *      findWidget_App              (const char *id);
+iBool       moveFocusWithArrows_App     (const void *sdlEvent);
+iBool       moveFocusInsideMenu_App     (const void *sdlEvent);
 void        commitFile_App              (const char *path, const char *tempPathWithNewContents); /* latter will be removed */
 void        openInDefaultBrowser_App    (const iString *url, const iString *mime);
 void        revealPath_App              (const iString *path);

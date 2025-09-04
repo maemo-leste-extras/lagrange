@@ -104,10 +104,14 @@ iRegExp *       newGemtextLink_RegExp   (void);
 
 #define GEMINI_DEFAULT_PORT         ((uint16_t) 1965)
 #define GEMINI_DEFAULT_PORT_CSTR    "1965"
+#define MISFIN_DEFAULT_PORT         ((uint16_t) 1958)
 #define URL_RESERVED_CHARS          ":/?#[]@!$&'()*+,;=" /* RFC 3986 */
+#define URL_DECODE_EXCLUDE_CHARS    URL_RESERVED_CHARS "%\""
+#define URL_ENCODE_EXCLUDE_CHARS    URL_RESERVED_CHARS "%"
 
 struct Impl_Url {
     iRangecc scheme;
+    iRangecc user;
     iRangecc host;
     iRangecc port;
     iRangecc path;
@@ -120,25 +124,28 @@ uint16_t        port_Url                (const iUrl *);
 
 iRangecc        urlScheme_String        (const iString *);
 iRangecc        urlHost_String          (const iString *);
+iRangecc        urlHostWithPort_String  (const iString *);
 iRangecc        urlDirectory_String     (const iString *); /* without a file name; ends with slash */
 uint16_t        urlPort_String          (const iString *);
 iRangecc        urlUser_String          (const iString *);
 iRangecc        urlRoot_String          (const iString *);
+iRangecc        urlPath_String          (const iString *);
 const iBlock *  urlThemeSeed_String     (const iString *);
 const iBlock *  urlPaletteSeed_String   (const iString *);
 
 const iString * absoluteUrl_String      (const iString *, const iString *urlMaybeRelative);
 iBool           isLikelyUrl_String      (const iString *);
+iBool           isTitanUrl_String       (const iString *);
 iBool           isKnownScheme_Rangecc   (iRangecc scheme); /* any URI scheme */
 iBool           isKnownUrlScheme_Rangecc(iRangecc scheme); /* URL schemes only */
 void            punyEncodeDomain_Rangecc(iRangecc domain, iString *encoded_out);
 void            punyEncodeUrlHost_String(iString *absoluteUrl);
 void            stripUrlPort_String     (iString *);
 void            stripDefaultUrlPort_String(iString *);
+const iString * urlDefaultPortStripped_String(const iString *);
 const iString * urlFragmentStripped_String(const iString *);
 const iString * urlQueryStripped_String (const iString *);
-void            urlDecodePath_String    (iString *);
-void            urlEncodePath_String    (iString *);
+iString *       withUrlParameters_String(const iString *d, ... /* key, value */); /* NULL key terminates; value can be NULL */
 void            urlEncodeQuery_String   (iString *);
 iString *       makeFileUrl_String      (const iString *localFilePath);
 const char *    makeFileUrl_CStr        (const char *localFilePath);
@@ -152,6 +159,7 @@ const iString * prettyDataUrl_String    (const iString *, int contentColor);
 const char *    mediaType_Path                      (const iString *path);
 const char *    mediaTypeFromFileExtension_String   (const iString *);
 iRangecc        mediaTypeWithoutParameters_Rangecc  (iRangecc mime);
+iBool           equalMediaType_String               (const iString *, const char *mediaType);
 
 const iString * findContainerArchive_Path           (const iString *path);
 

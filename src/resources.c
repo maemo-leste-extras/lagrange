@@ -59,6 +59,7 @@ iBlock blobJa_Resources;
 iBlock blobNl_Resources;
 iBlock blobPl_Resources;
 iBlock blobRu_Resources;
+iBlock blobSgs_Resources;
 iBlock blobSk_Resources;
 iBlock blobSr_Resources;
 iBlock blobTok_Resources;
@@ -112,6 +113,7 @@ static struct {
     { &blobNl_Resources, "lang/nl.bin" },
     { &blobPl_Resources, "lang/pl.bin" },
     { &blobRu_Resources, "lang/ru.bin" },
+    { &blobSgs_Resources, "lang/sgs.bin" },
     { &blobSk_Resources, "lang/sk.bin" },
     { &blobSr_Resources, "lang/sr.bin" },
     { &blobTok_Resources, "lang/tok.bin" },
@@ -129,6 +131,7 @@ static struct {
 iBool init_Resources(const char *path) {
     archive_ = new_Archive();
     iBool ok = iFalse;
+    // printf("Resources: Checking %s\n", path);
 #if defined (iPlatformAndroidMobile)
     /* Resources are bundled as assets so they cannot be loaded as a regular file.
        Fortunately, SDL implements a file wrapper. */

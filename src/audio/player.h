@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <the_Foundation/block.h>
 
 iDeclareType(Player)
-iDeclareTypeConstruction(Player)    
+iDeclareTypeConstruction(Player)
 
 enum iPlayerUpdate {
     replace_PlayerUpdate,
@@ -46,25 +46,26 @@ enum iPlayerTag {
     max_PlayerTag,
 };
 
-void    updateSourceData_Player (iPlayer *, const iString *mimeType, const iBlock *data,
-                                 enum iPlayerUpdate update);
-size_t  sourceDataSize_Player   (const iPlayer *);
+void        updateSourceData_Player (iPlayer *, const iString *mimeType, const iBlock *data,
+                                     enum iPlayerUpdate update);
+size_t      sourceDataSize_Player   (const iPlayer *);
 
-iBool   	start_Player            (iPlayer *);
-void    	stop_Player             (iPlayer *);
-void    	setPaused_Player        (iPlayer *, iBool isPaused);
-void    	setVolume_Player        (iPlayer *, float volume);
-void    	setFlags_Player         (iPlayer *, int flags, iBool set);
-void    	setNotIdle_Player       (iPlayer *);
-	
-int     	flags_Player            (const iPlayer *);
+iBool       start_Player            (iPlayer *);
+void        stop_Player             (iPlayer *);
+void        setPaused_Player        (iPlayer *, iBool isPaused);
+void        setVolume_Player        (iPlayer *, float volume);
+void        setFlags_Player         (iPlayer *, int flags, iBool set);
+void        setNotIdle_Player       (iPlayer *);
+
+int         flags_Player            (const iPlayer *);
 const iString *tag_Player           (const iPlayer *, enum iPlayerTag tag);
-iBool   	isStarted_Player        (const iPlayer *);
-iBool   	isPaused_Player         (const iPlayer *);
-float   	volume_Player           (const iPlayer *);
-float   	time_Player             (const iPlayer *);
-float   	duration_Player         (const iPlayer *);
-float   	streamProgress_Player   (const iPlayer *); /* normalized 0...1 */
+iBool       isStarted_Player        (const iPlayer *);
+iBool       isComplete_Player       (const iPlayer *); /* all data received */
+iBool       isPaused_Player         (const iPlayer *);
+float       volume_Player           (const iPlayer *);
+float       time_Player             (const iPlayer *);
+float       duration_Player         (const iPlayer *);
+float       streamProgress_Player   (const iPlayer *); /* normalized 0...1 */
 
 uint32_t    idleTimeMs_Player       (const iPlayer *);
 iString *   metadataLabel_Player    (const iPlayer *);

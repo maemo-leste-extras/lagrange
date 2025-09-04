@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: jaakko.keranen@iki.fi\n"
 "POT-Creation-Date: 2023-01-22 13:09+0000\n"
-"PO-Revision-Date: 2023-10-24 20:14+0000\n"
-"Last-Translator: Alyssa Liddell <e-liss@tuta.io>\n"
+"PO-Revision-Date: 2024-12-24 02:17+0000\n"
+"Last-Translator: Olga Smirnova <mistresssilvara@hotmail.com>\n"
 "Language-Team: Russian <http://weblate.skyjake.fi/projects/lagrange/ui/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -404,7 +404,7 @@ msgid "dlg.ident.notes"
 msgstr "Заметки о %s:"
 
 msgid "ident.fingerprint"
-msgstr "Скопировать отпечаток"
+msgstr "Скопировать отпечаток SHA-256"
 
 msgid "ident.delete"
 msgstr "Удалить клиентский сертификат…"
@@ -479,7 +479,7 @@ msgid "dlg.cert.trust"
 msgstr "Доверять"
 
 msgid "dlg.cert.fingerprint"
-msgstr "Скопировать отпечаток"
+msgstr "Отпечатки"
 
 msgid "dlg.input.prompt"
 msgstr "Введите данные для %s:"
@@ -889,19 +889,19 @@ msgid "prefs.mono.gopher"
 msgstr "Gopher"
 
 msgid "prefs.linewidth"
-msgstr "Ширина линии:"
+msgstr "Длина строки:"
 
 msgid "prefs.linewidth.normal"
 msgstr "Нормальная"
 
 msgid "prefs.linewidth.fill"
-msgstr "Заливка"
+msgstr "По ширине окна"
 
 msgid "prefs.quoteicon"
 msgstr "Индикатор цитаты:"
 
 msgid "prefs.quoteicon.icon"
-msgstr "\" Иконка"
+msgstr "Символ “"
 
 msgid "prefs.quoteicon.line"
 msgstr "Линия"
@@ -1639,7 +1639,7 @@ msgid "upload.file.name"
 msgstr "Имя файла:"
 
 msgid "upload.file.drophere"
-msgstr "(перетащите файл в окно)"
+msgstr "введите путь или перетащите файл в окно"
 
 msgid "upload.file.size"
 msgstr "Размер:"
@@ -1837,15 +1837,15 @@ msgstr "Клиентский сертификат по умолчанию"
 
 # used on mobile
 msgid "dlg.upload.text"
-msgstr "Загрузить простой текст"
+msgstr "Введите загружаемый текст"
 
 # used on mobile
 msgid "dlg.upload.file"
-msgstr "Загрузить файл"
+msgstr "Файл не выбран"
 
 # used on mobile
 msgid "dlg.upload.pickfile"
-msgstr "Выбрать файл"
+msgstr "Выбрать файл…"
 
 msgid "upload.id"
 msgstr "Клиентский сертификат:"
@@ -1892,7 +1892,7 @@ msgstr "Моноширинный шрифт:"
 msgid "error.glyphs.msg"
 msgstr ""
 "Эта страница отображена не полностью, так как некоторые символы отсутствуют. "
-"Установите дополнительные шрифты, чтобы исправить эту проблему."
+"Можно установить дополнительные шрифты, чтобы это исправить."
 
 msgid "truetype.help"
 msgstr ""
@@ -2106,7 +2106,7 @@ msgid "menu.share"
 msgstr "Поделиться"
 
 msgid "heading.upload.id"
-msgstr "Авторизация"
+msgstr "Учетные данные"
 
 msgid "menu.upload.delete"
 msgstr "Удалить всё"
@@ -2379,7 +2379,7 @@ msgid "error.incompleteheader"
 msgstr "Неполный заголовок"
 
 msgid "prefs.tui.simple"
-msgstr "Простые символы:"
+msgstr "Использовать простые символы:"
 
 msgid "prefs.evensplit"
 msgstr "Разделять окно равномерно:"
@@ -2715,3 +2715,140 @@ msgstr "Адрес"
 
 msgid "error.showutf8"
 msgstr "Автоматически определен UTF-8"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.linkkeys"
+msgstr "Открыть"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.menu"
+msgstr "Меню"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.menubar"
+msgstr "Гл. меню"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.sidebar"
+msgstr "Бок. панель"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.tab.new"
+msgstr "+ Вкладка"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.focus"
+msgstr "Фокус"
+
+msgid "dlg.cert.fingerprint.pubkey"
+msgstr "Копировать SHA-256 открытого ключа"
+
+msgid "dlg.cert.fingerprint.full"
+msgstr "Копировать SHA-256 сертификата"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.url"
+msgstr "Адрес"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.tab.close"
+msgstr "Закрыть"
+
+# Keyboard shortcut for the terminal. Should be very short or abbreviated.
+msgid "term.hover"
+msgstr "На ссылку"
+
+msgid "heading.upload.edit"
+msgstr "Отредактировать (Titan)"
+
+msgid "heading.upload.misfin"
+msgstr "Отправить сообщение Misfin"
+
+msgid "dlg.upload.edit.error"
+msgstr "Не удалось загрузить содержимое редактируемого ресурса."
+
+msgid "dlg.upload.edit.incompatible"
+msgstr "Ресурсы данного типа нельзя редактировать в этом приложении."
+
+msgid "dlg.upload.misfin.noident"
+msgstr "Для отправки сообщений нужен сертификат Misfin."
+
+# Only shown in a message box when CCing self fails.
+msgid "misfin.cc"
+msgstr "Отправка копии самому себе"
+
+# Only shown in a message box when verifying the recipient fails.
+msgid "misfin.verify"
+msgstr "Проверка получателя"
+
+msgid "misfin.redirect"
+msgstr "Получатель требует использовать другой адрес."
+
+msgid "misfin.failure"
+msgstr "Возникла ошибка при отправке сообщения."
+
+msgid "misfin.needcert"
+msgstr "Нужно добавить сертификат Misfin для идентификации отправителя."
+
+msgid "misfin.changed"
+msgstr "Ваш сертификат Misfin не соответствует ожидаемому получателем."
+
+msgid "misfin.unknown"
+msgstr "Не удалось связаться с сервером."
+
+msgid "upload.from"
+msgstr "От:"
+
+msgid "hint.upload.misfin"
+msgstr "введите сообщение"
+
+msgid "dlg.upload.sendmsg"
+msgstr "Отправить"
+
+msgid "prefs.warn.security"
+msgstr "Предупреждения TLS:"
+
+msgid "ident.sendmsg"
+msgstr "Отправить как…"
+
+msgid "heading.upload.edit.error"
+msgstr "Редактирование не удалось"
+
+msgid "heading.upload.misfin.noident"
+msgstr "Нет профилей Misfin"
+
+msgid "heading.misfin.ok"
+msgstr "Сообщение отправлено"
+
+msgid "misfin.success"
+msgstr "Сообщение успешно отправлено."
+
+msgid "misfin.unauth"
+msgstr "Вам не разрешено отправлять сообщения данному получателю."
+
+msgid "misfin.badcert"
+msgstr "Ваш сертификат Misfin неверен."
+
+msgid "upload.to"
+msgstr "Кому:"
+
+msgid "dlg.upload.edit"
+msgstr "Отправить"
+
+msgid "heading.upload.error.file"
+msgstr "Неверный файл"
+
+msgid "upload.error.directory"
+msgstr "Можно загружать только отдельные файлы."
+
+msgid "upload.file.path"
+msgstr "Путь к файлу:"
+
+msgid "misfin.self.copy"
+msgstr "Отправить мне копию"
+
+msgid "upload.type"
+msgstr "Содержимое"
+
+msgid "prefs.expandline"
+msgstr "Подгонять под длинные строки:"

@@ -169,6 +169,7 @@ void init_Widget(iWidget *d) {
     init_Anim(&d->overflowScrollOpacity, 0.0f);
     init_String(&d->data);
     iZap(d->padding);
+    iZap(d->borderPad);
     d->updateMenuItems = NULL;
     d->menuClosed = NULL;
 //    d->delayedTimer = 0;
@@ -242,6 +243,9 @@ void deinit_Widget(iWidget *d) {
         if (win->hover == d) {
             win->hover = NULL;
         }
+        if (win->keyPriority == d) {
+            win->keyPriority = NULL;
+        }
     }
     if (d->flags & nativeMenu_WidgetFlag) {
         releaseNativeMenu_Widget(d);
@@ -260,6 +264,9 @@ static void aboutToBeDestroyed_Widget_(iWidget *d) {
     }
     if (win->focus == d) {
         win->focus = NULL;
+    }
+    if (win->keyPriority == d) {
+        win->keyPriority = NULL;
     }
     if (win->lastHover == d) {
         win->lastHover = NULL;
@@ -387,7 +394,7 @@ iWidget *root_Widget(const iWidget *d) {
 }
 
 iWindow *window_Widget(const iAnyObject *d) {
-    return constAs_Widget(d)->root->window;
+    return d ? constAs_Widget(d)->root->window : NULL;
 }
 
 void showCollapsed_Widget(iWidget *d, iBool show) {
@@ -691,9 +698,9 @@ static void arrange_Widget_(iWidget *d) {
         setHeight_Widget_(d, height_Rect(innerRect_Widget_(d->parent)));
     }
     if (d->flags & safePadding_WidgetFlag) {
-#if defined (iPlatformAppleMobile)
+#if defined (iPlatformMobile)
         float left, top, right, bottom;
-        safeAreaInsets_iOS(&left, &top, &right, &bottom);
+        safeAreaInsets_Mobile(&left, &top, &right, &bottom);
         setPadding_Widget(d, left, top, right, bottom);
 #endif
     }
@@ -1750,7 +1757,7 @@ iBool processEvent_Widget(iWidget *d, const SDL_Event *ev) {
                            ev->button.button,
                            ev->button.x,
                            ev->button.y);
-        return iFalse;
+        return isMobile_Platform(); /* on mobile, consume missed taps to prevent accidental input */
     }
     if (d->flags & mouseModal_WidgetFlag && isMouseEvent_(ev) &&
         contains_Rect(rect_Root(d->root), mouseCoord_SDLEvent(ev))) {
@@ -1872,13 +1879,13 @@ void drawBorders_Widget(const iWidget *d) {
         const int hgt = gap_UI / 4;
         const int borderColor = uiSeparator_ColorId; /* TODO: Add a property to customize? */
         if (d->flags & borderTop_WidgetFlag) {
-            fillRect_Paint(&p, (iRect){ topLeft_Rect(rect),
-                                        init_I2(width_Rect(rect), hgt) },
+            fillRect_Paint(&p, (iRect){ addX_I2(topLeft_Rect(rect), d->borderPad[0]),
+                                        init_I2(width_Rect(rect) - d->borderPad[1] - d->borderPad[0], hgt) },
                             borderColor);
         }
         if (d->flags & borderBottom_WidgetFlag) {
-            fillRect_Paint(&p, (iRect) { addY_I2(bottomLeft_Rect(rect), -hgt),
-                                         init_I2(width_Rect(rect), hgt) },
+            fillRect_Paint(&p, (iRect) { add_I2(bottomLeft_Rect(rect), init_I2(d->borderPad[2], -hgt)),
+                                         init_I2(width_Rect(rect) - d->borderPad[3] - d->borderPad[2], hgt) },
                             borderColor);
         }
     }
@@ -1906,6 +1913,9 @@ void drawBackground_Widget(const iWidget *d) {
                 return;
             }
             fillRect_Paint(&p, rect, d->bgColor);
+            /*printf("drawBackground: '%s' %4d,%4d - %4d,%4d color:%3d\n",
+                   cstr_String(id_Widget(d)), rect.pos.x, rect.pos.y,
+                   rect.size.x, rect.size.y, d->bgColor);*/
         }
         if (d->frameColor >= 0 && ~d->flags & frameless_WidgetFlag) {
             drawRectThickness_Paint(&p, adjusted_Rect(rect, zero_I2(), neg_I2(one_I2())),
@@ -2070,7 +2080,7 @@ void draw_Widget(const iWidget *d) {
         iWidgetScrollInfo info;
         overflowScrollInfo_Widget(d, &info);
         const float opacity = value_Anim(&d->overflowScrollOpacity);
-        drawScrollIndicator_Widget(d, &info, uiBackgroundPressed_ColorId, opacity);
+        drawScrollIndicator_Widget(d, &info, uiTextAction_ColorId, opacity);
     }
 }
 
@@ -2425,9 +2435,14 @@ iBool isAffectedByVisualOffset_Widget(const iWidget *d) {
 }
 
 void setFocus_Widget(iWidget *d) {
+    setFocusWithMethod_Widget(d, none_FocusMethod);
+}
+
+void setFocusWithMethod_Widget(iWidget *d, enum iFocusMethod method) {
     iWindow *win = d ? window_Widget(d) : get_Window();
     iAssert(win);
     if (win->focus != d) {
+        win->keyPriority = NULL;
         if (win->focus) {
             iAssert(!contains_PtrSet(win->focus->root->pendingDestruction, win->focus));
             postCommand_Widget(win->focus, "focus.lost");
@@ -2438,16 +2453,14 @@ void setFocus_Widget(iWidget *d) {
         win->focus = d;
         if (d) {
             setKeyRoot_Window(get_Window(), d->root);
-            postCommand_Widget(d, "focus.gained");
+            if (method) {
+                postCommand_Widget(d, "focus.gained arg:%d", method);
+            }
+            else {
+                postCommand_Widget(d, "focus.gained");
+            }
         }
     }
-}
-
-void setKeyboardGrab_Widget(iWidget *d) {
-    iWindow *win = d ? window_Widget(d) : get_Window();
-    iAssert(win);
-    win->focus = d;
-    /* no notifications sent */
 }
 
 iWidget *focus_Widget(void) {
@@ -2470,28 +2483,28 @@ iWidget *hover_Widget(void) {
 }
 
 static const iWidget *findFocusable_Widget_(const iWidget *d, const iWidget *startFrom,
-                                            iBool *getNext, enum iWidgetFocusDir focusDir) {
+                                            iBool *getNext, enum iWidgetFocusDir cycleDir) {
     if (startFrom == d) {
         *getNext = iTrue;
         return NULL;
     }
     if ((d->flags & focusable_WidgetFlag) && isVisible_Widget(d) && !isDisabled_Widget(d) &&
         ~d->flags & destroyPending_WidgetFlag && *getNext) {
-        if ((~focusDir & notInput_WidgetFocusFlag) || !isInstance_Object(d, &Class_InputWidget)) {
+        if ((~cycleDir & notInput_WidgetFocusFlag) || !isInstance_Object(d, &Class_InputWidget)) {
             return d;
         }
     }
-    if ((focusDir & dirMask_WidgetFocusFlag) == forward_WidgetFocusDir) {
+    if ((cycleDir & dirMask_WidgetFocusFlag) == forward_WidgetFocusDir) {
         iConstForEach(ObjectList, i, d->children) {
             const iWidget *found =
-                findFocusable_Widget_(constAs_Widget(i.object), startFrom, getNext, focusDir);
+                findFocusable_Widget_(constAs_Widget(i.object), startFrom, getNext, cycleDir);
             if (found) return found;
         }
     }
     else {
         iReverseConstForEach(ObjectList, i, d->children) {
             const iWidget *found =
-                findFocusable_Widget_(constAs_Widget(i.object), startFrom, getNext, focusDir);
+                findFocusable_Widget_(constAs_Widget(i.object), startFrom, getNext, cycleDir);
             if (found) return found;
         }
     }
@@ -2536,14 +2549,14 @@ const iWidget *focusRoot_Widget(const iWidget *d) {
     return root_Widget(d);
 }
 
-iAny *findFocusable_Widget(const iWidget *startFrom, enum iWidgetFocusDir focusDir) {
+iAny *findFocusable_Widget(const iWidget *startFrom, enum iWidgetFocusDir cycleDir) {
     if (!get_Window()) {
         return NULL;
     }
     const iWidget *focusRoot = focusRoot_Widget(startFrom);
     iAssert(focusRoot != NULL);
     iBool getNext = (startFrom ? iFalse : iTrue);
-    const iWidget *found = findFocusable_Widget_(focusRoot, startFrom, &getNext, focusDir);
+    const iWidget *found = findFocusable_Widget_(focusRoot, startFrom, &getNext, cycleDir);
     if (!found && startFrom) {
         getNext = iTrue;
         /* Switch to the next root, if available. */
@@ -2551,9 +2564,9 @@ iAny *findFocusable_Widget(const iWidget *startFrom, enum iWidgetFocusDir focusD
             findTopmostFocusRoot_Widget_(otherRoot_Window(get_Window(), focusRoot->root)->widget),
             NULL,
             &getNext,
-            focusDir);
+            cycleDir);
     }
-    return iConstCast(iWidget *, found);
+    return as_Widget(iConstCast(iWidget *, found));
 }
 
 void setMouseGrab_Widget(iWidget *d) {
@@ -2564,7 +2577,8 @@ void setMouseGrab_Widget(iWidget *d) {
 }
 
 iWidget *mouseGrab_Widget(void) {
-    return get_Window()->mouseGrab;
+    const iWindow *win = get_Window();
+    return win ? win->mouseGrab : NULL;
 }
 
 void postCommand_Widget(const iAnyObject *d, const char *cmd, ...) {
@@ -2651,10 +2665,144 @@ iBool hasVisibleChildOnTop_Widget(const iWidget *parent) {
     return iFalse;
 }
 
+void addRecentlyDeleted_Widget(iAnyObject *obj) {
+    /* We sometimes include pointers to widgets in command events. Before an event is processed,
+       it is possible that the referened widget has been destroyed. Keeping track of recently
+       deleted widgets allows ignoring these events. */
+    maybeInit_RecentlyDeleted_(&recentlyDeleted_);
+    iGuardMutex(&recentlyDeleted_.mtx, insert_PtrSet(recentlyDeleted_.objs, obj));
+}
+
+void clearRecentlyDeleted_Widget(void) {
+    if (recentlyDeleted_.objs) {
+        iGuardMutex(&recentlyDeleted_.mtx, clear_PtrSet(recentlyDeleted_.objs));
+    }
+}
+
+iBool isRecentlyDeleted_Widget(const iAnyObject *obj) {
+    return contains_RecentlyDeleted_(&recentlyDeleted_, obj);
+}
+
 iBeginDefineClass(Widget)
     .processEvent = processEvent_Widget,
     .draw         = draw_Widget,
 iEndDefineClass(Widget)
+
+/*----------------------------------------------------------------------------------------------*/
+
+iDeclareType(AdjacentFocusFinder);
+
+struct Impl_AdjacentFocusFinder {
+    iRect           bounds;
+    enum iDirection direction;
+    float           nearestDist;
+    const iWidget  *nearest_out;
+};
+
+static iBool isContained_Rangei(iRangei large, iRangei small) {
+    return contains_Rangei(large, small.start) &&
+           (contains_Rangei(large, small.end) || large.end == small.end);
+}
+
+static int mid_Rangei(const iRangei d) {
+    return (d.start + d.end) / 2;
+}
+
+static float offAxisRangeDistance_(iRangei src, iRangei dst) {
+    if (src.start == dst.start || src.end == dst.end) {
+        return 0; /* Ideal match. */
+    }
+    if (isOverlapping_Rangei(src, dst)) {
+        return iAbs(src.start - dst.start); /* Prefer matching left/top edge. */
+    }
+    /* Source and destination are not overlapping. Off-axis non-overlapping differences are
+       unfavorable because this is used for navigating to a particular linear direction. */
+    const int dist = iAbs(mid_Rangei(src) - mid_Rangei(dst));
+    return dist * dist;
+}
+
+static float adjacentDistance_Rect(const iRect *d, const iRect *other, enum iDirection dir) {
+    float dist = 0;
+    switch (dir) {
+        case left_Direction:
+            dist = -right_Rect(*other) + left_Rect(*d);
+            if (dist < 0) {
+                return -1.0f;
+            }
+            dist += offAxisRangeDistance_(ySpan_Rect(*d), ySpan_Rect(*other));
+            break;
+        case right_Direction:
+            dist = left_Rect(*other) - right_Rect(*d);
+            if (dist < 0) {
+                return -1.0f;
+            }
+            dist += offAxisRangeDistance_(ySpan_Rect(*d), ySpan_Rect(*other));
+            break;
+        case up_Direction:
+            dist = -bottom_Rect(*other) + top_Rect(*d);
+            if (dist < 0) {
+                return -1.0f;
+            }
+            dist += offAxisRangeDistance_(xSpan_Rect(*d), xSpan_Rect(*other));
+            dist /= aspect_UI;
+            break;
+        case down_Direction:
+            dist = top_Rect(*other) - bottom_Rect(*d);
+            if (dist < 0) {
+                return -1.0f;
+            }
+            dist += offAxisRangeDistance_(xSpan_Rect(*d), xSpan_Rect(*other));
+            dist /= aspect_UI;
+            break;
+        default:
+            return -1.0f;
+    }
+    return dist;
+}
+
+static void walkTree_AdjacentFocusFinder_(iAdjacentFocusFinder *d, const iWidget *parent) {
+    const iBool isMenu = findParent_Widget(parent, "menu") != NULL;
+    iConstForEach(ObjectList, i, parent->children) {
+        const iWidget *w = i.object;
+        if (isVisible_Widget(w) && !isDisabled_Widget(w) && ~w->flags & destroyPending_WidgetFlag) {
+            if (w->flags & focusable_WidgetFlag) {
+                const iRect bounds = bounds_Widget(w);
+                if (isOverlapping_Rect(d->bounds, bounds)) {
+                    /* Overlapping means it isn't adjacent. */
+                    continue;
+                }
+                const float dist = adjacentDistance_Rect(&d->bounds, &bounds, d->direction);
+                if (dist < 0) {
+                    continue; /* wrong direction */
+                }
+                if (!d->nearest_out || dist < d->nearestDist) {
+                    d->nearest_out = w;
+                    d->nearestDist = dist;
+                }
+            }
+            walkTree_AdjacentFocusFinder_(d, w);
+        }
+    }
+}
+
+iAny *findAdjacentFocusable_Widget(const iWidget *d, enum iDirection direction) {
+    if (!get_Window() || direction == none_Direction) {
+        return NULL;
+    }
+    const iWidget *focusRoot = focusRoot_Widget(d);
+    const iWidget *menu = parentMenu_Widget(d);
+    if (menu) {
+        /* Inside menus, don't allow exiting the current menu. */
+        // const iWidget *topMenu = findParent_Widget(menu, "menu");
+        focusRoot = menu;
+    }
+    iAdjacentFocusFinder args = { .bounds = bounds_Widget(d), .direction = direction };
+    walkTree_AdjacentFocusFinder_(&args, focusRoot);
+    if (!args.nearest_out && menu) {
+        args.nearest_out = d; /* Keep the focus unchanged in a menu. */
+    }
+    return as_Widget(iConstCast(iWidget *, args.nearest_out));
+}
 
 /*----------------------------------------------------------------------------------------------
    Debug utilities for inspecting widget trees.
@@ -2723,58 +2871,3 @@ void identify_Widget(const iWidget *d) {
     printf("Root %d: %p\n", 1 + (d->root == get_Window()->roots[1]), d->root);
     fflush(stdout);
 }
-
-void addRecentlyDeleted_Widget(iAnyObject *obj) {
-    /* We sometimes include pointers to widgets in command events. Before an event is processed,
-       it is possible that the referened widget has been destroyed. Keeping track of recently
-       deleted widgets allows ignoring these events. */
-    maybeInit_RecentlyDeleted_(&recentlyDeleted_);
-    iGuardMutex(&recentlyDeleted_.mtx, insert_PtrSet(recentlyDeleted_.objs, obj));
-}
-
-void clearRecentlyDeleted_Widget(void) {
-    if (recentlyDeleted_.objs) {
-        iGuardMutex(&recentlyDeleted_.mtx, clear_PtrSet(recentlyDeleted_.objs));
-    }
-}
-
-iBool isRecentlyDeleted_Widget(const iAnyObject *obj) {
-    return contains_RecentlyDeleted_(&recentlyDeleted_, obj);
-}
-
-#if 0
-static uint32_t callDelayed_Widget_(uint32_t interval, void *ctx) {
-    iWidget *d = ctx;
-    lock_Mutex(d->delayedMutex);
-    d->delayedTimer = 0;
-    if (d->delayedCallback) {
-        d->delayedCallback(d);
-    }
-    unlock_Mutex(d->delayedMutex);
-    return 0; /* single-shot */
-}
-
-void setDelayedCallback_Widget(iWidget *d, int delay, void (*callback)(iWidget *)) {
-    if (!callback) {
-        if (d->delayedMutex) {
-            iGuardMutex(d->delayedMutex, {
-                SDL_RemoveTimer(d->delayedTimer);
-                d->delayedTimer    = 0;
-                d->delayedCallback = NULL;
-            });
-            delete_Mutex(d->delayedMutex);
-            d->delayedMutex = NULL;
-        }
-        return;
-    }
-    if (!d->delayedMutex) {
-        d->delayedMutex = new_Mutex();
-    }
-    lock_Mutex(d->delayedMutex);
-    if (d->delayedTimer) {
-        SDL_RemoveTimer(d->delayedTimer);
-    }
-    d->delayedTimer = SDL_AddTimer(delay, callDelayed_Widget_, d);
-    unlock_Mutex(d->delayedMutex);
-}
-#endif

@@ -30,13 +30,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 /* User preferences */
 
-iDeclareType(Prefs)
+iDeclareType(Prefs);
 
 enum iPrefsString {
     /* General */
     uiLanguage_PrefsString,
     downloadDir_PrefsString,
     searchUrl_PrefsString,
+    recentMisfinId_PrefsString,
 
     /* Network */
     caFile_PrefsString,
@@ -65,17 +66,19 @@ enum iPrefsBool {
     uiAnimations_PrefsBool,
     hideToolbarOnScroll_PrefsBool,
 
+    hideTabBar_PrefsBool,
     blinkingCursor_PrefsBool,
     bottomNavBar_PrefsBool,
     bottomTabBar_PrefsBool,
     menuBar_PrefsBool,
+    
     simpleChars_PrefsBool,
-
     evenSplit_PrefsBool,
     detachedPrefs_PrefsBool,
     editorSyntaxHighlighting_PrefsBool,
 
     /* Document presentation */
+    italicQuote_PrefsBool,
     sideIcon_PrefsBool,
     time24h_PrefsBool,
 
@@ -95,8 +98,10 @@ enum iPrefsBool {
     edgeSwipe_PrefsBool,
     pageSwipe_PrefsBool,
     capsLockKeyModifier_PrefsBool,
+    misfinSelfCopy_PrefsBool,
 
     /* Network */
+    warnCertSecurity_PrefsBool,
     decodeUserVisibleURLs_PrefsBool,
     allowSchemeChangingRedirect_PrefsBool,
 
@@ -114,6 +119,7 @@ enum iPrefsBool {
     centerShortDocs_PrefsBool,
 
     plainTextWrap_PrefsBool,
+    expandToLongLines_PrefsBool,
     geminiStyledGopher_PrefsBool,
 
     /* Meta */
@@ -128,6 +134,7 @@ enum iCollapse {
 };
 
 #define maxNavbarActions_Prefs  4
+#define maxSidebarModes_Prefs   8
 
 /* TODO: Use a systematic command naming convention for notifications. */
 
@@ -143,18 +150,20 @@ struct Impl_Prefs {
             iBool retainWindowSize;
             iBool uiAnimations;
             iBool hideToolbarOnScroll;
-
+            
+            iBool hideTabBar;
             iBool blinkingCursor;
             iBool bottomNavBar;
             iBool bottomTabBar;
             iBool menuBar;
+            
             iBool simpleChars;
-
             iBool evenSplit;
             iBool detachedPrefs;
             iBool editorSyntaxHighlighting;
 
             /* Document presentation */
+            iBool italicQuote;
             iBool sideIcon;
             iBool time24h;
 
@@ -174,8 +183,10 @@ struct Impl_Prefs {
             iBool edgeSwipe; /* mobile: one can swipe from edges to navigate */
             iBool pageSwipe; /* mobile: one can swipe over the page to navigate */
             iBool capsLockKeyModifier;
+            iBool misfinSelfCopy;
 
             /* Network */
+            iBool warnTlsSecurity;
             iBool decodeUserVisibleURLs;
             iBool allowSchemeChangingRedirect;
 
@@ -193,50 +204,61 @@ struct Impl_Prefs {
             iBool centerShortDocs;
 
             iBool plainTextWrap;
+            iBool expandToLongLines;
             iBool geminiStyledGopher;
         };
     };
+
     /* UI state (belongs to state.lgr...) */
-    int              dialogTab;
-    int              langFrom;
-    int              langTo;
-    iBool            translationIgnorePre;
+    int   dialogTab;
+    int   langFrom;
+    int   langTo;
+    iBool translationIgnorePre;
+    int   recentMenuBarIndex; /* most recently opened menubar child */
+
     /* Colors */
-    enum iColorTheme systemPreferredColorTheme[2]; /* dark, light */
-    enum iColorTheme theme;
+    enum iColorTheme  systemPreferredColorTheme[2]; /* dark, light */
+    enum iColorTheme  theme;
     enum iColorAccent accent;
+
     /* Window and User Interface */
-    float            uiScale;
+    float               uiScale;
     enum iToolbarAction navbarActions[maxNavbarActions_Prefs];
     enum iToolbarAction toolbarActions[2];
-    int              inputZoomLevel;
-    int              editorZoomLevel;
+    iBool               sidebarModeEnabled[2][maxSidebarModes_Prefs];
+    int                 inputZoomLevel;
+    int                 editorZoomLevel;
+
     /* Document presentation */
-    int              zoomPercent;
+    int zoomPercent;
+
     /* Behavior */
-    int              pinSplit; /* 0: no pinning, 1: left doc, 2: right doc */
+    int                pinSplit; /* 0: no pinning, 1: left doc, 2: right doc */
     enum iFeedInterval feedInterval;
-    int              returnKey;
-    int              smoothScrollSpeed[max_ScrollType];
-    enum iCollapse   collapsePre;
+    int                returnKey;
+    int                smoothScrollSpeed[max_ScrollType];
+    enum iCollapse     collapsePre;
+
     /* Network */
-    int              maxCacheSize; /* MB */
-    int              maxMemorySize; /* MB */
-    int              maxUrlSize; /* bytes; longer ones will be disregarded */
+    int maxCacheSize;  /* MB */
+    int maxMemorySize; /* MB */
+    int maxUrlSize;    /* bytes; longer ones will be disregarded */
+
     /* Style */
-    iStringSet *     disabledFontPacks;
+    iStringSet      *disabledFontPacks;
     int              gemtextAnsiEscapes;
     int              lineWidth;
     float            lineSpacing;
     int              tabWidth;
     enum iImageStyle imageStyle;
+
     /* Colors */
     enum iGmDocumentTheme docThemeDark;
     enum iGmDocumentTheme docThemeLight;
     float                 saturation;
 };
 
-iDeclareTypeConstruction(Prefs)
+iDeclareTypeConstruction(Prefs);
 
 iLocalDef float scrollSpeedFactor_Prefs(const iPrefs *d, enum iScrollType type) {
     iAssert(type >= 0 && type < max_ScrollType);

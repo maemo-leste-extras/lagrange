@@ -70,9 +70,13 @@ void init_Url(iUrl *d, const iString *text) {
         d->path     = capturedRange_RegExpMatch(&m, 5);
         d->query    = capturedRange_RegExpMatch(&m, 6);
         d->fragment = capturedRange_RegExpMatch(&m, 8); /* starts with a hash */
+        if (isEmpty_Range(&d->host)) {
+            d->host = (iRangecc){ d->scheme.end, d->scheme.end };
+        }
         /* Check if the authority contains a port. */
         init_RegExpMatch(&m);
         if (matchRange_RegExp(authPattern_, d->host, &m)) {
+            d->user = capturedRange_RegExpMatch(&m, 2);
             d->host = capturedRange_RegExpMatch(&m, 3);
             d->port = capturedRange_RegExpMatch(&m, 7);
         }
@@ -109,6 +113,9 @@ uint16_t port_Url(const iUrl *d) {
     }
     else if (equalCase_Rangecc(d->scheme, "spartan")) {
         port = 300;
+    }
+    else if (equalCase_Rangecc(d->scheme, "guppy")) {
+        port = 6775;
     }
     else if (equalCase_Rangecc(d->scheme, "https")) {
         port = 443;
@@ -147,11 +154,27 @@ void stripUrlPort_String(iString *d) {
     }
 }
 
+static iBool isDefaultPort_Url_(const iUrl *d) {
+    return (equalCase_Rangecc(d->scheme, "gemini") &&
+            equal_Rangecc(d->port, GEMINI_DEFAULT_PORT_CSTR)) ||
+           (equalCase_Rangecc(d->scheme, "gopher") && equal_Rangecc(d->port, "70"));
+}
+
+const iString *urlDefaultPortStripped_String(const iString *d) {
+    iUrl parts;
+    init_Url(&parts, d);
+    if (isDefaultPort_Url_(&parts)) {
+        iString *stripped = copy_String(d);
+        stripDefaultUrlPort_String(stripped);
+        return collect_String(stripped);
+    }
+    return d;
+}
+
 void stripDefaultUrlPort_String(iString *d) {
     iUrl parts;
     init_Url(&parts, d);
-    if (equalCase_Rangecc(parts.scheme, "gemini") &&
-        equal_Rangecc(parts.port, GEMINI_DEFAULT_PORT_CSTR)) {
+    if (isDefaultPort_Url_(&parts)) {
         /* Always preceded by a colon. */
         remove_Block(&d->chars, parts.port.start - 1 - constBegin_String(d),
                      size_Range(&parts.port) + 1);
@@ -232,6 +255,12 @@ iRangecc urlHost_String(const iString *d) {
     return url.host;
 }
 
+iRangecc urlHostWithPort_String(const iString *d) {
+    iUrl url;
+    init_Url(&url, d);
+    return (iRangecc){ url.host.start, !isEmpty_Range(&url.port) ? url.port.end : url.host.end };
+}
+
 iRangecc urlDirectory_String(const iString *d) {
     iUrl parts;
     init_Url(&parts, d);
@@ -253,15 +282,15 @@ uint16_t urlPort_String(const iString *d) {
 iRangecc urlUser_String(const iString *d) {
     static iRegExp *userPats_[2];
     if (!userPats_[0]) {
-        userPats_[0] = new_RegExp("~([^/?]+)", 0);
-        userPats_[1] = new_RegExp("/users/([^/?]+)", caseInsensitive_RegExpOption);
+        userPats_[0] = new_RegExp("^/~([^/?]+)", 0);
+        userPats_[1] = new_RegExp("^/users/([^/?]+)", caseInsensitive_RegExpOption);
     }
     iUrl url;
     init_Url(&url, d);
     iRegExpMatch m;
-    init_RegExpMatch(&m);
     iRangecc found = iNullRange;
     iForIndices(i, userPats_) {
+        init_RegExpMatch(&m);
         if (matchRange_RegExp(userPats_[i], url.path, &m)) {
             found = capturedRange_RegExpMatch(&m, 1);
         }
@@ -284,6 +313,12 @@ iRangecc urlRoot_String(const iString *d) {
         rootEnd = parts.path.start;
     }
     return (iRangecc){ constBegin_String(d), rootEnd };
+}
+
+iRangecc urlPath_String(const iString *d) {
+    iUrl url;
+    init_Url(&url, d);
+    return url.path;
 }
 
 const iBlock *urlThemeSeed_String(const iString *url) {
@@ -333,43 +368,26 @@ static iString *punyDecodeHost_(iRangecc host) {
     return result;
 }
 
-void urlDecodePath_String(iString *d) {
+iString *withUrlParameters_String(const iString *d, ...) {
     iUrl url;
     init_Url(&url, d);
-    if (isEmpty_Range(&url.path)) {
-        return;
+    iString *updated = new_String();
+    appendRange_String(updated, (iRangecc){ constBegin_String(d), url.path.end });
+    va_list args;
+    for (va_start(args, d);;) {
+        const char *key = va_arg(args, const char *);
+        if (!key) break;
+        const char *value = va_arg(args, const char *);
+        appendCStr_String(updated, ";");
+        appendCStr_String(updated, key);
+        if (value) {
+            appendCStr_String(updated, "=");
+            appendCStr_String(updated, value);
+        }
     }
-    iString *decoded = new_String();
-    appendRange_String(decoded, (iRangecc){ constBegin_String(d), url.path.start });
-    iString *path    = newRange_String(url.path);
-    iString *decPath = urlDecodeExclude_String(path, "%?/#"); /* don't decode reserved path chars */
-    append_String(decoded, decPath);
-    delete_String(decPath);
-    delete_String(path);
-    appendRange_String(decoded, (iRangecc){ url.path.end, constEnd_String(d) });
-    set_String(d, decoded);
-    delete_String(decoded);
-}
-
-void urlEncodePath_String(iString *d) {
-    iUrl url;
-    init_Url(&url, d);
-    if (equalCase_Rangecc(url.scheme, "data")) {
-        return;
-    }
-    if (isEmpty_Range(&url.path)) {
-        return;
-    }
-    iString *encoded = new_String();
-    appendRange_String(encoded, (iRangecc){ constBegin_String(d), url.path.start });
-    iString *path    = newRange_String(url.path);
-    iString *encPath = urlEncodeExclude_String(path, "%/= ");
-    append_String(encoded, encPath);
-    delete_String(encPath);
-    delete_String(path);
-    appendRange_String(encoded, (iRangecc){ url.path.end, constEnd_String(d) });
-    set_String(d, encoded);
-    delete_String(encoded);
+    appendRange_String(updated, (iRangecc){ url.path.end, constEnd_String(d) });
+    va_end(args);
+    return updated;
 }
 
 void urlEncodeQuery_String(iString *d) {
@@ -426,6 +444,10 @@ const iString *absoluteUrl_String(const iString *d, const iString *urlMaybeRelat
     if (!isEmpty_Range(&rel.scheme) && !isKnownUrlScheme_Rangecc(rel.scheme) &&
         isEmpty_Range(&rel.host)) {
         /* Probably not an URL, so we can't make this absolute. */
+        return urlMaybeRelative;
+    }
+    if (equalCase_Rangecc(rel.scheme, "misfin")) {
+        /* Use as-is. */
         return urlMaybeRelative;
     }
     const iBool isRelative = !isDef_(rel.host);
@@ -514,6 +536,10 @@ iBool isLikelyUrl_String(const iString *d) {
     return likelyUrl;
 }
 
+iBool isTitanUrl_String(const iString *d) {
+    return equalCase_Rangecc(urlScheme_String(d), "titan");
+}
+
 static iBool equalPuny_(const iString *d, iRangecc orig) {
     if (!endsWith_String(d, "-")) {
         return iFalse; /* This is a sufficient condition? */
@@ -566,7 +592,7 @@ iString *makeFileUrl_String(const iString *localFilePath) {
     iString *url = makeAbsolute_Path(collect_String(cleaned_Path(localFilePath)));
     replace_Block(&url->chars, '\\', '/'); /* in case it's a Windows path */
     set_String(url, collect_String(urlEncodeExclude_String(url, "/:")));
-#if defined (iPlatformMsys)
+#if defined (iPlatformMsys) || defined (iPlatformWindows)
     prependChar_String(url, '/'); /* three slashes */
 #endif
     prependCStr_String(url, "file://");
@@ -584,7 +610,7 @@ iString *localFilePathFromUrl_String(const iString *d) {
         return NULL;
     }
     iString *path = urlDecode_String(collect_String(newRange_String(url.path)));
-#if defined (iPlatformMsys)
+#if defined (iPlatformMsys) || defined (iPlatformWindows)
     /* Remove the extra slash from the beginning. */
     if (startsWith_String(path, "/")) {
         remove_Block(&path->chars, 0, 1);
@@ -705,12 +731,13 @@ const iString *canonicalUrl_String(const iString *d) {
     iString *canon = NULL;
     iUrl parts;
     init_Url(&parts, d);
+#if 0
     /* Colons (0x3a) are in decoded form in the URL path. */
     if (iStrStrN(parts.path.start, "%3A", size_Range(&parts.path)) ||
         iStrStrN(parts.path.start, "%3a", size_Range(&parts.path))) {
         /* This is done separately to avoid the copy if %3A is not present; it's rare. */
         canon = copy_String(d);
-        urlDecodePath_String(canon);
+        /*urlDecodePath_String(canon);*/
         iString *dec = maybeUrlDecodeExclude_String(canon, "% " URL_RESERVED_CHARS); /* decode everything else in all parts */
         if (dec) {
             set_String(canon, dec);
@@ -718,8 +745,9 @@ const iString *canonicalUrl_String(const iString *d) {
         }
     }
     else {
-        canon = maybeUrlDecodeExclude_String(d, "% " URL_RESERVED_CHARS);
-    }
+#endif
+        canon = maybeUrlDecodeExclude_String(d, " " URL_DECODE_EXCLUDE_CHARS);
+//    }
     /* `canon` may now be NULL if nothing was decoded. */
     if (indexOfCStr_String(canon ? canon : d, " ") != iInvalidPos ||
         indexOfCStr_String(canon ? canon : d, "\n") != iInvalidPos) {
@@ -758,6 +786,10 @@ iRangecc mediaTypeWithoutParameters_Rangecc(iRangecc mime) {
     iRangecc part = iNullRange;
     nextSplit_Rangecc(mime, ";", &part);
     return part;
+}
+
+iBool equalMediaType_String(const iString *d, const char *mediaType) {
+    return equal_Rangecc(mediaTypeWithoutParameters_Rangecc(range_String(d)), mediaType);
 }
 
 const iString *feedEntryOpenCommand_String(const iString *url, int newTab, int newWindow) {

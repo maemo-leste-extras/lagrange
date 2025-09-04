@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
    too convoluted, with both variants intermingled. */
 
 #include "inputwidget.h"
+
 #include "app.h"
 #include "command.h"
 #include "keys.h"
@@ -231,6 +232,7 @@ enum iInputWidgetFlag {
     dragMarkerStart_InputWidgetFlag      = iBit(15),
     dragMarkerEnd_InputWidgetFlag        = iBit(16),
     omitDefaultSchemeIfNarrow_InputWidgetFlag = iBit(17),
+    arrowFocusNavigable_InputWidgetFlag  = iBit(18),
 };
 
 /*----------------------------------------------------------------------------------------------*/
@@ -396,7 +398,7 @@ static iRect contentBounds_InputWidget_(const iInputWidget *d) {
     iRect          bounds = adjusted_Rect(bounds_Widget(w),
                                  addX_I2(padding_(), d->leftPadding),
                                  neg_I2(addX_I2(padding_(), d->rightPadding)));
-    shrink_Rect(&bounds, init_I2(gap_UI * (flags_Widget(w) & tight_WidgetFlag ? 1 : 2), 0));
+    shrink_Rect(&bounds, init_I2(gap_UI * (flags_Widget(w) & tight_WidgetFlag ? 1 : 2) * aspect_UI, 0));
     bounds.pos.y += padding_().y / 2;
     if (flags_Widget(w) & extraPadding_WidgetFlag) {
         if (d->sysCtrl && !cmp_String(id_Widget(w), "url")) {
@@ -864,12 +866,13 @@ void init_InputWidget(iInputWidget *d, size_t maxLen) {
     init_String(&d->oldText);
     init_String(&d->srcHint);
     init_String(&d->hint);
-    d->font         = uiInput_FontId | alwaysVariableFlag_FontId;
-    d->leftPadding  = 0;
-    d->rightPadding = 0;
+    d->font            = uiInput_FontId | alwaysVariableFlag_FontId;
+    d->leftPadding     = 0;
+    d->rightPadding    = 0;
     d->lastUpdateWidth = 0;
     d->inFlags         = eatEscape_InputWidgetFlag | enterKeyEnabled_InputWidgetFlag |
-                         lineBreaksEnabled_InputWidgetFlag | useReturnKeyBehavior_InputWidgetFlag;
+                         lineBreaksEnabled_InputWidgetFlag | useReturnKeyBehavior_InputWidgetFlag |
+                         arrowFocusNavigable_InputWidgetFlag;
     setMaxLen_InputWidget(d, maxLen);
     d->visWrapLines.start = 0;
     d->visWrapLines.end = 1;
@@ -1080,6 +1083,10 @@ void setLineBreaksEnabled_InputWidget(iInputWidget *d, iBool lineBreaksEnabled) 
     iChangeFlags(d->inFlags, lineBreaksEnabled_InputWidgetFlag, lineBreaksEnabled);
 }
 
+void setArrowFocusNavigable_InputWidget(iInputWidget *d, iBool arrowFocusNavigable) {
+    iChangeFlags(d->inFlags, arrowFocusNavigable_InputWidgetFlag, arrowFocusNavigable);
+}
+
 void setEnterKeyEnabled_InputWidget(iInputWidget *d, iBool enterKeyEnabled) {
     iChangeFlags(d->inFlags, enterKeyEnabled_InputWidgetFlag, enterKeyEnabled);
 }
@@ -1202,23 +1209,16 @@ void setTextUndoable_InputWidget(iInputWidget *d, const iString *text, iBool isU
 #endif
     if (d->inFlags & isUrl_InputWidgetFlag) {
         if (prefs_App()->decodeUserVisibleURLs) {
-            iString *enc = collect_String(copy_String(text));
-            urlDecodePath_String(enc);
-            text = enc;
+            text = collect_String(urlDecodeExclude_String(text, URL_DECODE_EXCLUDE_CHARS));
         }
         else {
             /* The user wants URLs encoded, also Punycode the domain. */
-            iString *enc = collect_String(copy_String(text));
-            urlEncodePath_String(enc);
+            iString *enc = urlEncodeExclude_String(text, URL_ENCODE_EXCLUDE_CHARS);
             /* Prevent address bar spoofing (mentioned as IDN homograph attack in
                https://github.com/skyjake/lagrange/issues/73) */
             punyEncodeUrlHost_String(enc);
             text = enc;
         }
-        /* Omit the default (Gemini) scheme if there isn't much space. */
-        /*if (isNarrow_InputWidget_(d)) {
-            text = omitDefaultScheme_(collect_String(copy_String(text)));
-        }*/
     }
     iString *nfcText = collect_String(copy_String(text));
     normalize_String(nfcText);
@@ -1312,7 +1312,7 @@ void systemInputChanged_InputWidget_(iSystemTextInput *sysCtrl, void *widget) {
 }
 #endif
 
-void begin_InputWidget(iInputWidget *d) {
+static void begin_InputWidget_(iInputWidget *d, iBool allowSelectAll) {
     iWidget *w = as_Widget(d);
     if (isEditing_InputWidget_(d)) {
         /* Already active. */
@@ -1369,7 +1369,7 @@ void begin_InputWidget(iInputWidget *d) {
     showCursor_InputWidget_(d);
     refresh_Widget(w);
     startOrStopCursorTimer_InputWidget_(d, iTrue);
-    if (d->inFlags & selectAllOnFocus_InputWidgetFlag) {
+    if (allowSelectAll && d->inFlags & selectAllOnFocus_InputWidgetFlag) {
         d->mark = (iRanges){ 0, lastLine_InputWidget_(d)->range.end };
         d->cursor = cursorMax_InputWidget_(d);
     }
@@ -1378,7 +1378,12 @@ void begin_InputWidget(iInputWidget *d) {
     }
     updateTextInputRect_InputWidget_(d);
     updateVisible_InputWidget_(d);
+    window_Widget(w)->keyPriority = w;
 #endif
+}
+
+void begin_InputWidget(iInputWidget *d) {
+    begin_InputWidget_(d, iTrue);
 }
 
 void end_InputWidget(iInputWidget *d, iBool accept) {
@@ -1411,6 +1416,7 @@ void end_InputWidget(iInputWidget *d, iBool accept) {
     d->inFlags &= ~isMarking_InputWidgetFlag;
     deactivateInputMode_InputWidget_(d);
     startOrStopCursorTimer_InputWidget_(d, iFalse);
+    window_Widget(w)->keyPriority = NULL;
 #endif
     d->inFlags |= needUpdateBuffer_InputWidgetFlag;
     setFlags_Widget(w, selected_WidgetFlag | keepOnTop_WidgetFlag | touchDrag_WidgetFlag, iFalse);
@@ -1428,7 +1434,10 @@ void end_InputWidget(iInputWidget *d, iBool accept) {
                     iString *query = collectNewRange_String((iRangecc){ snip.end, constEnd_String(text) });
                     trim_String(query);
                     set_String(query, collect_String(urlEncode_String(query)));
-                    prependCStr_String(query, "?");
+                    if (!contains_String(content, '?')) {
+                        /* substition may already have the beginning of a query */
+                        prependCStr_String(query, "?");
+                    }
                     prepend_String(query, content);
                     setText_InputWidget(d, query);
                 }
@@ -1513,7 +1522,7 @@ iLocalDef iBool isMarking_(void) {
     return (modState_Keys() & KMOD_SHIFT) != 0;
 }
 
-void setCursor_InputWidget(iInputWidget *d, iInt2 pos) {
+static void setCursor_InputWidget(iInputWidget *d, iInt2 pos) {
     iAssert(!isEmpty_Array(&d->lines));
     pos.x = iClamp(pos.x, 0, endX_InputWidget_(d, pos.y));
     d->cursor = pos;
@@ -1532,6 +1541,10 @@ void setCursor_InputWidget(iInputWidget *d, iInt2 pos) {
         iZap(d->mark);
     }
     showCursor_InputWidget_(d);
+}
+
+void moveCursorHome_InputWidget(iInputWidget *d) {
+    setCursor_InputWidget(d, zero_I2());
 }
 
 static iBool moveCursorByLine_InputWidget_(iInputWidget *d, int dir, int horiz) {
@@ -1769,16 +1782,17 @@ static void paste_InputWidget_(iInputWidget *d) {
         deleteMarked_InputWidget_(d);
         char *   text  = SDL_GetClipboardText();
         iString *paste = collect_String(newCStr_String(text));
+        replace_String(paste, "\r", ""); // we expect line breaks to be just LF, no CRs
         /* Url decoding. */
         if (d->inFlags & isUrl_InputWidgetFlag) {
             trim_String(paste);
             if (prefs_App()->decodeUserVisibleURLs) {
-                paste = collect_String(urlDecodeExclude_String(paste, URL_RESERVED_CHARS));
+                paste = collect_String(urlDecodeExclude_String(paste, URL_DECODE_EXCLUDE_CHARS));
                 replace_String(paste, "\n", "%0A");
                 replace_String(paste, "\t", "%09");
             }
             else {
-                urlEncodePath_String(paste);
+                paste = collect_String(urlEncodeExclude_String(paste, URL_ENCODE_EXCLUDE_CHARS));
             }
         }
         SDL_free(text);
@@ -1810,6 +1824,15 @@ static void lineTextWasChanged_InputWidget_(iInputWidget *d, iInputLine *line) {
     const int y = indexOf_Array(&d->lines, line);
     textOfLinesWasChanged_InputWidget_(d, (iRangei){ y, y + 1 });
 }
+
+#else
+
+void moveCursorHome_InputWidget(iInputWidget *d) {
+    if (d->sysCtrl) {
+        // TODO: Is there a way to move the native cursor to the start?
+    }
+}
+
 #endif
 
 void setSensitiveContent_InputWidget(iInputWidget *d, iBool isSensitive) {
@@ -1873,6 +1896,9 @@ static iBool checkLineBreakMods_InputWidget_(const iInputWidget *d, int mods) {
 }
 
 static iBool checkAcceptMods_InputWidget_(const iInputWidget *d, int mods) {
+    if (isMobile_Platform()) {
+        return mods == KMOD_PRIMARY; /* non-configurable */
+    }
     if (d->inFlags & useReturnKeyBehavior_InputWidgetFlag) {
         return mods == acceptKeyMod_ReturnKeyBehavior(prefs_App()->returnKey);
     }
@@ -1895,6 +1921,7 @@ static void markWordAtCursor_InputWidget_(iInputWidget *d) {
 
 static void showClipMenu_InputWidget_(const iInputWidget *d, iInt2 coord) {
     iWidget *clipMenu = findChild_Widget(root_Widget(constAs_Widget(d)), "clipmenu");
+    if (!clipMenu) return; /* all main/extra windows have a clipmenu, but popups do not */
     if (isVisible_Widget(clipMenu)) {
         closeMenu_Widget(clipMenu);
     }
@@ -2355,7 +2382,8 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
             setFocus_Widget(NULL);
         }
         else {
-            begin_InputWidget(d);
+            enum iFocusMethod method = arg_Command(command_UserEvent(ev));
+            begin_InputWidget_(d, method != arrowKeys_FocusMethod);
         }
         return iFalse;
     }
@@ -2654,10 +2682,22 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
                     (checkAcceptMods_InputWidget_(d, mods) ||
                      (~d->inFlags & lineBreaksEnabled_InputWidgetFlag))) {
                     d->inFlags |= enterPressed_InputWidgetFlag;
-                    setFocus_Widget(NULL);
+                    if (isTerminal_Platform() && cmp_String(id_Widget(w), "url")) {
+                        /* In dialogs, Return moves to the next focusable field rather than
+                           loosing focus entirely. */
+                        setFocus_Widget(findFocusable_Widget(w, forward_WidgetFocusDir));
+                    }
+                    else {
+                        setFocus_Widget(NULL);
+                    }
                     return iTrue;
                 }
+#if !LAGRANGE_USE_SYSTEM_TEXT_INPUT
                 return iFalse;
+#else
+                /* Native input handles Return key. */
+                return iTrue;
+#endif
             case SDLK_ESCAPE:
                 end_InputWidget(d, iTrue);
                 setFocus_Widget(NULL);
@@ -2810,11 +2850,17 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
                     refresh_Widget(d);
                     return iTrue;
                 }
-                if (isArrowUpDownConsumed_InputWidget_(d)) {
+                // if (isArrowUpDownConsumed_InputWidget_(d)) {
+                //     return iTrue;
+                // }
+                /* For moving to lookup from url entry. */
+                if (processEvent_Widget(as_Widget(d), ev)) {
                     return iTrue;
                 }
-                /* For moving to lookup from url entry. */
-                return processEvent_Widget(as_Widget(d), ev);
+                if (d->inFlags & arrowFocusNavigable_InputWidgetFlag) {
+                    return moveFocusWithArrows_App(ev);
+                }
+                return iTrue;
             case SDLK_PAGEUP:
             case SDLK_PAGEDOWN:
                 for (int count = 0; count < 5; count++) {
@@ -2822,7 +2868,18 @@ static iBool processEvent_InputWidget_(iInputWidget *d, const SDL_Event *ev) {
                 }
                 refresh_Widget(d);
                 return iTrue;
-#endif /* !LAGRANGE_USE_SYSTEM_TEXT_INPUT */
+#else /* !LAGRANGE_USE_SYSTEM_TEXT_INPUT */
+            /* The native input handles cursor movements. */
+            case SDLK_HOME:
+            case SDLK_END:
+            case SDLK_LEFT:
+            case SDLK_RIGHT:
+            case SDLK_UP:
+            case SDLK_DOWN:
+            case SDLK_PAGEUP:
+            case SDLK_PAGEDOWN:
+                return iTrue;
+#endif
         }
         if (mods & (KMOD_GUI | KMOD_CTRL)) {
             return iFalse;
@@ -2909,7 +2966,7 @@ static void draw_InputWidget_(const iInputWidget *d) {
     /* `lines` is already up to date and ready for drawing. */
     fillRect_Paint(
         &p, bounds, isFocused ? uiInputBackgroundFocused_ColorId : uiInputBackground_ColorId);
-    if (!isTerminal_Platform()) {
+    if (!isTerminal_Platform() && ~w->flags & frameless_WidgetFlag) {
         drawRectThickness_Paint(&p,
                                 adjusted_Rect(bounds, neg_I2(one_I2()), zero_I2()),
                                 isFocused ? gap_UI / 4 : 1,
