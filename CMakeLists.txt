@@ -667,10 +667,9 @@ Icon=fi.skyjake.Lagrange
 MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/spartan;
 ")
         install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
-        install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
-        install (FILES res/lagrange-256.png
-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps
-            RENAME fi.skyjake.Lagrange.png
+        install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon)
+        install (FILES debian/maemo/lagrange.png
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
         )
         install (FILES res/fi.skyjake.Lagrange.appdata.xml
             DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
