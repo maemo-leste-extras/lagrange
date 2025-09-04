@@ -1238,7 +1238,10 @@ void releasePopup_SystemMenu(iWidget *owner) {
 #endif /* !iPlatformAppleMobile */
 
 void updateAfterBoundsChange_SystemMenu(iWidget *owner) {
-    iAssert(isSupported_SystemMenu());
+     if (!isSupported_SystemMenu()) {
+        return; /* Desktop build: native system menus not available. */
+     }
+    //iAssert(isSupported_SystemMenu());
     //printf("updating bounds of sysmenu owner %p\n", owner);
     iAssert(flags_Widget(owner) & nativeMenu_WidgetFlag);
     iWidget *parent = parent_Widget(owner);

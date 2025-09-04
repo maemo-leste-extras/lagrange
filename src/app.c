@@ -2076,16 +2076,29 @@ void processEvents_App(enum iAppEventMode eventMode) {
 #endif
         switch (ev.type) {
             case SDL_QUIT:
-                if (!isMobile_Platform()) {
-                    d->isRunning = iFalse;
-                    if (findWidget_App("prefs")) {
-                        /* Make sure changed preferences get saved. */
-                        postCommand_Root(NULL, "prefs.dismiss");
-                        processEvents_App(postedEventsOnly_AppEventMode);
-                    }
-                    goto backToMainLoop;
-                }
+            #if defined(iPlatformAppleMobile) || defined(iPlatformAndroidMobile)
+                /* On real mobile, OS controls lifecycle; ignore SDL_QUIT. */
                 break;
+            #else
+                d->isRunning = iFalse;
+                if (findWidget_App("prefs")) {
+                    /* Make sure changed preferences get saved. */
+                    postCommand_Root(NULL, "prefs.dismiss");
+                    processEvents_App(postedEventsOnly_AppEventMode);
+                }
+                goto backToMainLoop;
+            #endif
+            //case SDL_QUIT:
+            //    if (!isMobile_Platform()) {
+            //        d->isRunning = iFalse;
+            //        if (findWidget_App("prefs")) {
+            //            /* Make sure changed preferences get saved. */
+            //            postCommand_Root(NULL, "prefs.dismiss");
+            //            processEvents_App(postedEventsOnly_AppEventMode);
+            //        }
+            //        goto backToMainLoop;
+            //    }
+            //    break;
             case SDL_APP_TERMINATING: {
                 iForEach(PtrArray, i, &d->mainWindows) {
                     setFreezeDraw_MainWindow(*i.value, iTrue);

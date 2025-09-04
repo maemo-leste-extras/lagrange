@@ -2355,6 +2355,7 @@ const iWidget *currentTabPage_Widget(const iWidget *tabs) {
 }
 
 size_t tabCount_Widget(const iWidget *tabs) {
+     if (!tabs) return 0; // in mobile ui tabs may not be created yet.
     return childCount_Widget(findChild_Widget(tabs, "tabs.pages"));
 }
 
