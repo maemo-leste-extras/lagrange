@@ -670,13 +670,14 @@ Exec=${CMAKE_INSTALL_PREFIX}/bin/lagrange %U
 Terminal=false
 Type=Application
 StartupWMClass=lagrange
-Icon=fi.skyjake.Lagrange
+Icon=lagrange
 MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/spartan;
 ")
         install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
         install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon)
         install (FILES debian/maemo/lagrange.png
-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pixmaps
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/48x48/hildon
+            RENAME lagrange.png
         )
         install (FILES res/fi.skyjake.Lagrange.appdata.xml
             DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo

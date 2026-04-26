@@ -1,3 +1,9 @@
+lagrange (1.19.5-1+leste1) unstable; urgency=low
+
+  * Fixing shortcut icon.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Sun, 26 Apr 2026 18:59:00 +0400
+
 lagrange (1.19.4-1+leste1) unstable; urgency=low
 
   * Fixing icon.
