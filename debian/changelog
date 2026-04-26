@@ -1,3 +1,10 @@
+lagrange (1.19.2-1+leste1) unstable; urgency=low
+
+  * Rebuild for Excalibur.
+  * Update Forgejo workflow to inherit secrets.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Sun, 26 Apr 2026 11:10:00 +0400
+
 lagrange (1.19.1-1+leste1) unstable; urgency=low
 
   * update to 1.19.0.
