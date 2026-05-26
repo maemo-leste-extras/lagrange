@@ -660,33 +660,28 @@ elseif (UNIX AND NOT APPLE)
         set_target_properties (app PROPERTIES
             INSTALL_RPATH_USE_LINK_PATH YES
         )
-        set (desktop ${CMAKE_CURRENT_BINARY_DIR}/fi.skyjake.Lagrange.desktop)
-        file (WRITE ${desktop} "[Desktop Entry]
-Name=Lagrange
-GenericName=Gemini Client
-Comment=${PROJECT_DESCRIPTION}
-Categories=Network;
-Exec=${CMAKE_INSTALL_PREFIX}/bin/lagrange %U
-Terminal=false
-Type=Application
-StartupWMClass=lagrange
-Icon=lagrange
-MimeType=x-scheme-handler/gemini;x-scheme-handler/gopher;x-scheme-handler/spartan;
-")
+
         install (TARGETS app DESTINATION ${CMAKE_INSTALL_BINDIR})
-        install (FILES ${desktop} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon)
+
+        install (FILES debian/maemo/lagrange.desktop
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications/hildon
+        )
+
         install (FILES debian/maemo/lagrange.png
             DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/48x48/hildon
             RENAME lagrange.png
         )
+
         install (FILES res/fi.skyjake.Lagrange.appdata.xml
             DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo
         )
+
         if (NOT ENABLE_RELATIVE_EMBED)
             target_compile_definitions (app PUBLIC
-                    LAGRANGE_EMB_BIN="${CMAKE_INSTALL_FULL_DATADIR}/lagrange/resources.lgr")
+                LAGRANGE_EMB_BIN="${CMAKE_INSTALL_FULL_DATADIR}/lagrange/resources.lgr")
         endif ()
     endif ()
+
     install (FILES res/lagrange.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
     install (FILES ${EMB_BIN} DESTINATION ${CMAKE_INSTALL_DATADIR}/lagrange)
 endif ()
