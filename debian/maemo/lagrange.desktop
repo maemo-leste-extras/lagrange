@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Lagrange
 Comment=Lagrange gemini client
-Exec=/usr/bin/lagrange
+Exec=env SDL_RENDER_DRIVER=opengles /usr/bin/lagrange
 Icon=lagrange
 X-Icon-path=/usr/share/pixmaps/
 X-Window-Icon=lagrange

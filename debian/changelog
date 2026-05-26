@@ -1,3 +1,9 @@
+lagrange (1.19.6-1+leste1) unstable; urgency=low
+
+  * Fixing shortcut icon to use opengles since it is supported better now.
+
+ -- Norayr Chilingarian <norayr@arnet.am>  Sun, 26 May 2026 17:50:00 +0400
+
 lagrange (1.19.5-1+leste1) unstable; urgency=low
 
   * Fixing shortcut icon.
